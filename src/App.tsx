@@ -1,6 +1,6 @@
 import "@mantine/core/styles.css";
 import { Center, Code, MantineProvider, Blockquote } from "@mantine/core";
-import { theme } from "./theme";
+import { theme } from "@/theme";
 
 export default function App() {
   return (
