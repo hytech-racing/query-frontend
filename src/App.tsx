@@ -4,10 +4,10 @@ import {
   Code,
   MantineProvider,
   Blockquote,
-  Flex,
   AppShell,
 } from "@mantine/core";
 import { theme } from "./theme";
+import Navbar from "/Users/jas/school/gatech/hytech/query-frontend/src/Navbar.tsx";
 
 export default function App() {
   return (
@@ -19,9 +19,8 @@ export default function App() {
           collapsed: { mobile: !open },
         }}
       >
-        <AppShell.Navbar>
-          <Flex direction="row">navbar</Flex>
-        </AppShell.Navbar>
+        <Navbar>{/* <Flex direction="row">navbar</Flex> */}</Navbar>
+
         <Center h="100vh">
           <Blockquote color="yellow">
             Edit <Code>src/App.tsx</Code> to get started.
