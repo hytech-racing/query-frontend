@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import table from './table';
+import Tablecomp from './Tablecomp';
 
 function App() {
   return (
@@ -19,8 +19,8 @@ function App() {
         >
           Learn React
         </a>
+        <Tablecomp />
       </header>
-      <table />
     </div>
   );
 }
