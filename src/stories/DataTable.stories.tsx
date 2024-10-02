@@ -123,9 +123,7 @@ export const WithResultsSmall: Story = {
   },
   decorators: [
     (Story) => (
-      <div
-        style={{ maxHeight: "200px", maxWidth: "600px", overflow: "scroll" }}
-      >
+      <div style={{ height: "200px", width: "700px" }}>
         <Story />
       </div>
     ),
@@ -133,7 +131,7 @@ export const WithResultsSmall: Story = {
   parameters: {
     docs: {
       description: {
-        story: `If ${componentName} is placed in an element with a defined height/width and overflow-scroll, the ${componentName} will become scrollable.`,
+        story: `If ${componentName} is placed in an element with a defined height and width, the ${componentName} will become scrollable.`,
       },
     },
   },

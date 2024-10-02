@@ -41,12 +41,14 @@ export default function DataTable({ data }: DataTableProps) {
   return (
     <Table.ScrollContainer h="100%" minWidth={800}>
       <Table
-        stickyHeader
         striped
         highlightOnHover={data && data.length > 0}
         highlightOnHoverColor={theme.primaryColor}
       >
-        <Table.Thead bg={theme.primaryColor}>
+        <Table.Thead
+          bg={theme.primaryColor}
+          style={{ top: 0, position: "sticky", zIndex: 0 }}
+        >
           <Table.Tr>
             <Table.Th>Name</Table.Th>
             <Table.Th>Date</Table.Th>
