@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { data } from "@/data/sampledata";
 import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
-import DataCard from "./DataCard";
+// import DataCard from "./DataCard";
+import DataTable from "./DataTable";
 
 function SearchBarWithFilter() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -157,7 +158,8 @@ function SearchBarWithFilter() {
           {filteredData.length === 0 ? (
             <p>No results found</p>
           ) : (
-            <DataCard filteredData={filteredData} />
+            // <DataCard filteredData={filteredData} />
+            <DataTable data={filteredData} />
           )}
         </div>
       </div>
