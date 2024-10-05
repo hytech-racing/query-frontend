@@ -1,0 +1,23 @@
+.preview-container {
+    width: 75%;
+    height: 30%;
+    justify-content: center;
+    margin: 20px;
+    background-color: lightgrey;
+  }
+  
+.image-column {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    height: 100%; /* Ensures the column takes the full height */
+    width: 100%; /* Ensures the column takes the full width */
+}
+
+.preview-image {
+    display: flex;
+    max-width: 70%; /* Ensures the image scales with the column width */
+    max-height: 70%; /* Ensures the image does not exceed the column height */
+    height: auto; /* Maintains aspect ratio */
+    margin: 20px;
+}

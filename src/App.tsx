@@ -1,12 +1,12 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { theme } from "@/theme";
-import SearchBar from "./components/SearchBar";
+import PreviewCard from "./components/PreviewCard";
 
 export default function App() {
   return (
     <MantineProvider theme={theme}>
-      <SearchBar />
+      <PreviewCard />
     </MantineProvider>
   );
 }
