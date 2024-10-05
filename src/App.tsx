@@ -1,15 +1,12 @@
 import "@mantine/core/styles.css";
-import { Center, Code, MantineProvider, Blockquote } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { theme } from "@/theme";
+import SearchBar from "./components/SearchBar";
 
 export default function App() {
   return (
     <MantineProvider theme={theme}>
-      <Center h="100vh">
-        <Blockquote>
-          Edit <Code>src/App.tsx</Code> to get started.
-        </Blockquote>
-      </Center>
+      <SearchBar />
     </MantineProvider>
   );
 }
