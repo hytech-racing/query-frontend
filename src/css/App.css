@@ -1,0 +1,38 @@
+.app-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    background-color: #f0f0f0;
+    width: 100%;
+    position: fixed;
+    /*so table doesn't cover it - make sure it stays on top of other elements*/
+    z-index: 1000;
+}
+
+.search-bar {
+    background-color: #e0e0e0;
+    border-radius: 0;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    height: 500px;
+    padding-top: 50px;
+}
+.column-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+
+.footer {
+    padding: 2em;
+    text-align: center;
+    background: #9b8b5de5;
+    color: white;
+}
