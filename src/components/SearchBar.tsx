@@ -3,7 +3,8 @@ import { data } from "@/data/sampledata";
 import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
 // import DataCard from "./DataCard";
-import DataTable from "./DataTable";
+import DataTable from "@components/DataTable";
+import PreviewCard from "./PreviewCard";
 
 function SearchBarWithFilter() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +15,8 @@ function SearchBarWithFilter() {
     beforeDate: "",
     afterDate: "",
   });
-
+  const style = {
+  };
   useEffect(() => {
     // add code to get data from server here
     // setFilteredData(serverData)
@@ -80,7 +82,18 @@ function SearchBarWithFilter() {
   };
 
   return (
-    <div>
+    <div className="Search">
+      
+      {/* Display Filtered Data */}
+      <div className="results-container">
+        <div>
+            <div className="table" style={style}>
+              <DataTable data={filteredData} />
+            </div>
+            <PreviewCard/>
+        </div>
+      </div>
+
       <div className="search-filter-container">
         <h1>Search and Filter Data</h1>
 
@@ -151,18 +164,8 @@ function SearchBarWithFilter() {
         </div>
       </div>
 
-      {/* Display Filtered Data */}
-      <div className="results-container">
-        <div>
-          <h2>Filtered Results:</h2>
-          {filteredData.length === 0 ? (
-            <p>No results found</p>
-          ) : (
-            // <DataCard filteredData={filteredData} />
-            <DataTable data={filteredData} />
-          )}
-        </div>
-      </div>
+
+      
     </div>
   );
 }

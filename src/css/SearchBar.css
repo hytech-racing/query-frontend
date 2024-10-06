@@ -1,9 +1,9 @@
 .results-container {
-  width: 100vw;
   height: auto;
-  display: flex;
+  display: flex;  
   justify-content: center;
   align-items: center;
+  flex: 1;
 }
 
 .results-container h2 {
@@ -11,15 +11,18 @@
   text-align: center;
 }
 
+.Search {
+  display: flex;
+}
+
 .search-filter-container {
   background-color: #f8f9fa;
   padding: 20px;
   border-radius: 10px;
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  flex: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 2em;
+  max-width: 500px;
 }
 
 .search-filter-container h1 {
