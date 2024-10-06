@@ -15,8 +15,6 @@ function SearchBarWithFilter() {
     beforeDate: "",
     afterDate: "",
   });
-  const style = {
-  };
   useEffect(() => {
     // add code to get data from server here
     // setFilteredData(serverData)
@@ -87,9 +85,7 @@ function SearchBarWithFilter() {
       {/* Display Filtered Data */}
       <div className="results-container">
         <div>
-            <div className="table" style={style}>
-              <DataTable data={filteredData} />
-            </div>
+            <DataTable data={filteredData} />
             <PreviewCard/>
         </div>
       </div>
