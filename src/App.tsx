@@ -1,7 +1,7 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { theme } from "@/theme";
-import Navbar from "@/Navbar.tsx";
+import Navbar from "@/components/Navbar";
 import SearchBar from "@/components/SearchBar";
 import "@/css/App.css";
 
