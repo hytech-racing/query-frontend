@@ -1,44 +1,38 @@
 import "@mantine/core/styles.css";
 import {} from "@mantine/core";
 
+import "./css/Navbar.css";
+// import favicon from "../public/favicon.ico";
+
 import { useState } from "react";
 
-const linkStyle = (isActive: boolean) => ({
-  padding: "10px 20px",
-  textDecoration: "none",
-  color: isActive ? "##FDDA0D" : "#495057",
-  backgroundColor: isActive ? "#FFBF00" : "transparent",
-  borderRadius: "8px",
-  fontWeight: isActive ? "bold" : "normal",
-  cursor: "pointer",
-  transition: "all 0.2s ease-in-out",
-  display: "inline-block",
-  marginRight: "10px",
-});
-
-const mainLinksData = ["Chart", "Visuals", "Search"];
+const mainLinksData = [
+  { name: "Hytech", url: "https://hytechracing.gatech.edu/" },
+  { name: "Hytech2", url: "https://hytechracing.gatech.edu/" },
+  { name: "Hytech3", url: "https://hytechracing.gatech.edu/" },
+];
 
 export default function Navbar() {
-  const [activeLink, setActiveLink] = useState("Settings");
+  const [activeLink, setActiveLink] = useState();
 
-  const links = mainLinksData.map((link) => (
+  const links = mainLinksData.map(({ name, url }) => (
     <a
-      // className={classes.link}
-      style={linkStyle(activeLink === link)}
-      data-active={activeLink === link || undefined}
-      href="https://ui.mantine.dev/category/navbars/"
-      onClick={(event) => {
-        event.preventDefault();
-        setActiveLink(link);
+      key={name}
+      className={`nav-link ${activeLink === name ? "active" : ""}`}
+      // style={linkStyle(activeLink === link)}
+      // data-active={activeLink === link || undefined}
+      href={url}
+      onClick={() => {
+        setActiveLink(name);
       }}
-      key={link}
     >
-      {link}
+      {name}
     </a>
   ));
 
   return (
     <nav>
+      {/*<img src={favicon} alt="Logo" className="navbar-icon" />*/}
       {links}
       {/* Optionally render active link or other content here */}
     </nav>

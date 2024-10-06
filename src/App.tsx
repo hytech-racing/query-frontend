@@ -1,13 +1,7 @@
 import "@mantine/core/styles.css";
-import {
-  Center,
-  Code,
-  MantineProvider,
-  Blockquote,
-  AppShell,
-} from "@mantine/core";
+import { MantineProvider, AppShell } from "@mantine/core";
 import { theme } from "./theme";
-import Navbar from "/Users/jas/school/gatech/hytech/query-frontend/src/Navbar.tsx";
+import Navbar from "./Navbar.tsx";
 
 export default function App() {
   return (
@@ -20,12 +14,6 @@ export default function App() {
         }}
       >
         <Navbar>{/* <Flex direction="row">navbar</Flex> */}</Navbar>
-
-        <Center h="100vh">
-          <Blockquote color="yellow">
-            Edit <Code>src/App.tsx</Code> to get started.
-          </Blockquote>
-        </Center>
       </AppShell>
     </MantineProvider>
   );
