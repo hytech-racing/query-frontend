@@ -5,6 +5,7 @@ import Navbar from "./Navbar.tsx";
 import SearchBar from "./components/SearchBar";
 import DataTable from "./components/DataTable";
 import "./css/App.css";
+// import PreviewCard from "./components/PreviewCard";
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
           <h3>Content, layout, design: Hytech Frontend Team</h3>
         </footer>
       </div>
+      {/* <PreviewCard /> */}
     </MantineProvider>
   );
 }
