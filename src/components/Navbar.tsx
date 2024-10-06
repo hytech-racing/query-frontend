@@ -1,8 +1,6 @@
 import "@mantine/core/styles.css";
 import {} from "@mantine/core";
-
 import "@/css/Navbar.css";
-
 import { useState } from "react";
 
 const mainLinksData = [
