@@ -23,12 +23,6 @@
     height: 500px;
     padding-top: 50px;
 }
-.column-content {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
 
 .footer {
     padding: 2em;

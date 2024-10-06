@@ -4,7 +4,7 @@ import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
 // import DataCard from "./DataCard";
 import DataTable from "@components/DataTable";
-import PreviewCard from "./PreviewCard";
+import PreviewCard from "@/components/PreviewCard";
 
 function SearchBarWithFilter() {
   const [searchTerm, setSearchTerm] = useState("");

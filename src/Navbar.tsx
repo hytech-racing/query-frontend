@@ -2,7 +2,6 @@ import "@mantine/core/styles.css";
 import {} from "@mantine/core";
 
 import "@/css/Navbar.css";
-// import favicon from "../public/favicon.ico";
 
 import { useState } from "react";
 
