@@ -3,6 +3,9 @@
 nav {
     padding: 15px 0;
     background: linear-gradient(90deg, #f7d74b, #f9e2a0);
+    display: flex;
+    height: 70px;
+    align-items: center;
 }
 
 .nav-link {
@@ -25,8 +28,8 @@ nav {
 }
 
 .nav-link:hover {
-    color: white; /* Color when hovered */
-    background-color: #FFD700; /* Background when hovered */
+    color: white;
+    background-color: #FFD700;
     font-style: oblique;
 }
 
@@ -34,4 +37,12 @@ nav {
     height: 30px;
     margin-right: 20px;
     margin-left: 20px;
+}
+
+.hytechName {
+    margin-left: auto;
+    margin-right: 10px;
+    border-radius: 5px;
+    color: white;
+    font-weight: 900;
 }
