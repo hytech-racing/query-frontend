@@ -1,13 +1,16 @@
 .results-container {
-  height: auto;
-  display: flex;  
-  justify-content: center;
-  align-items: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.table-contain-result {
+  text-align: center;
   flex: 1;
 }
 
-.results-container h2 {
-  width: 100%;
+.preview-contain-result {
   text-align: center;
 }
 
