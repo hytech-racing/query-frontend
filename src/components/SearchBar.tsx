@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { data } from "@/data/sampledata";
 import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
-// import DataCard from "./DataCard";
-import DataTable from "@components/DataTable";
-import PreviewCard from "@/components/PreviewCard";
 
-function SearchBarWithFilter() {
+interface SearchBarWithFilterProps {
+  setFilteredData: React.Dispatch<React.SetStateAction<MCAPFileInformation[]>>;
+}
+
+function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState<MCAPFileInformation[]>(data);
   const [filters, setFilters] = useState({
     location: "",
     eventType: "",
@@ -81,17 +81,7 @@ function SearchBarWithFilter() {
 
   return (
     <div className="Search">
-      
       {/* Display Filtered Data */}
-      <div className="results-container">
-        <div className="table-contain-result">
-          <DataTable data={filteredData} />
-        </div>
-
-        <div className="preview-contain-result">
-          <PreviewCard/>
-        </div>
-      </div>
 
       <div className="search-filter-container">
         <h1>Search and Filter Data</h1>
@@ -162,9 +152,6 @@ function SearchBarWithFilter() {
           </label>
         </div>
       </div>
-
-
-      
     </div>
   );
 }
