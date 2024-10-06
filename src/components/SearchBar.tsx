@@ -84,9 +84,12 @@ function SearchBarWithFilter() {
       
       {/* Display Filtered Data */}
       <div className="results-container">
-        <div>
-            <DataTable data={filteredData} />
-            <PreviewCard/>
+        <div className="table-contain-result">
+          <DataTable data={filteredData} />
+        </div>
+
+        <div className="preview-contain-result">
+          <PreviewCard/>
         </div>
       </div>
 
