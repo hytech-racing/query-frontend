@@ -1,7 +1,7 @@
 import cx from 'clsx';
 import { useState } from 'react';
-import { Table as MantineTable, ScrollArea } from '@mantine/core';
-import classes from './Tablecomp.module.css';
+import { Table , ScrollArea } from '@mantine/core';
+import classes from './tablecomp.module.css';
 import React from 'react';
 
 const data = [
@@ -99,34 +99,34 @@ function Tablecomp() {
   const [scrolled, setScrolled] = useState(false);
 
   const rows = data.map((row) => (
-    <MantineTable>
-        <tr key={row.name}>
-        <td>{row.name}</td>
-        <td>{row.date}</td>
-        <td>{row.location}</td>
-        <td>{row.config}</td>
-        <td>{row.testtarget}</td>
-        <td>{row.notes}</td>
-        </tr>
-    </MantineTable>
+      <Table.Tr key={row.name}>
+      <Table.Td>{row.name}</Table.Td>
+      <Table.Td>{row.date}</Table.Td>
+      <Table.Td>{row.location}</Table.Td>
+      <Table.Td>{row.config}</Table.Td>
+      <Table.Td>{row.testtarget}</Table.Td>
+      <Table.Td>{row.notes}</Table.Td>
+      </Table.Tr>
   ));
 
   return (
+    <pre>
     <ScrollArea h={300} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-        <MantineTable miw={700}>
-            <th className={cx(classes.header, { [classes.scrolled]: scrolled })}>
-              <tr>
-                  <th>Name</th>
-                  <th>Date</th>
-                  <th>Location</th>
-                  <th>Config</th>
-                  <th>Test Target</th>
-                  <th>Notes</th>
-              </tr>
-            </th>
-            <MantineTable.Tbody>{rows}</MantineTable.Tbody>
-        </MantineTable>
+        <Table miw={700}>
+            <Table.Th className={cx(classes.header, { [classes.scrolled]: scrolled })}>
+              <Table.Tr>
+                  <Table.Th>Name</Table.Th>
+                  <Table.Th>Date</Table.Th>
+                  <Table.Th>Location</Table.Th>
+                  <Table.Th>Config</Table.Th>
+                  <Table.Th>Test Target</Table.Th>
+                  <Table.Th>Notes</Table.Th>
+              </Table.Tr>
+            </Table.Th>
+            <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
     </ScrollArea>
+    </pre>
   );
 }
 export default Tablecomp;
