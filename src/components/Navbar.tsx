@@ -10,7 +10,7 @@ const mainLinksData = [
 ];
 
 export default function Navbar() {
-  const hytechName = "Hytech Racing checkpoint 1";
+  const hytechName = "HyTech Racing Checkpoint 1";
   const [activeLink, setActiveLink] = useState();
   const links = mainLinksData.map(({ name, url }) => (
     <a
@@ -29,8 +29,8 @@ export default function Navbar() {
 
   return (
     <nav>
-     <img src="/favicon.ico" alt="Logo" className="navbar-icon" />
-     {links}
+      <img src="/favicon.ico" alt="Logo" className="navbar-icon" />
+      {links}
       {/* Optionally render active link or other content here */}
       <h3 className="hytechName">{hytechName}</h3>
     </nav>
