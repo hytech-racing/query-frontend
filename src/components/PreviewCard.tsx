@@ -1,6 +1,6 @@
 import React from "react";
-import { Text, Button, Grid } from "@mantine/core";
-import { IconDownload } from "@tabler/icons-react";
+import { Text, Button, Grid, Menu, rem } from "@mantine/core";
+import { IconDownload, IconChevronDown, IconFile } from "@tabler/icons-react";
 import "@/css/PreviewCard.css";
 
 function PreviewCard() {
@@ -72,20 +72,8 @@ function PreviewCard() {
               gap: "10px",
             }}
           >
-            <Button
-              variant="filled"
-              size="xs"
-              rightSection={<IconDownload size={20} />}
-            >
-              MAT
-            </Button>
-            <Button
-              variant="filled"
-              size="xs"
-              rightSection={<IconDownload size={20} />}
-            >
-              MCAP
-            </Button>
+            <DownloadButton buttonText="MAT" />
+            <DownloadButton buttonText="MCAP" />
           </div>
         </Grid.Col>
       </Grid>
@@ -94,3 +82,63 @@ function PreviewCard() {
 }
 
 export default PreviewCard;
+
+interface DownloadButtonProps {
+  buttonText: string;
+}
+
+export function DownloadButton({ buttonText }: DownloadButtonProps) {
+  return (
+    <Menu
+      transitionProps={{ transition: "pop-top-right" }}
+      position="top-end"
+      width={150}
+      withinPortal
+    >
+      <Menu.Target>
+        <Button
+          variant="filled"
+          size="xs"
+          rightSection={<IconChevronDown size={20} />}
+          leftSection={<IconDownload size={20} />}
+        >
+          {buttonText}
+        </Button>
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Menu.Item
+          leftSection={
+            <IconFile
+              style={{ width: rem(16), height: rem(16) }}
+              stroke={1.5}
+            />
+          }
+        >
+          File_1
+        </Menu.Item>
+
+        <Menu.Item
+          leftSection={
+            <IconFile
+              style={{ width: rem(16), height: rem(16) }}
+              stroke={1.5}
+            />
+          }
+        >
+          File_2
+        </Menu.Item>
+
+        <Menu.Item
+          leftSection={
+            <IconFile
+              style={{ width: rem(16), height: rem(16) }}
+              stroke={1.5}
+            />
+          }
+        >
+          File_3
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  );
+}
