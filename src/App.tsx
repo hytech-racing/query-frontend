@@ -31,10 +31,6 @@ export default function App() {
           </div>
           <SearchBar setFilteredData={setFilteredData} />
         </div>
-
-        <footer className="footer">
-          <h3>made by Frontend team 2024</h3>
-        </footer>
       </div>
 
       {/* <PreviewCard /> */}
