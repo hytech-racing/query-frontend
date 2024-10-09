@@ -25,11 +25,11 @@ export default function App() {
               <DataTable data={filteredData} />
             </div>
 
-            <div className="preview-contain-result">
-              <PreviewCard />
-            </div>
+            <SearchBar setFilteredData={setFilteredData} />
           </div>
-          <SearchBar setFilteredData={setFilteredData} />
+          <div className="preview-contain-result">
+            <PreviewCard />
+          </div>
         </div>
       </div>
 
