@@ -2,19 +2,19 @@ import React, { useState, useEffect } from "react";
 import { data } from "@/data/sampledata";
 import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
-// import DataCard from "./DataCard";
-import DataTable from "./DataTable";
 
-function SearchBarWithFilter() {
+interface SearchBarWithFilterProps {
+  setFilteredData: React.Dispatch<React.SetStateAction<MCAPFileInformation[]>>;
+}
+
+function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState<MCAPFileInformation[]>(data);
   const [filters, setFilters] = useState({
     location: "",
     eventType: "",
     beforeDate: "",
     afterDate: "",
   });
-
   useEffect(() => {
     // add code to get data from server here
     // setFilteredData(serverData)
@@ -80,7 +80,9 @@ function SearchBarWithFilter() {
   };
 
   return (
-    <div>
+    <div className="Search">
+      {/* Display Filtered Data */}
+
       <div className="search-filter-container">
         <h1>Search and Filter Data</h1>
 
@@ -148,19 +150,6 @@ function SearchBarWithFilter() {
               placeholder="Filter by date"
             />
           </label>
-        </div>
-      </div>
-
-      {/* Display Filtered Data */}
-      <div className="results-container">
-        <div>
-          <h2>Filtered Results:</h2>
-          {filteredData.length === 0 ? (
-            <p>No results found</p>
-          ) : (
-            // <DataCard filteredData={filteredData} />
-            <DataTable data={filteredData} />
-          )}
         </div>
       </div>
     </div>
