@@ -22,11 +22,17 @@
     flex: 1;
     height: 500px;
     padding-top: 50px;
+    flex-direction: column;
+}
+
+.results-container {
+    display: flex;
+    flex-direction: row;
 }
 
 .footer {
-    padding: 2em;
     text-align: center;
     background: #9b8b5de5;
     color: white;
 }
+
