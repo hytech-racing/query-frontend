@@ -1,29 +1,39 @@
 .results-container {
-  width: 100vw;
-  height: auto;
+  flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
 
-.results-container h2 {
-  width: 100%;
+
+.table-contain-result {
+  text-align: center;
+  flex: 1;
+}
+
+.preview-contain-result {
   text-align: center;
 }
+
+.Search {
+  display: flex;
+  max-width: 360px;
+  font-size: 15px;
+
+}
+
 
 .search-filter-container {
   background-color: #f8f9fa;
   padding: 20px;
   border-radius: 10px;
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  flex: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 2em;
+  max-width: 500px;
 }
 
 .search-filter-container h1 {
-  font-size: 1.8em;
+  font-size: 25px;
   text-align: center;
   color: #333;
   margin-bottom: 20px;
@@ -34,7 +44,6 @@
   padding: 12px;
   border-radius: 30px;
   border: 1px solid #ddd;
-  font-size: 1em;
   outline: none;
   transition: box-shadow 0.2s ease-in-out;
 }
@@ -54,16 +63,13 @@
 .filter-options label {
   display: flex;
   flex-direction: column;
-  font-size: 1em;
   color: #555;
   margin-bottom: 10px;
   flex: 1 1 48%;
 }
 
 .filter-select {
-  margin-top: 8px;
   padding: 10px;
-  font-size: 1em;
   border-radius: 10px;
   border: 1px solid #ddd;
   background-color: #fff;
@@ -76,7 +82,6 @@
 }
 
 .date-picker {
-  margin-top: 8px;
   padding: 10px;
   font-size: 1em;
   border-radius: 10px;
