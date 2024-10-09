@@ -16,7 +16,10 @@
 
 .Search {
   display: flex;
+  max-width: 360px;
+
 }
+
 
 .search-filter-container {
   background-color: #f8f9fa;
@@ -29,7 +32,7 @@
 }
 
 .search-filter-container h1 {
-  font-size: 1.8em;
+  font-size: 1.5em;
   text-align: center;
   color: #333;
   margin-bottom: 20px;
@@ -67,7 +70,6 @@
 }
 
 .filter-select {
-  margin-top: 8px;
   padding: 10px;
   font-size: 1em;
   border-radius: 10px;
@@ -82,7 +84,6 @@
 }
 
 .date-picker {
-  margin-top: 8px;
   padding: 10px;
   font-size: 1em;
   border-radius: 10px;

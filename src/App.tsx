@@ -25,16 +25,12 @@ export default function App() {
               <DataTable data={filteredData} />
             </div>
 
-            <div className="preview-contain-result">
-              <PreviewCard />
-            </div>
+            <SearchBar setFilteredData={setFilteredData} />
           </div>
-          <SearchBar setFilteredData={setFilteredData} />
+          <div className="preview-contain-result">
+            <PreviewCard />
+          </div>
         </div>
-
-        <footer className="footer">
-          <h3>made by Frontend team 2024</h3>
-        </footer>
       </div>
 
       {/* <PreviewCard /> */}
