@@ -1,13 +1,13 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
-import { theme } from "@/theme";
-import Navbar from "@/components/Navbar";
-import SearchBar from "@/components/SearchBar";
-import "@/css/App.css";
-import DataTable from "@/components/DataTable";
-import PreviewCard from "./components/PreviewCard";
-import { data } from "@/data/sampledata";
+import { theme } from "./theme";
+import { data } from "./data/sampledata";
 import { useState } from "react";
+import Navbar from "./components/Navbar";
+import SearchBar from "./components/SearchBar";
+import "./css/App.css";
+import DataTable from "./components/DataTable";
+import PreviewCard from "./components/PreviewCard";
 
 export default function App() {
   const [filteredData, setFilteredData] = useState<MCAPFileInformation[]>(data);
