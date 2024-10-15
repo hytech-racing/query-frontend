@@ -1,6 +1,8 @@
 import React from "react";
 import { Text, Button, Grid, Menu, rem } from "@mantine/core";
-import { IconDownload, IconChevronDown, IconFile } from "@tabler/icons-react";
+import { IconDownload } from "@tabler/icons-react";
+import { IconChevronDown } from "@tabler/icons-react";
+import { IconFile } from "@tabler/icons-react";
 import "@/css/PreviewCard.css";
 
 function PreviewCard() {
