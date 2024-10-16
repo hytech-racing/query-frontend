@@ -19,13 +19,21 @@ export default function App() {
           <Navbar />
         </header>
 
-        <div className="main-content">
+        <div className="main-content static">
           <div className="results-container">
-            <div className="table-contain-result">
-              <DataTable data={filteredData} />
-            </div>
 
-            <SearchBar setFilteredData={setFilteredData} />
+            {/* <div className="scrollable">
+              <div className="table-contain-result">
+                <DataTable data={filteredData} />
+              </div>
+            </div> */}
+            <div className="table-contain-result scrollable">
+                <DataTable data={filteredData} />
+              </div>
+
+            <div className="search-bar">
+              <SearchBar setFilteredData={setFilteredData}/>
+            </div>
           </div>
           <div className="preview-contain-result">
             <PreviewCard />
