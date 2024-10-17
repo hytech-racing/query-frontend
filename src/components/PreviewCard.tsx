@@ -1,4 +1,3 @@
-import React from "react";
 import { Text, Button, Grid, Menu, rem } from "@mantine/core";
 import { IconDownload } from "@tabler/icons-react";
 import { IconChevronDown } from "@tabler/icons-react";

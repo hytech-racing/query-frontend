@@ -11,7 +11,7 @@ const mainLinksData = [
 
 export default function Navbar() {
   const hytechName = "HyTech Racing Checkpoint 1";
-  const [activeLink, setActiveLink] = useState();
+  const [activeLink, setActiveLink] = useState<string>("");
   const links = mainLinksData.map(({ name, url }) => (
     <a
       key={name}
