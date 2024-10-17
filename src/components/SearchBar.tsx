@@ -71,13 +71,15 @@ function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
   }, [searchTerm, filters]);
 
   // Handle filter changes
-  const handleFilterChange = (e) => {
+  function handleFilterChange(
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>,
+  ) {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: value,
     }));
-  };
+  }
 
   return (
     <div className="Search">
