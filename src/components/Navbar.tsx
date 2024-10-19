@@ -1,34 +1,27 @@
 import "@mantine/core/styles.css";
 import {} from "@mantine/core";
 import "@/css/Navbar.css";
-import { useState } from "react";
+import { NavLink } from "react-router-dom";
+
+const BASE_URL = import.meta.env.BASE_URL;
 
 const mainLinksData = [
-  { name: "Files", url: "https://hytechracing.gatech.edu/" },
-  { name: "Documentation", url: "https://hytechracing.gatech.edu/" },
-  { name: "Changelog", url: "https://hytechracing.gatech.edu/" },
+  { name: "Files", url: BASE_URL },
+  { name: "Documentation", url: `${BASE_URL}docs` },
+  { name: "Changelog", url: `${BASE_URL}changelog` },
 ];
 
 export default function Navbar() {
   const hytechName = "HyTech Racing Checkpoint 1";
-  const [activeLink, setActiveLink] = useState();
+
   const links = mainLinksData.map(({ name, url }) => (
-    <a
-      key={name}
-      className={`nav-link ${activeLink === name ? "active" : ""}`}
-      // style={linkStyle(activeLink === link)}
-      // data-active={activeLink === link || undefined}
-      href={url}
-      onClick={() => {
-        setActiveLink(name);
-      }}
-    >
+    <NavLink key={name} className="nav-link" to={url}>
       {name}
-    </a>
+    </NavLink>
   ));
 
   return (
-    <nav>
+    <nav id="navbar">
       <img src="/favicon.ico" alt="Logo" className="navbar-icon" />
       {links}
       {/* Optionally render active link or other content here */}
