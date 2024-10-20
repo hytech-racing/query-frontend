@@ -21,15 +21,12 @@ export default function App() {
 
         <div className="main-content static">
           <div className="results-container">
-
-            {/* <div className="scrollable">
-              <div className="table-contain-result">
+            
+            <div className="table-contain-result scrollable-container">
+              <div className="scrollable">
                 <DataTable data={filteredData} />
               </div>
-            </div> */}
-            <div className="table-contain-result scrollable">
-                <DataTable data={filteredData} />
-              </div>
+            </div>
 
             <div className="search-bar">
               <SearchBar setFilteredData={setFilteredData}/>
