@@ -2,6 +2,7 @@ import "@mantine/core/styles.css";
 import {} from "@mantine/core";
 import "@/css/Navbar.css";
 import { NavLink } from "react-router-dom";
+import FileUpload from "@/components/FileUpload"
 
 const BASE_URL = import.meta.env.BASE_URL;
 
@@ -24,6 +25,10 @@ export default function Navbar() {
     <nav id="navbar">
       <img src="/favicon.ico" alt="Logo" className="navbar-icon" />
       {links}
+
+      {/* Once POST API is out -- Currently WIP */}
+      <FileUpload uploadUrl="http://localhost:8080/api/v2/mcap/upload"/>
+
       {/* Optionally render active link or other content here */}
       <h3 className="hytechName">{hytechName}</h3>
     </nav>
