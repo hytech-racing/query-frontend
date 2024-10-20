@@ -1,14 +1,11 @@
 import "@mantine/core/styles.css";
-import {} from "@mantine/core";
 import "@/css/Navbar.css";
 import { NavLink } from "react-router-dom";
 
-const BASE_URL = import.meta.env.BASE_URL;
-
 const mainLinksData = [
-  { name: "Files", url: BASE_URL },
-  { name: "Documentation", url: `${BASE_URL}docs` },
-  { name: "Changelog", url: `${BASE_URL}changelog` },
+  { name: "Files", url: "/" },
+  { name: "Documentation", url: `/docs` },
+  { name: "Changelog", url: `/changelog` },
 ];
 
 export default function Navbar() {
@@ -22,7 +19,11 @@ export default function Navbar() {
 
   return (
     <nav id="navbar">
-      <img src="/favicon.ico" alt="Logo" className="navbar-icon" />
+      <img
+        src={`${import.meta.env.BASE_URL}favicon.ico`}
+        alt="Logo"
+        className="navbar-icon"
+      />
       {links}
       {/* Optionally render active link or other content here */}
       <h3 className="hytechName">{hytechName}</h3>
