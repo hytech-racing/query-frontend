@@ -22,7 +22,7 @@ nav {
     font-family: 'Roboto', sans-serif;
 }
 
-.nav-link.active {
+#navbar a.active {
     background-color: #FFBF00;
     font-weight: bold;
 }
