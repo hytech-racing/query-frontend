@@ -3,6 +3,9 @@
     height: auto;
     justify-content: center;
     background-color: #F8F9FA;
+    outline-color: #DEE2E6;
+    outline-width: 2px;
+    outline-style: solid;
   }
   
 .image-column {
