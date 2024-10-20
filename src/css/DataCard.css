@@ -39,10 +39,12 @@
   margin: 5px 0;
   font-size: 1em;
   color: #555;
+  
 }
 
 .card-content p strong {
   color: #333;
+
 }
 
 .card-footer {
