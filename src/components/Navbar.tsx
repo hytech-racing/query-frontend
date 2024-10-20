@@ -22,7 +22,7 @@ export default function Navbar() {
 
   return (
     <nav id="navbar">
-      <img src="/favicon.ico" alt="Logo" className="navbar-icon" />
+      {/*<img src="/favicon.ico" alt="Logo" className="navbar-icon" />*/}
       {links}
       {/* Optionally render active link or other content here */}
       <h3 className="hytechName">{hytechName}</h3>
