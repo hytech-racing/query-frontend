@@ -39,23 +39,26 @@ export default function DataTable({ data }: DataTableProps) {
   );
 
   return (
-    <Table.ScrollContainer h="100%" minWidth={800}>
-      <Table
-        stickyHeader
-        striped
-        highlightOnHover={data && data.length > 0}
-        highlightOnHoverColor={theme.primaryColor}
-      >
-        <Table.Thead bg={theme.primaryColor}>
-          <Table.Tr>
-            <Table.Th>Name</Table.Th>
-            <Table.Th>Date</Table.Th>
-            <Table.Th>Location</Table.Th>
-            <Table.Th>Notes</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
-    </Table.ScrollContainer>
+    //should work 
+    <div style={{ height: "calc(100vh - 300px)", overflowY: "auto"}}>
+      <Table.ScrollContainer h="100%" minWidth={800} style={{ overflowY: 'auto' }}>
+        <Table
+          stickyHeader
+          striped
+          highlightOnHover={data && data.length > 0}
+          highlightOnHoverColor={theme.primaryColor}
+        >
+          <Table.Thead bg={theme.primaryColor}>
+            <Table.Tr>
+              <Table.Th>Name</Table.Th>
+              <Table.Th>Date</Table.Th>
+              <Table.Th>Location</Table.Th>
+              <Table.Th>Notes</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      </Table.ScrollContainer>
+    </div>
   );
 }
