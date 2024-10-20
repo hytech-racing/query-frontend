@@ -1,6 +1,7 @@
 import React from "react";
-import { Text, Button, Grid, Menu, rem, Table, ScrollArea } from "@mantine/core";
-import { IconDownload, IconChevronDown, IconFile } from "@tabler/icons-react";
+import { useState } from 'react';
+import { Text, Button, Grid, Menu, rem, Table, ScrollArea, TextInput } from "@mantine/core";
+import { IconDownload, IconChevronDown, IconFile, IconSearch } from "@tabler/icons-react";
 import "@/css/PreviewCard.css";
 
 function PreviewCard() {
@@ -148,33 +149,69 @@ export function DownloadButton({ buttonText }: DownloadButtonProps) {
   );
 }
 
+
+
 export const SchemaTable = () => {
   // Example data for the table
-  const data = Array.from({ length: 20 }, (_, index) => ({
+  const initialData = Array.from({ length: 20 }, (_, index) => ({
     name: `Schema ${index + 1}`,
     value: `${index + 1 + "." + index + "." + index}`,
   }));
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(initialData);
+
+  // Function to filter data based on the search term
+  const handleSearch = (term: string) => {
+    const lowercasedTerm = term.toLowerCase();
+    const filtered = initialData.filter(item => 
+      item.name.toLowerCase().includes(lowercasedTerm) || 
+      item.value.toLowerCase().includes(lowercasedTerm)
+    );
+    setFilteredData(filtered);
+  };
+
   return (
-    <ScrollArea style={{ height: 200, width: 250}}> {/* Scrollable area with height limit */}
-      <Table striped highlightOnHover horizontalSpacing="sm" verticalSpacing="0.01rem" withRowBorders>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Name</Table.Th>
-            <Table.Th>Version</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {data.map((item, index) => (
-            <Table.Tr key={index}>
-              <Table.Td>{item.name}</Table.Td>
-              <Table.Td>{item.value}</Table.Td>
+    <div>
+      {/* Search input */}
+      <TextInput
+        size="xs"
+
+        leftSection={<IconSearch></IconSearch>}
+        placeholder="Search schemas" // very hacky text spacing
+        value={searchTerm}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          handleSearch(e.target.value);
+        }}
+      />
+
+      <ScrollArea style={{ height: 200, width: 250 }}> {/* Scrollable area with height limit */}
+        <Table striped highlightOnHover horizontalSpacing="sm" verticalSpacing="0.01rem" withRowBorders withTableBorder withColumnBorders>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Name</Table.Th>
+              <Table.Th>Version</Table.Th>
             </Table.Tr>
-          ))}
-        </Table.Tbody>
-      </Table>
-    </ScrollArea>
+          </Table.Thead>
+          <Table.Tbody>
+            {filteredData.length > 0 ? (
+              filteredData.map((item, index) => (
+                <Table.Tr key={index} >
+                  <Table.Td style={{textAlign: 'left'}}>{item.name}</Table.Td>
+                  <Table.Td style={{textAlign: 'left'}}>{item.value}</Table.Td>
+                </Table.Tr>
+              ))
+            ) : (
+              <Table.Tr>
+                <Table.Td colSpan={2} style={{ textAlign: 'center' }}>
+                  No results found
+                </Table.Td>
+              </Table.Tr>
+            )}
+          </Table.Tbody>
+        </Table>
+      </ScrollArea>
+    </div>
   );
 };
-
-
