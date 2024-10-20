@@ -12,6 +12,11 @@
     z-index: 1000;
 }
 
+.search-bar {
+    background-color: #e0e0e0;
+    border-radius: 0;
+}
+
 .main-content {
     display: flex;
     flex: 1;
@@ -22,10 +27,7 @@
 
 .results-container {
     display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow-x: auto;
-
+    flex-direction: row;
 }
 
 .footer {
@@ -33,19 +35,4 @@
     background: #9b8b5de5;
     color: white;
 }
-
-/* Made sure the height of search bar and data table matches up */
-.table-search-wrapper {
-    display: flex;
-    align-items: flex-start;
-    bottom: 0;    
-    overflow: hidden;
-}
-
-.search-contain {
-    max-height: calc(100vh - 300px);
-    overflow-y: auto;
-}
-
-
 
