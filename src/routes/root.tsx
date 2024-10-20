@@ -10,16 +10,12 @@ export default function Root() {
   return (
     <>
       <div className="results-container">
-        <div className="table-search-wrapper">
-          <div className="table-contain-result" >
-            <DataTable data={filteredData} />
-          </div>
-          <div className="search-contain">
-            <SearchBar setFilteredData={setFilteredData}/>
-          </div>
+        <div className="table-contain-result">
+          <DataTable data={filteredData} />
         </div>
-      </div>
 
+        <SearchBar setFilteredData={setFilteredData} />
+      </div>
       <div className="preview-contain-result">
         <PreviewCard />
       </div>
