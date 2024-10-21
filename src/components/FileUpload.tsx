@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Modal, Button, Notification, FileInput } from '@mantine/core';
 import '@/css/FileUpload.css';
 
 interface FileUploadProps {
@@ -8,16 +9,15 @@ interface FileUploadProps {
 const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const newFiles = Array.from(event.target.files);
-      setSelectedFiles((prevFiles) => [...prevFiles, ...newFiles]);
+  const handleFileChange = (files: File[]) => {
+    if (files.length > 0) {
+      setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
     }
   };
 
   const handleUpload = async () => {
-    // Once POST API req is out -- Currently WIP so cannot make any progress here
     if (selectedFiles.length > 0) {
       const formData = new FormData();
       selectedFiles.forEach((file) => {
@@ -31,7 +31,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         });
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          setError('Upload failed. Network response was not ok.');
+          return;  
         }
 
         const data = await response.json();
@@ -41,9 +42,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         handleClose();
       } catch (error) {
         console.error('Upload failed:', error);
+        setError('An error occurred while uploading. Please try again.');
       }
     } else {
-      alert('Please select files to upload');
+      setError('Please select files to upload.');
     }
   };
 
@@ -54,39 +56,49 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const handleClose = () => {
     setShowModal(false);
     setSelectedFiles([]);
+    setError(null);
   };
 
   return (
     <div>
-      <button onClick={toggleModal}>Upload Files</button>
+      <Button onClick={toggleModal}>Upload Files</Button>
 
-      {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={handleClose}>&times;</span>
-            <h2>Select files to upload</h2>
-            <div className='files'>
-                <input
-                type="file"
-                multiple
-                onChange={handleFileChange}
-                />
-                {selectedFiles.length > 0 && (
-                <div>
-                    <h3>Chosen Files:</h3>
-                    <ul>
-                    {selectedFiles.map((file, index) => (
-                        <li key={index}>{file.name}</li>
-                    ))}
-                    </ul>
-                </div>
-                )}
+      <Modal
+        opened={showModal}
+        onClose={handleClose}
+        title="Select files to upload"
+        centered
+        style={{ textAlign: "center" }} 
+      >
+        <div className="files">
+          <FileInput
+            multiple
+            accept=".mcap"
+            onChange={handleFileChange}
+            placeholder="Select files to upload"
+            label="Choose files"
+            style={{ display: 'block', margin: '0 auto' }}
+          />
+          {selectedFiles.length > 0 && (
+            <div>
+              <h3>Chosen Files:</h3>
+              <ul>
+                {selectedFiles.map((file, index) => (
+                  <li key={index}>{file.name}</li>
+                ))}
+              </ul>
             </div>
-            <button onClick={handleUpload}>Upload</button>
-            <button onClick={handleClose}>Close</button>
-          </div>
+          )}
         </div>
-      )}
+
+        <Button onClick={handleUpload} style={{ marginTop: 10 }}>Upload</Button>
+
+        {error && (
+          <Notification color="red" onClose={() => setError(null)} style={{ marginTop: 10 }}>
+            {error}
+          </Notification>
+        )}
+      </Modal>
     </div>
   );
 };
