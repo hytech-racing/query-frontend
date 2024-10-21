@@ -49,9 +49,11 @@ function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
 
       // Match filters
       const matchesLocation =
-        filters.location === "" || item.location === filters.location;
+        filters.location === "" ||
+        item.location.toLowerCase() === filters.location.toLowerCase();
       const matchesEventType =
-        filters.eventType === "" || item.event_type === filters.eventType;
+        filters.eventType.toLowerCase() === "" ||
+        item.event_type?.toLowerCase() === filters.eventType.toLowerCase();
       const matchesDate = isDateInRange(
         item.date,
         filters.beforeDate,
