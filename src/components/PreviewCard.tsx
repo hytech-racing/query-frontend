@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from 'react';
 import { Text, Button, Grid, Menu, rem, Table, ScrollArea, TextInput } from "@mantine/core";
 import { IconDownload, IconChevronDown, IconFile, IconSearch } from "@tabler/icons-react";
