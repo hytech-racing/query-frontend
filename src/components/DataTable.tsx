@@ -27,7 +27,7 @@ export default function DataTable({ data }: DataTableProps) {
       <Table.Tr
         key={file.id}
         onClick={() => setSelectedRow(file.id)}
-        fw={selectedRow === file.id ? "bold" : ""}
+        /*fw={selectedRow === file.id ? "bold" : ""}*/
         bg={selectedRow === file.id ? theme.primaryColor : ""}
       >
         <Table.Td>{file.mcap_file_name}</Table.Td>
@@ -43,10 +43,10 @@ export default function DataTable({ data }: DataTableProps) {
       <Table
         striped
         highlightOnHover={data && data.length > 0}
-        highlightOnHoverColor={theme.primaryColor}
+        highlightOnHoverColor={"#F8F9FA"}
       >
         <Table.Thead
-          bg={theme.primaryColor}
+          bg={"#D1BF80"}
           style={{ top: 0, position: "sticky", zIndex: 0 }}
         >
           <Table.Tr>

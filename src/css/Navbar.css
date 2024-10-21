@@ -2,35 +2,34 @@
 
 nav {
     padding: 15px 0;
-    background: linear-gradient(90deg, #b8b5aa, #907d48);
+    background: #B3A36A;
     display: flex;
     height: 50px;
     align-items: center;
 }
 
 .nav-link {
-    padding: 10px 20px;
+    padding: 3px 15px;
     text-decoration: none;
-    color: #495057;
+    color: #FFFFFF;
     background-color: transparent;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     display: inline-block;
-    margin-right: 10px;
+    margin-left: 20px;
     font-family: 'Roboto', sans-serif;
 }
 
-.nav-link.active {
-    background-color: #FFBF00;
+#navbar a.active {
+    background-color: #978750;
     font-weight: bold;
 }
 
 .nav-link:hover {
     color: white;
-    background-color: #FFD700;
-    font-style: oblique;
+    background-color: #D1BF80;
 }
 
 .navbar-icon {
