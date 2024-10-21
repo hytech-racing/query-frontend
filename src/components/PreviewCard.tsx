@@ -1,9 +1,28 @@
-import { useState } from 'react';
-import { Text, Button, Grid, Menu, rem, Table, ScrollArea, TextInput } from "@mantine/core";
-import { IconDownload, IconChevronDown, IconFile, IconSearch } from "@tabler/icons-react";
+import { useState } from "react";
+import {
+  Text,
+  Button,
+  Grid,
+  Menu,
+  rem,
+  Table,
+  ScrollArea,
+  TextInput,
+} from "@mantine/core";
+import {
+  IconDownload,
+  IconChevronDown,
+  IconFile,
+  IconSearch,
+} from "@tabler/icons-react";
 import "@/css/PreviewCard.css";
 
-function PreviewCard() {
+interface PreviewCardProps {
+  selectedRow?: string;
+  selectedData: MCAPFileInformation | undefined;
+}
+
+function PreviewCard({ selectedData }: PreviewCardProps) {
   return (
     <div className="preview-container">
       <Grid>
@@ -25,61 +44,73 @@ function PreviewCard() {
           <SchemaTable></SchemaTable>
         </Grid.Col>
         <Grid.Col span={3} style={{ position: "relative", padding: "10px" }}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="md" fw={700}>
-              run 2024-18-10.mcap
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Date:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              Fri, Oct 18, 2024
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Time:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              12:24:02 PM
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Location:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              MRDC
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Sensors:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              aero_sensor_1
-            </Text>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              padding: 20,
-              gap: "10px",
-            }}
-          >
-            <DownloadButton buttonText="MAT" />
-            <DownloadButton buttonText="MCAP" />
-          </div>
+          {selectedData ? (
+            <>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="md" fw={700}>
+                  run 2024-18-10.mcap
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Date:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  Fri, Oct 18, 2024
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Time:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  12:24:02 PM
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Location:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  MRDC
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Sensors:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  aero_sensor_1
+                </Text>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  padding: 20,
+                  gap: "10px",
+                }}
+              >
+                <DownloadButton buttonText="MAT" />
+                <DownloadButton buttonText="MCAP" />
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="md" fw={700}>
+                  No file selected
+                </Text>
+              </div>
+            </>
+          )}
         </Grid.Col>
       </Grid>
     </div>
@@ -148,8 +179,6 @@ export function DownloadButton({ buttonText }: DownloadButtonProps) {
   );
 }
 
-
-
 export const SchemaTable = () => {
   // Example data for the table
   const initialData = Array.from({ length: 20 }, (_, index) => ({
@@ -157,15 +186,16 @@ export const SchemaTable = () => {
     value: `${index + 1 + "." + index + "." + index}`,
   }));
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(initialData);
 
   // Function to filter data based on the search term
   const handleSearch = (term: string) => {
     const lowercasedTerm = term.toLowerCase();
-    const filtered = initialData.filter(item => 
-      item.name.toLowerCase().includes(lowercasedTerm) || 
-      item.value.toLowerCase().includes(lowercasedTerm)
+    const filtered = initialData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(lowercasedTerm) ||
+        item.value.toLowerCase().includes(lowercasedTerm),
     );
     setFilteredData(filtered);
   };
@@ -175,7 +205,6 @@ export const SchemaTable = () => {
       {/* Search input */}
       <TextInput
         size="xs"
-
         leftSection={<IconSearch></IconSearch>}
         placeholder="Search schemas" // very hacky text spacing
         value={searchTerm}
@@ -185,8 +214,18 @@ export const SchemaTable = () => {
         }}
       />
 
-      <ScrollArea style={{ height: 200, width: 250 }}> {/* Scrollable area with height limit */}
-        <Table striped highlightOnHover horizontalSpacing="sm" verticalSpacing="0.01rem" withRowBorders withTableBorder withColumnBorders>
+      <ScrollArea style={{ height: 200, width: 250 }}>
+        {" "}
+        {/* Scrollable area with height limit */}
+        <Table
+          striped
+          highlightOnHover
+          horizontalSpacing="sm"
+          verticalSpacing="0.01rem"
+          withRowBorders
+          withTableBorder
+          withColumnBorders
+        >
           <Table.Thead>
             <Table.Tr>
               <Table.Th>Name</Table.Th>
@@ -196,14 +235,16 @@ export const SchemaTable = () => {
           <Table.Tbody>
             {filteredData.length > 0 ? (
               filteredData.map((item, index) => (
-                <Table.Tr key={index} >
-                  <Table.Td style={{textAlign: 'left'}}>{item.name}</Table.Td>
-                  <Table.Td style={{textAlign: 'left'}}>{item.value}</Table.Td>
+                <Table.Tr key={index}>
+                  <Table.Td style={{ textAlign: "left" }}>{item.name}</Table.Td>
+                  <Table.Td style={{ textAlign: "left" }}>
+                    {item.value}
+                  </Table.Td>
                 </Table.Tr>
               ))
             ) : (
               <Table.Tr>
-                <Table.Td colSpan={2} style={{ textAlign: 'center' }}>
+                <Table.Td colSpan={2} style={{ textAlign: "center" }}>
                   No results found
                 </Table.Td>
               </Table.Tr>

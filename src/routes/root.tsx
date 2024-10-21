@@ -7,17 +7,25 @@ import PreviewCard from "@/components/PreviewCard";
 
 export default function Root() {
   const [filteredData, setFilteredData] = useState<MCAPFileInformation[]>(data);
+  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [selectedData, setSelectedData] = useState<MCAPFileInformation>();
+
   return (
     <>
       <div className="results-container">
         <div className="table-contain-result">
-          <DataTable data={filteredData} />
+          <DataTable
+            data={filteredData}
+            selectedRow={selectedRow}
+            setSelectedRow={setSelectedRow}
+            setSelectedData={setSelectedData}
+          />
         </div>
 
         <SearchBar setFilteredData={setFilteredData} />
       </div>
       <div className="preview-contain-result">
-        <PreviewCard />
+        <PreviewCard selectedRow={selectedRow} selectedData={selectedData} />
       </div>
     </>
   );
