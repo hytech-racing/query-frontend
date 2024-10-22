@@ -7,7 +7,7 @@
 
 
 .search-filter-container {
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
   width: 100%;
@@ -30,6 +30,7 @@
   border: 1px solid #ddd;
   outline: none;
   transition: box-shadow 0.2s ease-in-out;
+  
 }
 
 .search-bar:focus {
