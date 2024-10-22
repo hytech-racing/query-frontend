@@ -1,6 +1,20 @@
-import { useState } from 'react';
-import { Text, Button, Grid, Menu, rem, Table, ScrollArea, TextInput } from "@mantine/core";
-import { IconDownload, IconChevronDown, IconFile, IconSearch } from "@tabler/icons-react";
+import { useState } from "react";
+import {
+  Text,
+  Button,
+  Grid,
+  Menu,
+  rem,
+  Table,
+  ScrollArea,
+  TextInput,
+} from "@mantine/core";
+import {
+  IconDownload,
+  IconChevronDown,
+  IconFile,
+  IconSearch,
+} from "@tabler/icons-react";
 import "@/css/PreviewCard.css";
 
 function PreviewCard() {
@@ -77,7 +91,7 @@ function PreviewCard() {
               gap: "10px",
             }}
           >
-            <div className='previewFileButtons'>
+            <div className="previewFileButtons">
               <DownloadButton buttonText="MAT" />
               <DownloadButton buttonText="MCAP" />
             </div>
@@ -150,8 +164,6 @@ export function DownloadButton({ buttonText }: DownloadButtonProps) {
   );
 }
 
-
-
 export const SchemaTable = () => {
   // Example data for the table
   const initialData = Array.from({ length: 20 }, (_, index) => ({
@@ -159,15 +171,16 @@ export const SchemaTable = () => {
     value: `${index + 1 + "." + index + "." + index}`,
   }));
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(initialData);
 
   // Function to filter data based on the search term
   const handleSearch = (term: string) => {
     const lowercasedTerm = term.toLowerCase();
-    const filtered = initialData.filter(item => 
-      item.name.toLowerCase().includes(lowercasedTerm) || 
-      item.value.toLowerCase().includes(lowercasedTerm)
+    const filtered = initialData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(lowercasedTerm) ||
+        item.value.toLowerCase().includes(lowercasedTerm),
     );
     setFilteredData(filtered);
   };
@@ -177,7 +190,6 @@ export const SchemaTable = () => {
       {/* Search input */}
       <TextInput
         size="xs"
-
         leftSection={<IconSearch></IconSearch>}
         placeholder="Search schemas" // very hacky text spacing
         value={searchTerm}
@@ -187,8 +199,18 @@ export const SchemaTable = () => {
         }}
       />
 
-      <ScrollArea style={{ height: 200, width: 250, padding: 10}}> {/* Scrollable area with height limit */}
-        <Table striped highlightOnHover horizontalSpacing="sm" verticalSpacing="0.01rem" withRowBorders withTableBorder withColumnBorders>
+      <ScrollArea style={{ height: 200, width: 250, padding: 10 }}>
+        {" "}
+        {/* Scrollable area with height limit */}
+        <Table
+          striped
+          highlightOnHover
+          horizontalSpacing="sm"
+          verticalSpacing="0.01rem"
+          withRowBorders
+          withTableBorder
+          withColumnBorders
+        >
           <Table.Thead>
             <Table.Tr>
               <Table.Th>Name</Table.Th>
@@ -198,14 +220,16 @@ export const SchemaTable = () => {
           <Table.Tbody>
             {filteredData.length > 0 ? (
               filteredData.map((item, index) => (
-                <Table.Tr key={index} >
-                  <Table.Td style={{textAlign: 'left'}}>{item.name}</Table.Td>
-                  <Table.Td style={{textAlign: 'left'}}>{item.value}</Table.Td>
+                <Table.Tr key={index}>
+                  <Table.Td style={{ textAlign: "left" }}>{item.name}</Table.Td>
+                  <Table.Td style={{ textAlign: "left" }}>
+                    {item.value}
+                  </Table.Td>
                 </Table.Tr>
               ))
             ) : (
               <Table.Tr>
-                <Table.Td colSpan={2} style={{ textAlign: 'center' }}>
+                <Table.Td colSpan={2} style={{ textAlign: "center" }}>
                   No results found
                 </Table.Td>
               </Table.Tr>
