@@ -77,8 +77,10 @@ function PreviewCard() {
               gap: "10px",
             }}
           >
-            <DownloadButton buttonText="MAT" />
-            <DownloadButton buttonText="MCAP" />
+            <div className='previewFileButtons'>
+              <DownloadButton buttonText="MAT" />
+              <DownloadButton buttonText="MCAP" />
+            </div>
           </div>
         </Grid.Col>
       </Grid>
@@ -185,7 +187,7 @@ export const SchemaTable = () => {
         }}
       />
 
-      <ScrollArea style={{ height: 200, width: 250 }}> {/* Scrollable area with height limit */}
+      <ScrollArea style={{ height: 200, width: 250, padding: 10}}> {/* Scrollable area with height limit */}
         <Table striped highlightOnHover horizontalSpacing="sm" verticalSpacing="0.01rem" withRowBorders withTableBorder withColumnBorders>
           <Table.Thead>
             <Table.Tr>
