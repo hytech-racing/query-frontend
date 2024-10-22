@@ -9,7 +9,6 @@
     background-color: #f0f0f0;
     width: 100%;
     position: fixed;
-    /*so table doesn't cover it - make sure it stays on top of other elements*/
     z-index: 1000;
 }
 
@@ -18,20 +17,27 @@
     width: 100%;
     display: flex;
     flex: 1;
+    overflow: hidden;
+    height: 500px;
     padding-top: 50px;
     flex-direction: column;
 }
 
 .results-container {
     display: flex;
+    flex: 1;
+    overflow: hidden;
     flex-direction: row;
     height: 70%;
     flex-shrink: 0;
 }
 
 .table-contain-result {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-bottom: 10px;
     width: 80%;
-}
+  }
 
 .footer {
     text-align: center;
