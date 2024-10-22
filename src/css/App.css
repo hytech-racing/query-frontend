@@ -14,9 +14,12 @@
 }
 
 .search-bar {
+    width: 100%;
+}
+
+.search-bar-container {
     width: 30%;
     background-color: #e0e0e0;
-    border-radius: 0;
 }
 
 .main-content {
@@ -31,6 +34,8 @@
 .results-container {
     display: flex;
     flex-direction: row;
+    height: 70%;
+    flex-shrink: 0;
 }
 
 .table-contain-result {
@@ -49,9 +54,13 @@
 
 .scrollable {
     overflow-y: auto;
+    flex-shrink: 0;
 }
 
 .scrollable-container {
-    height: 700px;
     overflow-y: auto;
+}
+
+.preview-contain-result {
+    z-index: 1000;
 }
