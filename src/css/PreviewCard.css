@@ -2,7 +2,10 @@
     width: 100%;
     height: auto;
     justify-content: center;
-    background-color: lightgrey;
+    background-color: #F8F9FA;
+    outline-color: #DEE2E6;
+    outline-width: 2px;
+    outline-style: solid;
   }
   
 .image-column {
@@ -20,3 +23,11 @@
     height: auto; /* Maintains aspect ratio */
     margin: 20px;
 }
+
+@media (max-width: 600px) {
+    .previewFileButtons {
+        display: flex;
+        flex-direction: column;
+        
+    }
+  }
