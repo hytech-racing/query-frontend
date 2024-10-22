@@ -77,8 +77,10 @@ function PreviewCard() {
               gap: "10px",
             }}
           >
-            <DownloadButton buttonText="MAT" />
-            <DownloadButton buttonText="MCAP" />
+            <div className='previewFileButtons'>
+              <DownloadButton buttonText="MAT" />
+              <DownloadButton buttonText="MCAP" />
+            </div>
           </div>
         </Grid.Col>
       </Grid>

@@ -23,3 +23,11 @@
     height: auto; /* Maintains aspect ratio */
     margin: 20px;
 }
+
+@media (max-width: 600px) {
+    .previewFileButtons {
+        display: flex;
+        flex-direction: column;
+        
+    }
+  }
