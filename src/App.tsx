@@ -28,9 +28,12 @@ export default function App() {
               </div>
             </div>
 
-            <div className="search-bar">
-              <SearchBar setFilteredData={setFilteredData}/>
+            <div className="search-bar-container">
+              <div className="search-bar">
+                <SearchBar setFilteredData={setFilteredData}/>
+              </div>
             </div>
+            
           </div>
           <div className="preview-contain-result">
             <PreviewCard />
