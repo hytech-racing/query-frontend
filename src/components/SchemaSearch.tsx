@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Autocomplete } from "@mantine/core";
+import { Autocomplete, Button } from "@mantine/core";
 import "@/css/SchemaSearch.css";
 
 ///Add feature to select multiple schemas
@@ -54,13 +54,19 @@ const SchemaSearch: React.FC<SchemaSearch> = ({ schemas }) => {
         onKeyDown={handleKeyDown}
       />
       <br />
-      <h4>Selected Schema</h4>
-      {selectedSchema.map((str, index) => (
-        <p key={index}>{str}</p>
-      ))}
-      <button className="cancel-button" onClick={clearSchema}>
-        Cancel
-      </button>
+      {selectedSchema.length > 0 && (
+        <div>
+          <h4>Selected Schema</h4>
+          <ul>
+            {selectedSchema.map((str, index) => (
+              <li key={index}>{str}</li>
+            ))}
+          </ul>
+          <Button className="cancel-button" onClick={clearSchema}>
+            Cancel
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
