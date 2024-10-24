@@ -23,6 +23,27 @@ interface PreviewCardProps {
 }
 
 function PreviewCard({ selectedData }: PreviewCardProps) {
+  const formatDate = (dateString: string) => {
+    const [month, day, year] = dateString.split("-");
+    const date = new Date(`${year}-${month}-${day}`);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const formatTime = (dateString: string) => {
+    const [month, day, year] = dateString.split("-");
+    const date = new Date(`${year}-${month}-${day}T00:00:00`);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  };
+
   return (
     <div className="preview-container">
       <Grid>
@@ -48,43 +69,52 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
             <>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Text size="md" fw={700}>
-                  run 2024-18-10.mcap
+                  {selectedData.mcap_file_name}{" "}
                 </Text>
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Text size="xs" fw={700}>
                   Date:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
-                  Fri, Oct 18, 2024
+                  {formatDate(selectedData.date)}{" "}
                 </Text>
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Text size="xs" fw={700}>
                   Time:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
-                  12:24:02 PM
+                  {formatTime(selectedData.date)}{" "}
                 </Text>
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Text size="xs" fw={700}>
                   Location:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
-                  MRDC
+                  {selectedData.location}
                 </Text>
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Text size="xs" fw={700}>
                   Sensors:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
-                  aero_sensor_1
+                  {selectedData.event_type || "N/A"}{" "}
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Notes:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} />
+                <Text size="xs" fw={400}>
+                  {selectedData.notes || "N/A"}{" "}
                 </Text>
               </div>
               <div
@@ -98,8 +128,16 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                   gap: "10px",
                 }}
               >
-                <DownloadButton buttonText="MAT" />
-                <DownloadButton buttonText="MCAP" />
+                <DownloadButton
+                  buttonText="MCAP"
+                  fileName={selectedData.mcap_file_name}
+                  signedUrl={selectedData.signed_url}
+                />
+                <DownloadButton
+                  buttonText="MAT"
+                  fileName={selectedData.mcap_file_name}
+                  signedUrl={"#"}
+                />
               </div>
             </>
           ) : (
@@ -121,9 +159,15 @@ export default PreviewCard;
 
 interface DownloadButtonProps {
   buttonText: string;
+  fileName: string;
+  signedUrl: string | null;
 }
 
-export function DownloadButton({ buttonText }: DownloadButtonProps) {
+export function DownloadButton({
+  buttonText,
+  fileName,
+  signedUrl,
+}: DownloadButtonProps) {
   return (
     <Menu
       transitionProps={{ transition: "pop-top-right" }}
@@ -149,30 +193,11 @@ export function DownloadButton({ buttonText }: DownloadButtonProps) {
               stroke={1.5}
             />
           }
+          onClick={() => {
+            window.open(signedUrl, "_blank");
+          }}
         >
-          File_1
-        </Menu.Item>
-
-        <Menu.Item
-          leftSection={
-            <IconFile
-              style={{ width: rem(16), height: rem(16) }}
-              stroke={1.5}
-            />
-          }
-        >
-          File_2
-        </Menu.Item>
-
-        <Menu.Item
-          leftSection={
-            <IconFile
-              style={{ width: rem(16), height: rem(16) }}
-              stroke={1.5}
-            />
-          }
-        >
-          File_3
+          {fileName}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
