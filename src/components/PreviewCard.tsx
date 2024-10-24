@@ -67,56 +67,26 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
         <Grid.Col span={3} style={{ position: "relative", padding: "10px" }}>
           {selectedData ? (
             <>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Text size="md" fw={700}>
-                  {selectedData.mcap_file_name}{" "}
-                </Text>
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Text size="xs" fw={700}>
-                  Date:{" "}
-                </Text>
-                <span style={{ marginLeft: "5px" }} />
-                <Text size="xs" fw={400}>
-                  {formatDate(selectedData.date)}{" "}
-                </Text>
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Text size="xs" fw={700}>
-                  Time:{" "}
-                </Text>
-                <span style={{ marginLeft: "5px" }} />
-                <Text size="xs" fw={400}>
-                  {formatTime(selectedData.date)}{" "}
-                </Text>
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Text size="xs" fw={700}>
-                  Location:{" "}
-                </Text>
-                <span style={{ marginLeft: "5px" }} />
-                <Text size="xs" fw={400}>
-                  {selectedData.location}
-                </Text>
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Text size="xs" fw={700}>
-                  Sensors:{" "}
-                </Text>
-                <span style={{ marginLeft: "5px" }} />
-                <Text size="xs" fw={400}>
-                  {selectedData.event_type || "N/A"}{" "}
-                </Text>
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Text size="xs" fw={700}>
-                  Notes:{" "}
-                </Text>
-                <span style={{ marginLeft: "5px" }} />
-                <Text size="xs" fw={400}>
-                  {selectedData.notes || "N/A"}{" "}
-                </Text>
-              </div>
+              <PreviewDataDiv name={selectedData.mcap_file_name} val={""} />
+              <PreviewDataDiv
+                name={"Date"}
+                val={formatDate(selectedData.date)}
+              />
+              <PreviewDataDiv
+                name={"Time"}
+                val={formatTime(selectedData.date)}
+              />
+              <PreviewDataDiv
+                name={"Date"}
+                val={formatDate(selectedData.date)}
+              />
+              <PreviewDataDiv name={"Location"} val={selectedData.location} />
+              <PreviewDataDiv
+                name={"Event Type"}
+                val={selectedData.event_type}
+              />
+              <PreviewDataDiv name={"Notes"} val={selectedData.notes} />
+              <PreviewDataDiv name={"Location"} val={selectedData.location} />
               <div
                 style={{
                   display: "flex",
@@ -156,6 +126,24 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
 }
 
 export default PreviewCard;
+
+interface PreviewDataDivProps {
+  name: string;
+  val: string | null;
+}
+export function PreviewDataDiv({ name, val }: PreviewDataDivProps) {
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <Text size="xs" fw={700}>
+        {name}:{" "}
+      </Text>
+      <span style={{ marginLeft: "5px" }} />
+      <Text size="xs" fw={400}>
+        {val}
+      </Text>
+    </div>
+  );
+}
 
 interface DownloadButtonProps {
   buttonText: string;
