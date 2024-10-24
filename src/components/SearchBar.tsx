@@ -4,7 +4,9 @@ import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
 
 interface SearchBarWithFilterProps {
-  setFilteredData: React.Dispatch<React.SetStateAction<MCAPFileInformation[]>>;
+  setFilteredData: React.Dispatch<
+    React.SetStateAction<MCAPFileInformation[] | undefined>
+  >;
 }
 
 function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {

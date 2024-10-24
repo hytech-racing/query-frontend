@@ -11,4 +11,5 @@ type MCAPFileInformation = {
   location: string;
   notes: string?;
   event_type: string?;
+  signed_url: string?;
 };
