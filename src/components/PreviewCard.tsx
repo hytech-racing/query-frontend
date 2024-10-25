@@ -83,9 +83,9 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
               <PreviewDataDiv name={"Location"} val={selectedData.location} />
               <PreviewDataDiv
                 name={"Event Type"}
-                val={selectedData.event_type}
+                val={selectedData.event_type ?? null}
               />
-              <PreviewDataDiv name={"Notes"} val={selectedData.notes} />
+              <PreviewDataDiv name={"Notes"} val={selectedData.notes ?? null} />
               <PreviewDataDiv name={"Location"} val={selectedData.location} />
               <div
                 style={{
@@ -101,7 +101,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 <DownloadButton
                   buttonText="MCAP"
                   fileName={selectedData.mcap_file_name}
-                  signedUrl={selectedData.signed_url}
+                  signedUrl={selectedData.signed_url ?? null}
                 />
                 <DownloadButton
                   buttonText="MAT"
@@ -182,7 +182,7 @@ export function DownloadButton({
             />
           }
           onClick={() => {
-            window.open(signedUrl, "_blank");
+            window.open(signedUrl ?? undefined, "_blank");
           }}
         >
           {fileName}

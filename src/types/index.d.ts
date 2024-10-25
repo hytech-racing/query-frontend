@@ -9,7 +9,16 @@ type MCAPFileInformation = {
   velocity_plot_path: string;
   date: string;
   location: string;
-  notes: string?;
-  event_type: string?;
-  signed_url: string?;
+  notes?: string;
+  event_type?: string;
+  signed_url?: string;
+};
+
+type SearchFilter = {
+  location?: string;
+  date?: string;
+  notes?: string;
+  eventType?: string;
+  afterDate?: string;
+  beforeDate?: string;
 };

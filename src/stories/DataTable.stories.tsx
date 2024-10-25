@@ -107,7 +107,6 @@ const sampleData = [
     date: "08-29-2024",
     location: "MRDC",
     notes: "car did not turn on",
-    event_type: null,
   },
 ];
 
