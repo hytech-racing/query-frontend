@@ -74,13 +74,25 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
   function handleFilterChange(
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>,
   ) {
-    let { name } = e.target;
+    const { name } = e.target;
     const { value } = e.target;
 
-    if (name == "") name = "notes";
+    const filt: SearchFilter = {
+      notes: "",
+      filename: "",
+    };
+
+    if (name == "") {
+      filt.notes = value;
+      filt.filename = value;
+    }
+
+    // console.log("search", filt);
 
     setSearchFilters((prevFilters) => ({
       ...prevFilters,
+      notes: filt.notes,
+      filename: filt.filename,
       [name]: value,
     }));
   }
