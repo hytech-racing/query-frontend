@@ -16,41 +16,104 @@ export default function Root() {
     afterDate: "",
   });
 
+  // const fetchData = async (filters: SearchFilter) => {
+  //   const { location, date, notes, eventType, filename } = filters;
+  //   let { afterDate, beforeDate } = filters;
+
+  //   beforeDate = beforeDate
+  //     ? `${beforeDate?.split("-")[1]}-${beforeDate?.split("-")[2]}-${beforeDate?.split("-")[0]}`
+  //     : undefined;
+  //   afterDate = afterDate
+  //     ? `${afterDate?.split("-")[1]}-${afterDate?.split("-")[2]}-${afterDate?.split("-")[0]}`
+  //     : undefined;
+
+  //   const params: Record<string, string> = {
+  //     ...(location ? { location } : {}),
+  //     ...(eventType ? { eventType } : {}),
+  //     ...(date ? { date } : {}),
+  //     ...(notes ? { notes } : {}),
+  //     ...(filename ? { filename } : {}),
+  //     ...(afterDate ? { afterDate } : {}),
+  //     ...(beforeDate ? { beforeDate } : {}),
+  //   };
+
+  //   const queryString = new URLSearchParams(params).toString();
+
+  //   const res = await fetch(
+  //     `${import.meta.env.VITE_API_URL}/api/v2/mcap/get?${queryString}`,
+  //   );
+
+  //   const data = await res.json();
+  //   return data.data;
+  // };
+
   const fetchData = async (filters: SearchFilter) => {
-    const { location, date, notes, eventType } = filters;
+    const { location, date, notes, eventType, filename } = filters;
     let { afterDate, beforeDate } = filters;
 
     beforeDate = beforeDate
-      ? `${beforeDate?.split("-")[1]}-${beforeDate?.split("-")[2]}-${beforeDate?.split("-")[0]}`
+      ? `${beforeDate.split("-")[1]}-${beforeDate.split("-")[2]}-${beforeDate.split("-")[0]}`
       : undefined;
     afterDate = afterDate
-      ? `${afterDate?.split("-")[1]}-${afterDate?.split("-")[2]}-${afterDate?.split("-")[0]}`
+      ? `${afterDate.split("-")[1]}-${afterDate.split("-")[2]}-${afterDate.split("-")[0]}`
       : undefined;
 
-    // console.log(beforeDate);
-    // console.log(afterDate);
-
-    const params: Record<string, string> = {
-      ...(location ? { location } : {}),
-      ...(eventType ? { eventType } : {}),
-      ...(date ? { date } : {}),
-      ...(notes ? { notes } : {}),
-      ...(afterDate ? { afterDate } : {}),
-      ...(beforeDate ? { beforeDate } : {}),
+    const buildParams = (additionalParams: Record<string, string> = {}) => {
+      return {
+        ...(location ? { location } : {}),
+        ...(eventType ? { eventType } : {}),
+        ...(date ? { date } : {}),
+        ...(afterDate ? { afterDate } : {}),
+        ...(beforeDate ? { beforeDate } : {}),
+        ...additionalParams,
+      };
     };
 
-    const queryString = new URLSearchParams(params).toString();
-    console.log(queryString);
+    if (!notes && !filename) {
+      const params = buildParams();
+      const queryString = new URLSearchParams(params).toString();
 
-    // console.log(queryString);
-    // console.log(searchFilters);
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v2/mcap/get?${queryString}`,
+      );
+      const data = await res.json();
+      return data.data;
+    }
 
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/v2/mcap/get?${queryString}`,
-    );
+    const promises: Promise<Response>[] = [];
 
-    const data = await res.json();
-    return data.data;
+    if (notes) {
+      const paramsNotes = buildParams({ notes });
+      const queryStringNotes = new URLSearchParams(paramsNotes).toString();
+      promises.push(
+        fetch(
+          `${import.meta.env.VITE_API_URL}/api/v2/mcap/get?${queryStringNotes}`,
+        ),
+      );
+    }
+
+    if (filename) {
+      const paramsFilename = buildParams({ filename });
+      const queryStringFilename = new URLSearchParams(
+        paramsFilename,
+      ).toString();
+      promises.push(
+        fetch(
+          `${import.meta.env.VITE_API_URL}/api/v2/mcap/get?${queryStringFilename}`,
+        ),
+      );
+    }
+
+    const results = await Promise.all(promises);
+    const data = await Promise.all(results.map((res) => res.json()));
+
+    const combinedData = data.flatMap((entry) => entry.data || []);
+
+    const uniqueData = Array.from(
+      new Set(combinedData.map((item) => item.id)),
+    ).map((id) => combinedData.find((item) => item.id === id));
+
+    return uniqueData;
   };
 
   const assignData = async () => {
