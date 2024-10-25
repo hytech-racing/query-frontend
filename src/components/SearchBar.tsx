@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { data } from "@/data/sampledata";
+import React, { useState } from "react";
 import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
 
@@ -7,79 +6,80 @@ interface SearchBarWithFilterProps {
   setFilteredData: React.Dispatch<
     React.SetStateAction<MCAPFileInformation[] | undefined>
   >;
+  setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilter>>;
 }
 
-function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
+function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState({
-    location: "",
-    eventType: "",
-    beforeDate: "",
-    afterDate: "",
-  });
-  useEffect(() => {
-    // add code to get data from server here
-    // setFilteredData(serverData)
-  }, []);
+  // const [filters] = useState({
+  //   location: "",
+  //   eventType: "",
+  //   beforeDate: "",
+  //   afterDate: "",
+  // });
 
   // Check if a date is in the valid range
-  const isDateInRange = (
-    dateStr: string,
-    beforeDate: string,
-    afterDate: string,
-  ) => {
-    const itemDate = new Date(dateStr);
-    const before = beforeDate ? new Date(beforeDate) : null;
-    const after = afterDate ? new Date(afterDate) : null;
+  // const isDateInRange = (
+  //   dateStr: string,
+  //   beforeDate: string,
+  //   afterDate: string,
+  // ) => {
+  //   const itemDate = new Date(dateStr);
+  //   const before = beforeDate ? new Date(beforeDate) : null;
+  //   const after = afterDate ? new Date(afterDate) : null;
 
-    if (before && itemDate > before) return false;
-    if (after && itemDate < after) return false;
+  //   if (before && itemDate > before) return false;
+  //   if (after && itemDate < after) return false;
 
-    return true;
-  };
+  //   return true;
+  // };
 
   // Filter logic
-  const handleSearch = () => {
-    const filtered = data.filter((item) => {
-      // Match search term in multiple fields
-      const matchesSearch =
-        item.mcap_file_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.matlab_file_name
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        item.notes?.toLowerCase().includes(searchTerm.toLowerCase());
+  // const handleSearch = () => {
+  //   const filtered = data.filter((item) => {
+  //     // Match search term in multiple fields
+  //     const matchesSearch =
+  //       item.mcap_file_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //       item.matlab_file_name
+  //         .toLowerCase()
+  //         .includes(searchTerm.toLowerCase()) ||
+  //       item.notes?.toLowerCase().includes(searchTerm.toLowerCase());
 
-      // Match filters
-      const matchesLocation =
-        filters.location === "" ||
-        item.location.toLowerCase() === filters.location.toLowerCase();
-      const matchesEventType =
-        filters.eventType.toLowerCase() === "" ||
-        item.event_type?.toLowerCase() === filters.eventType.toLowerCase();
-      const matchesDate = isDateInRange(
-        item.date,
-        filters.beforeDate,
-        filters.afterDate,
-      );
+  //     // Match filters
+  //     const matchesLocation =
+  //       filters.location === "" ||
+  //       item.location.toLowerCase() === filters.location.toLowerCase();
+  //     const matchesEventType =
+  //       filters.eventType.toLowerCase() === "" ||
+  //       item.event_type?.toLowerCase() === filters.eventType.toLowerCase();
+  //     const matchesDate = isDateInRange(
+  //       item.date,
+  //       filters.beforeDate,
+  //       filters.afterDate,
+  //     );
 
-      return (
-        matchesSearch && matchesLocation && matchesEventType && matchesDate
-      );
-    });
-    setFilteredData(filtered);
-  };
+  //     return (
+  //       matchesSearch && matchesLocation && matchesEventType && matchesDate
+  //     );
+  //   });
+  //   setFilteredData(filtered);
+  // };
 
   // Trigger search on filter or search term change
-  useEffect(() => {
-    handleSearch();
-  }, [searchTerm, filters]);
+  // useEffect(() => {
+  //   handleSearch();
+  // }, [searchTerm, filters]);
 
   // Handle filter changes
   function handleFilterChange(
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>,
   ) {
-    const { name, value } = e.target;
-    setFilters((prevFilters) => ({
+    let { name } = e.target;
+    const { value } = e.target;
+
+    if (name == "") name = "notes";
+
+    setSearchFilters((prevFilters) => ({
       ...prevFilters,
       [name]: value,
     }));
@@ -98,7 +98,10 @@ function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
           className="search-bar"
           placeholder="Search by file name or notes..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            handleFilterChange(e);
+            setSearchTerm(e.target.value);
+          }}
         />
 
         {/* Filter Options */}
