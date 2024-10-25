@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { data } from "@/data/sampledata";
 import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
+import SchemaSearch from "@/components/SchemaSearch";
 
 interface SearchBarWithFilterProps {
   setFilteredData: React.Dispatch<React.SetStateAction<MCAPFileInformation[]>>;
@@ -35,6 +36,8 @@ function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
 
     return true;
   };
+
+  const schemas = ["Schema1", "Schema2", "Schema3", "Schema4"];
 
   // Filter logic
   const handleSearch = () => {
@@ -152,6 +155,8 @@ function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
               placeholder="Filter by date"
             />
           </label>
+
+          <SchemaSearch schemas={schemas} />
         </div>
       </div>
     </div>
