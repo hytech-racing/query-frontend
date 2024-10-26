@@ -57,7 +57,7 @@ export default function DataTable({
   );
 
   return (
-    <Table.ScrollContainer h="100%" minWidth={800}>
+    <Table.ScrollContainer h="100%" minWidth={800} style={{ overflowY: 'auto' }}>
       <Table
         stickyHeader
         highlightOnHover={data && data.length > 0}
