@@ -39,7 +39,6 @@ export const data: MCAPFileInformation[] = [
     date: "08-29-2024",
     location: "MRDC",
     notes: "car did jk turn on",
-    event_type: null,
   },
   {
     id: "07a0sdjwne-597f-4637-8b61-6134e75e6f76",
@@ -151,6 +150,5 @@ export const data: MCAPFileInformation[] = [
     date: "08-29-2024",
     location: "MRDC",
     notes: "car did not turn on",
-    event_type: null,
   },
 ];
