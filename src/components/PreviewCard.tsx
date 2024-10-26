@@ -226,7 +226,6 @@ export const SchemaTable = () => {
           handleSearch(e.target.value);
         }}
       />
-
       <ScrollArea style={{ height: 200, width: 250 }}>
         {" "}
         {/* Scrollable area with height limit */}

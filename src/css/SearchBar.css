@@ -1,27 +1,8 @@
-.results-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-   outline-color: #DEE2E6;
-    outline-width: 2px;
-    outline-style: solid;
-}
-
-
-.table-contain-result {
-  text-align: center;
-  flex: 1;
-}
-
-.preview-contain-result {
-  text-align: center;
-}
-
 .Search {
   display: flex;
   max-width: 360px;
   font-size: 15px;
-  
+  overflow: auto;
 }
 
 
