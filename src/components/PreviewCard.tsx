@@ -1,9 +1,49 @@
-import { useState } from 'react';
-import { Text, Button, Grid, Menu, rem, Table, ScrollArea, TextInput } from "@mantine/core";
-import { IconDownload, IconChevronDown, IconFile, IconSearch } from "@tabler/icons-react";
+import { useState } from "react";
+import {
+  Text,
+  Button,
+  Grid,
+  Menu,
+  rem,
+  Table,
+  ScrollArea,
+  TextInput,
+} from "@mantine/core";
+import {
+  IconDownload,
+  IconChevronDown,
+  IconFile,
+  IconSearch,
+} from "@tabler/icons-react";
 import "@/css/PreviewCard.css";
 
-function PreviewCard() {
+interface PreviewCardProps {
+  selectedRow?: string;
+  selectedData: MCAPFileInformation | undefined;
+}
+
+function PreviewCard({ selectedData }: PreviewCardProps) {
+  const formatDate = (dateString: string) => {
+    const [month, day, year] = dateString.split("-");
+    const date = new Date(`${year}-${month}-${day}`);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const formatTime = (dateString: string) => {
+    const [month, day, year] = dateString.split("-");
+    const date = new Date(`${year}-${month}-${day}T00:00:00`);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  };
+
   return (
     <div className="preview-container">
       <Grid>
@@ -25,63 +65,60 @@ function PreviewCard() {
           <SchemaTable></SchemaTable>
         </Grid.Col>
         <Grid.Col span={3} style={{ position: "relative", padding: "10px" }}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="md" fw={700}>
-              run 2024-18-10.mcap
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Date:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              Fri, Oct 18, 2024
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Time:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              12:24:02 PM
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Location:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              MRDC
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Sensors:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              aero_sensor_1
-            </Text>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              padding: 20,
-              gap: "10px",
-            }}
-          >
-            <div className='previewFileButtons'>
-              <DownloadButton buttonText="MAT" />
-              <DownloadButton buttonText="MCAP" />
-            </div>
-          </div>
+          {selectedData ? (
+            <>
+              <PreviewDataDiv name={selectedData.mcap_file_name} val={""} />
+              <PreviewDataDiv
+                name={"Date"}
+                val={formatDate(selectedData.date)}
+              />
+              <PreviewDataDiv
+                name={"Time"}
+                val={formatTime(selectedData.date)}
+              />
+              <PreviewDataDiv
+                name={"Date"}
+                val={formatDate(selectedData.date)}
+              />
+              <PreviewDataDiv name={"Location"} val={selectedData.location} />
+              <PreviewDataDiv
+                name={"Event Type"}
+                val={selectedData.event_type ?? null}
+              />
+              <PreviewDataDiv name={"Notes"} val={selectedData.notes ?? null} />
+              <PreviewDataDiv name={"Location"} val={selectedData.location} />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  padding: 20,
+                  gap: "10px",
+                }}
+              >
+                <DownloadButton
+                  buttonText="MCAP"
+                  fileName={selectedData.mcap_file_name}
+                  signedUrl={selectedData.signed_url ?? null}
+                />
+                <DownloadButton
+                  buttonText="MAT"
+                  fileName={selectedData.mcap_file_name}
+                  signedUrl={"#"}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="md" fw={700}>
+                  No file selected
+                </Text>
+              </div>
+            </>
+          )}
         </Grid.Col>
       </Grid>
     </div>
@@ -90,11 +127,35 @@ function PreviewCard() {
 
 export default PreviewCard;
 
-interface DownloadButtonProps {
-  buttonText: string;
+interface PreviewDataDivProps {
+  name: string;
+  val: string | null;
+}
+export function PreviewDataDiv({ name, val }: PreviewDataDivProps) {
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <Text size="xs" fw={700}>
+        {name}:{" "}
+      </Text>
+      <span style={{ marginLeft: "5px" }} />
+      <Text size="xs" fw={400}>
+        {val}
+      </Text>
+    </div>
+  );
 }
 
-export function DownloadButton({ buttonText }: DownloadButtonProps) {
+interface DownloadButtonProps {
+  buttonText: string;
+  fileName: string;
+  signedUrl: string | null;
+}
+
+export function DownloadButton({
+  buttonText,
+  fileName,
+  signedUrl,
+}: DownloadButtonProps) {
   return (
     <Menu
       transitionProps={{ transition: "pop-top-right" }}
@@ -120,37 +181,16 @@ export function DownloadButton({ buttonText }: DownloadButtonProps) {
               stroke={1.5}
             />
           }
+          onClick={() => {
+            window.open(signedUrl ?? undefined, "_blank");
+          }}
         >
-          File_1
-        </Menu.Item>
-
-        <Menu.Item
-          leftSection={
-            <IconFile
-              style={{ width: rem(16), height: rem(16) }}
-              stroke={1.5}
-            />
-          }
-        >
-          File_2
-        </Menu.Item>
-
-        <Menu.Item
-          leftSection={
-            <IconFile
-              style={{ width: rem(16), height: rem(16) }}
-              stroke={1.5}
-            />
-          }
-        >
-          File_3
+          {fileName}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
   );
 }
-
-
 
 export const SchemaTable = () => {
   // Example data for the table
@@ -159,15 +199,16 @@ export const SchemaTable = () => {
     value: `${index + 1 + "." + index + "." + index}`,
   }));
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(initialData);
 
   // Function to filter data based on the search term
   const handleSearch = (term: string) => {
     const lowercasedTerm = term.toLowerCase();
-    const filtered = initialData.filter(item => 
-      item.name.toLowerCase().includes(lowercasedTerm) || 
-      item.value.toLowerCase().includes(lowercasedTerm)
+    const filtered = initialData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(lowercasedTerm) ||
+        item.value.toLowerCase().includes(lowercasedTerm),
     );
     setFilteredData(filtered);
   };
@@ -177,7 +218,6 @@ export const SchemaTable = () => {
       {/* Search input */}
       <TextInput
         size="xs"
-
         leftSection={<IconSearch></IconSearch>}
         placeholder="Search schemas" // very hacky text spacing
         value={searchTerm}
@@ -186,9 +226,18 @@ export const SchemaTable = () => {
           handleSearch(e.target.value);
         }}
       />
-
-      <ScrollArea style={{ height: 200, width: 250, padding: 10}}> {/* Scrollable area with height limit */}
-        <Table striped highlightOnHover horizontalSpacing="sm" verticalSpacing="0.01rem" withRowBorders withTableBorder withColumnBorders>
+      <ScrollArea style={{ height: 200, width: 250 }}>
+        {" "}
+        {/* Scrollable area with height limit */}
+        <Table
+          striped
+          highlightOnHover
+          horizontalSpacing="sm"
+          verticalSpacing="0.01rem"
+          withRowBorders
+          withTableBorder
+          withColumnBorders
+        >
           <Table.Thead>
             <Table.Tr>
               <Table.Th>Name</Table.Th>
@@ -198,14 +247,16 @@ export const SchemaTable = () => {
           <Table.Tbody>
             {filteredData.length > 0 ? (
               filteredData.map((item, index) => (
-                <Table.Tr key={index} >
-                  <Table.Td style={{textAlign: 'left'}}>{item.name}</Table.Td>
-                  <Table.Td style={{textAlign: 'left'}}>{item.value}</Table.Td>
+                <Table.Tr key={index}>
+                  <Table.Td style={{ textAlign: "left" }}>{item.name}</Table.Td>
+                  <Table.Td style={{ textAlign: "left" }}>
+                    {item.value}
+                  </Table.Td>
                 </Table.Tr>
               ))
             ) : (
               <Table.Tr>
-                <Table.Td colSpan={2} style={{ textAlign: 'center' }}>
+                <Table.Td colSpan={2} style={{ textAlign: "center" }}>
                   No results found
                 </Table.Td>
               </Table.Tr>

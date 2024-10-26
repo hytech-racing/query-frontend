@@ -1,14 +1,32 @@
-import { useState } from "react";
 import { Table } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
 
 interface DataTableProps {
   data?: MCAPFileInformation[];
+  selectedRow?: string;
+  setSelectedRow: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedData: React.Dispatch<
+    React.SetStateAction<MCAPFileInformation | undefined>
+  >;
 }
 
-export default function DataTable({ data }: DataTableProps) {
+export default function DataTable({
+  data,
+  selectedRow,
+  setSelectedRow,
+  setSelectedData,
+}: DataTableProps) {
   const theme = useMantineTheme();
-  const [selectedRow, setSelectedRow] = useState<string>();
+
+  const setPreviewData = (file: MCAPFileInformation) => {
+    if (selectedRow === file.id) {
+      setSelectedRow("");
+      setSelectedData(undefined);
+    } else {
+      setSelectedRow(file.id);
+      setSelectedData(file);
+    }
+  };
 
   const rows = !data ? (
     <Table.Tr>
@@ -26,7 +44,7 @@ export default function DataTable({ data }: DataTableProps) {
     data.map((file) => (
       <Table.Tr
         key={file.id}
-        onClick={() => setSelectedRow(file.id)}
+        onClick={() => setPreviewData(file)}
         /*fw={selectedRow === file.id ? "bold" : ""}*/
         bg={selectedRow === file.id ? theme.primaryColor : ""}
       >
