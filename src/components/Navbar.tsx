@@ -27,8 +27,7 @@ export default function Navbar() {
       />
       {links}
 
-      {/* Once POST API is out -- Currently WIP */}
-      <FileUpload uploadUrl="http://localhost:8080/api/v2/mcap/upload"/>
+      <FileUpload uploadUrl={`${import.meta.env.VITE_API_URL}/api/v2/mcaps`}/>
 
       {/* Optionally render active link or other content here */}
       <h3 className="hytechName">{hytechName}</h3>
