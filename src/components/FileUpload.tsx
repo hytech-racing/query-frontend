@@ -24,50 +24,33 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     if (selectedFiles.length > 0) {
       try {
         //Single file upload -- uploadUrl + /upload DOES NOT WORK
-        // SO --> Used bulk_upload instead
-        if (selectedFiles.length === 1) {
-          const formData = new FormData();
-          formData.append('files', selectedFiles[0]);
-          
-          console.log([...formData]);
-  
-          const response = await fetch(uploadUrl + "/bulk_upload", {
-            method: 'POST',
-            body: formData,
-          });
-  
-          if (!response.ok) {
-            setError(`Failed to upload file: ${selectedFiles[0].name}.`);
-          } else {
-            setSuccess('File uploaded successfully!');
-            console.log('File uploaded successfully:', selectedFiles[0].name);
-          }
-        } else {
-          // Bulk files upload 
-          const formData = new FormData();
-          selectedFiles.forEach(file => {
-              formData.append('files', file);
-          });
+        // SO --> Used bulk_upload instead for one file as well
+        
+        // Bulk files upload 
+        const formData = new FormData();
+        selectedFiles.forEach(file => {
+            formData.append('files', file);
+        });
 
-          try {
-              const response = await fetch(uploadUrl + "/bulk_upload", {
-                  method: 'POST',
-                  body: formData,
-              });
+        try {
+            const response = await fetch(uploadUrl + "/bulk_upload", {
+                method: 'POST',
+                body: formData,
+            });
 
-              if (!response.ok) {
-                  const errorMsg = await response.text();
-                  setError(`Failed to upload: ${errorMsg}`);
-              } else {
-                  const result = await response.json();
-                  setSuccess('File uploaded successfully!');
-                  console.log('Upload successful:', result);
-              }
-          } catch (error) {
-              console.error('Error uploading files:', error);
-              setError('An error occurred during file upload.');
-          }
+            if (!response.ok) {
+                const errorMsg = await response.text();
+                setError(`Failed to upload: ${errorMsg}`);
+            } else {
+                const result = await response.json();
+                setSuccess('File uploaded successfully!');
+                console.log('Upload successful:', result);
+            }
+        } catch (error) {
+            console.error('Error uploading files:', error);
+            setError('An error occurred during file upload.');
         }
+        
   
         setSelectedFiles([]);
       } catch (error) {
