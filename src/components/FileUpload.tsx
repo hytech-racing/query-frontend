@@ -33,7 +33,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         });
 
         try {
-            const response = await fetch(uploadUrl + "/bulk_upload", {
+            const response = await fetch(uploadUrl, {
                 method: 'POST',
                 body: formData,
             });
