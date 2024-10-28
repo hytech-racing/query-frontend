@@ -27,7 +27,7 @@ export default function Navbar() {
       />
       {links}
 
-      <FileUpload uploadUrl={`${import.meta.env.VITE_API_URL}/api/v2/mcaps`}/>
+      <FileUpload uploadUrl={`${import.meta.env.VITE_API_URL}/api/v2/mcaps/bulk_upload`}/>
 
       {/* Optionally render active link or other content here */}
       <h3 className="hytechName">{hytechName}</h3>
