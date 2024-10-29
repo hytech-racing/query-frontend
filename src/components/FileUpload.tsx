@@ -23,35 +23,35 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     setSuccess(null)
     if (selectedFiles.length > 0) {
       try {
-        //Single file upload -- uploadUrl + /upload DOES NOT WORK
-        // SO --> Used bulk_upload instead for one file as well
-        
-        // Bulk files upload 
         const formData = new FormData();
         selectedFiles.forEach(file => {
-            formData.append('files', file);
+          formData.append('files', file);
         });
 
         try {
             const response = await fetch(uploadUrl, {
-                method: 'POST',
-                body: formData,
+              method: 'POST',
+              body: formData,
             });
 
             if (!response.ok) {
+              if (response.status === 503) {
+                const errorMsg = await response.text();
+                setError(`Failed to upload: ${errorMsg} \nTry again in a few minutes!`);
+              } else {
                 const errorMsg = await response.text();
                 setError(`Failed to upload: ${errorMsg}`);
+              }
             } else {
-                const result = await response.json();
-                setSuccess('File uploaded successfully!');
-                console.log('Upload successful:', result);
+              const result = await response.json();
+              setSuccess('File uploaded successfully!');
+              console.log('Upload successful:', result);
             }
         } catch (error) {
-            console.error('Error uploading files:', error);
-            setError('An error occurred during file upload.');
+          console.error('Error uploading files:', error);
+          setError('An error occurred during file upload.');
         }
         
-  
         setSelectedFiles([]);
       } catch (error) {
         console.error('Upload failed:', error);
