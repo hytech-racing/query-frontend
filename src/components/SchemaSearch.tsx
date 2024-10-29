@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Autocomplete, Button } from "@mantine/core";
 import "@/css/SchemaSearch.css";
 
 interface SchemaSearch {
   schemas: string[];
+  clear: boolean;
 }
 
-const SchemaSearch: React.FC<SchemaSearch> = ({ schemas }) => {
+const SchemaSearch: React.FC<SchemaSearch> = ({ schemas, clear }) => {
   const [value, setValue] = useState<string>("");
   const [selectedSchema, setSelected] = useState<string[]>([]);
 
@@ -24,6 +25,7 @@ const SchemaSearch: React.FC<SchemaSearch> = ({ schemas }) => {
 
   const clearSchema = () => {
     setSelected([]);
+    setValue("");
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -32,6 +34,10 @@ const SchemaSearch: React.FC<SchemaSearch> = ({ schemas }) => {
       addSchema(filteredSchemas[0]);
     }
   };
+
+  useEffect(() => {
+    clearSchema();
+  }, [clear]);
 
   return (
     <div>
