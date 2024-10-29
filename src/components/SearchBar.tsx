@@ -17,6 +17,7 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
   const [selectedEventType, setSelectedEventType] = useState("");
   const [beforeDate, setBeforeDate] = useState("");
   const [afterDate, setAfterDate] = useState("");
+  const [clearSchemas, setClearSchemas] = useState(false);
   // const [filters] = useState({
   //   location: "",
   //   eventType: "",
@@ -139,7 +140,7 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
     setSelectedEventType("");
     setBeforeDate("");
     setAfterDate("");
-    clearSchema();
+    setClearSchemas((prev) => !prev);
   };
 
   return (
@@ -219,7 +220,7 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
             />
           </label>
 
-          <SchemaSearch schemas={schemas} />
+          <SchemaSearch schemas={schemas} clear={clearSchemas} />
         </div>
         <div
           style={{
