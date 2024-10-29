@@ -9,9 +9,13 @@ interface SearchBarWithFilterProps {
     React.SetStateAction<MCAPFileInformation[] | undefined>
   >;
   setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilter>>;
+  setSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
+function SearchBarWithFilter({
+  setSearchFilters,
+  setSearch,
+}: SearchBarWithFilterProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedEventType, setSelectedEventType] = useState("");
@@ -143,6 +147,10 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
     setClearSchemas((prev) => !prev);
   };
 
+  const handleSearch = () => {
+    setSearch((prev) => !prev);
+  };
+
   return (
     <div className="Search">
       {/* Display Filtered Data */}
@@ -233,7 +241,7 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
             Clear
           </Button>
           {/* Clear Button */}
-          <Button onClick={handleClear} size="xs">
+          <Button onClick={handleSearch} size="xs">
             Search
           </Button>
         </div>

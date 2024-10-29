@@ -15,6 +15,7 @@ export default function Root() {
     beforeDate: "",
     afterDate: "",
   });
+  const [search, setSearch] = useState<boolean>(false);
 
   // const fetchData = async (filters: SearchFilter) => {
   //   const { location, date, notes, eventType, filename } = filters;
@@ -157,7 +158,7 @@ export default function Root() {
       setFilteredData(sortedData);
     };
     getData();
-  }, [searchFilters]);
+  }, [search]);
 
   return (
     <>
@@ -171,10 +172,7 @@ export default function Root() {
           />
         </div>
 
-        <SearchBar
-          setFilteredData={setFilteredData}
-          setSearchFilters={setSearchFilters}
-        />
+        <SearchBar setSearchFilters={setSearchFilters} setSearch={setSearch} />
       </div>
       <div className="preview-contain-result">
         <PreviewCard selectedRow={selectedRow} selectedData={selectedData} />
