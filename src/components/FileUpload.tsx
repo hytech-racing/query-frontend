@@ -10,6 +10,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleFileChange = (files: File[]) => {
     if (files.length > 0) {
@@ -18,28 +19,40 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   };
 
   const handleUpload = async () => {
+    setError(null);
+    setSuccess(null)
     if (selectedFiles.length > 0) {
-      const formData = new FormData();
-      selectedFiles.forEach((file) => {
-        formData.append('files', file);
-      });
-
       try {
-        const response = await fetch(uploadUrl, {
-          method: 'POST',
-          body: formData,
+        const formData = new FormData();
+        selectedFiles.forEach(file => {
+          formData.append('files', file);
         });
 
-        if (!response.ok) {
-          setError('Upload failed. Network response was not ok.');
-          return;  
-        }
+        try {
+            const response = await fetch(uploadUrl, {
+              method: 'POST',
+              body: formData,
+            });
 
-        const data = await response.json();
-        console.log('Upload successful:', data);
+            if (!response.ok) {
+              if (response.status === 503) {
+                const errorMsg = await response.text();
+                setError(`Failed to upload: ${errorMsg} \nTry again in a few minutes!`);
+              } else {
+                const errorMsg = await response.text();
+                setError(`Failed to upload: ${errorMsg}`);
+              }
+            } else {
+              const result = await response.json();
+              setSuccess('File uploaded successfully!');
+              console.log('Upload successful:', result);
+            }
+        } catch (error) {
+          console.error('Error uploading files:', error);
+          setError('An error occurred during file upload.');
+        }
         
         setSelectedFiles([]);
-        handleClose();
       } catch (error) {
         console.error('Upload failed:', error);
         setError('An error occurred while uploading. Please try again.');
@@ -57,6 +70,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     setShowModal(false);
     setSelectedFiles([]);
     setError(null);
+    setSuccess(null)
   };
 
   return (
@@ -92,7 +106,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         </div>
 
         <Button onClick={handleUpload} style={{ marginTop: 10 }}>Upload</Button>
-
+        {success && (
+          <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
+            {success}
+          </Notification>
+        )}
         {error && (
           <Notification color="red" onClose={() => setError(null)} style={{ marginTop: 10 }}>
             {error}
