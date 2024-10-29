@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
 import SchemaSearch from "@/components/SchemaSearch";
+import { Button } from "@mantine/core";
 
 interface SearchBarWithFilterProps {
   setFilteredData: React.Dispatch<
@@ -12,6 +13,10 @@ interface SearchBarWithFilterProps {
 
 function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedEventType, setSelectedEventType] = useState("");
+  const [beforeDate, setBeforeDate] = useState("");
+  const [afterDate, setAfterDate] = useState("");
   // const [filters] = useState({
   //   location: "",
   //   eventType: "",
@@ -98,7 +103,44 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
       filename: filt.filename,
       [name]: value,
     }));
+
+    // Update local state based on input
+    switch (name) {
+      case "location":
+        setSelectedLocation(value);
+        break;
+      case "eventType":
+        setSelectedEventType(value);
+        break;
+      case "beforeDate":
+        setBeforeDate(value);
+        break;
+      case "afterDate":
+        setAfterDate(value);
+        break;
+      default:
+        break;
+    }
   }
+
+  // Clear all filters and search term
+  const handleClear = () => {
+    setSearchTerm("");
+    setSearchFilters({
+      notes: "",
+      filename: "",
+      location: "",
+      eventType: "",
+      beforeDate: "",
+      afterDate: "",
+    });
+    setSearchTerm("");
+    setSelectedLocation("");
+    setSelectedEventType("");
+    setBeforeDate("");
+    setAfterDate("");
+    clearSchema();
+  };
 
   return (
     <div className="Search">
@@ -125,6 +167,7 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
             Location:
             <select
               name="location"
+              value={selectedLocation}
               onChange={handleFilterChange}
               className="filter-select"
             >
@@ -141,6 +184,7 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
             Event Type:
             <select
               name="eventType"
+              value={selectedEventType}
               onChange={handleFilterChange}
               className="filter-select"
             >
@@ -158,9 +202,9 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
             <input
               type="date"
               name="beforeDate"
+              value={beforeDate}
               onChange={handleFilterChange}
               className="date-picker"
-              placeholder="Filter by date"
             />
           </label>
 
@@ -169,13 +213,28 @@ function SearchBarWithFilter({ setSearchFilters }: SearchBarWithFilterProps) {
             <input
               type="date"
               name="afterDate"
+              value={afterDate}
               onChange={handleFilterChange}
               className="date-picker"
-              placeholder="Filter by date"
             />
           </label>
 
           <SchemaSearch schemas={schemas} />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+          }}
+        >
+          {/* Clear Button */}
+          <Button onClick={handleClear} size="xs">
+            Clear
+          </Button>
+          {/* Clear Button */}
+          <Button onClick={handleClear} size="xs">
+            Search
+          </Button>
         </div>
       </div>
     </div>
