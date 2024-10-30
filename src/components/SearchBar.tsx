@@ -5,9 +5,6 @@ import SchemaSearch from "@/components/SchemaSearch";
 import { Button } from "@mantine/core";
 
 interface SearchBarWithFilterProps {
-  setFilteredData: React.Dispatch<
-    React.SetStateAction<MCAPFileInformation[] | undefined>
-  >;
   setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilter>>;
   setSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }
