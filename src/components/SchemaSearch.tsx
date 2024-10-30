@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import { Autocomplete, Button } from "@mantine/core";
+import React, { useState, useEffect } from "react";
+import { MultiSelect } from "@mantine/core";
 import "@/css/SchemaSearch.css";
 
 interface SchemaSearch {
   schemas: string[];
+  clear: boolean;
 }
 
-const SchemaSearch: React.FC<SchemaSearch> = ({ schemas }) => {
+const SchemaSearch: React.FC<SchemaSearch> = ({ schemas, clear }) => {
   const [value, setValue] = useState<string>("");
-  const [selectedSchema, setSelected] = useState<string[]>([]);
+  //const [selectedSchema, setSelected] = useState<string[]>([]);
 
   const filteredSchemas = schemas.filter((schema) =>
     schema.toLowerCase().includes(value.toLowerCase()),
   );
-
+  {
+    /*
   const addSchema = (newSchema: string) => {
     if (!selectedSchema.includes(newSchema)) {
       setSelected([...selectedSchema, newSchema]);
@@ -21,29 +23,37 @@ const SchemaSearch: React.FC<SchemaSearch> = ({ schemas }) => {
       alert("Schema already selected!");
     }
   };
+  */
+  }
 
   const clearSchema = () => {
-    setSelected([]);
+    //setSelected([]);
+    setValue("");
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && filteredSchemas.length > 0) {
       setValue(filteredSchemas[0]);
-      addSchema(filteredSchemas[0]);
+      //addSchema(filteredSchemas[0]);
     }
   };
 
+  useEffect(() => {
+    clearSchema();
+  }, [clear]);
+
   return (
     <div>
-      <Autocomplete
-        label="Search by Schema"
-        placeholder="Start typing a schema name"
+      <MultiSelect
+        label="Schema"
+        placeholder="Schema name"
         data={filteredSchemas}
-        value={value}
-        onChange={setValue}
         onKeyDown={handleKeyDown}
+        searchable
+        size="xs"
       />
       <br />
+      {/*
       {selectedSchema.length > 0 && (
         <div>
           <label>Selected Schema</label>
@@ -52,11 +62,10 @@ const SchemaSearch: React.FC<SchemaSearch> = ({ schemas }) => {
               <li key={index}>{str}</li>
             ))}
           </ul>
-          <Button className="cancel-button" onClick={clearSchema}>
-            Cancel
-          </Button>
+         
         </div>
       )}
+      */}
     </div>
   );
 };
