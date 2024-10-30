@@ -234,7 +234,7 @@ function SearchBarWithFilter({
           }}
         >
           {/* Clear Button */}
-          <Button onClick={handleClear} size="xs">
+          <Button onClick={handleClear} size="xs" variant="light">
             Clear
           </Button>
           {/* Clear Button */}
