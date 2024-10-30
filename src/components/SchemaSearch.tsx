@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Autocomplete } from "@mantine/core";
+import { MultiSelect } from "@mantine/core";
 import "@/css/SchemaSearch.css";
 
 interface SchemaSearch {
@@ -44,13 +44,13 @@ const SchemaSearch: React.FC<SchemaSearch> = ({ schemas, clear }) => {
 
   return (
     <div>
-      <Autocomplete
-        label="Search by Schema"
-        placeholder="Start typing a schema name"
+      <MultiSelect
+        label="Schema"
+        placeholder="Schema name"
         data={filteredSchemas}
-        value={value}
-        onChange={setValue}
         onKeyDown={handleKeyDown}
+        searchable
+        size="xs"
       />
       <br />
       {/*
