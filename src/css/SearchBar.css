@@ -3,6 +3,8 @@
   max-width: 360px;
   font-size: 15px;
   overflow: auto;
+  padding-bottom: 10px;
+  border-left: solid #D1BF80 2px;
 }
 
 
@@ -12,8 +14,8 @@
   border-radius: 10px;
   width: 100%;
   flex: 1;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 500px;
+  height: fit-content;
 }
 
 .search-filter-container h1 {
