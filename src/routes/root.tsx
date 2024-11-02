@@ -174,9 +174,7 @@ export default function Root() {
 
         <SearchBar setSearchFilters={setSearchFilters} setSearch={setSearch} />
       </div>
-      <div className="preview-contain-result">
-        <PreviewCard selectedRow={selectedRow} selectedData={selectedData} />
-      </div>
+      <PreviewCard selectedRow={selectedRow} selectedData={selectedData} />
     </>
   );
 }
