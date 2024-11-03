@@ -29,22 +29,6 @@ function SearchBarWithFilter({
     const { name } = e.target;
     const { value } = e.target;
 
-    const filt: SearchFilter = {
-      notes: "",
-      filename: "",
-    };
-
-    if (name == "") {
-      filt.notes = value;
-      filt.filename = value;
-    }
-
-    setSearchFilters((prevFilters) => ({
-      ...prevFilters,
-      notes: filt.notes,
-      filename: filt.filename,
-      [name]: value,
-    }));
 
     // Update local state based on input
     switch (name) {
@@ -60,6 +44,9 @@ function SearchBarWithFilter({
       case "afterDate":
         setAfterDate(value);
         break;
+      case "search_text":
+        setSearchTerm(value);
+        break;
       default:
         break;
     }
@@ -69,14 +56,12 @@ function SearchBarWithFilter({
   const handleClear = () => {
     setSearchTerm("");
     setSearchFilters({
-      notes: "",
-      filename: "",
+      searchText: "",
       location: "",
       eventType: "",
       beforeDate: "",
       afterDate: "",
     });
-    setSearchTerm("");
     setSelectedLocation("");
     setSelectedEventType("");
     setBeforeDate("");
@@ -85,7 +70,7 @@ function SearchBarWithFilter({
   };
 
   const handleSearch = () => {
-    setSearch((prev) => !prev);
+    setSearch(true);
   };
 
   return (
@@ -94,16 +79,15 @@ function SearchBarWithFilter({
 
       <div className="search-filter-container">
         <h1>Search and Filter Data</h1>
-
         {/* Search Bar */}
         <input
           type="text"
+          name="search_text"
           className="search-bar"
           placeholder="Search by file name or notes..."
           value={searchTerm}
           onChange={(e) => {
             handleFilterChange(e);
-            setSearchTerm(e.target.value);
           }}
         />
 
@@ -144,7 +128,7 @@ function SearchBarWithFilter({
           </label>
 
           <label>
-            Before Date:
+            Start Date:
             <input
               type="date"
               name="beforeDate"
@@ -155,7 +139,7 @@ function SearchBarWithFilter({
           </label>
 
           <label>
-            After Date:
+            End Date:
             <input
               type="date"
               name="afterDate"
