@@ -3,7 +3,6 @@ import SearchBar from "@/components/SearchBar";
 import "@/css/Root.css";
 import DataTable from "@/components/DataTable";
 import PreviewCard from "@/components/PreviewCard";
-import { location } from "@/data/dataFilters";
 
 export default function Root() {
   const [filteredData, setFilteredData] = useState<MCAPFileInformation[]>();
