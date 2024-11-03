@@ -27,6 +27,7 @@ export const data: MCAPFileInformation[] = [
         signed_url: "bar",
         file_name: "far",
       }],
+    },
   },
   {
     id: "0723984238489-21312-4e75e6f76",
@@ -56,6 +57,7 @@ export const data: MCAPFileInformation[] = [
         signed_url: "bar",
         file_name: "far",
       }],
+    },
   },
   {
     id: "091823792-2321312-a081",
@@ -84,7 +86,8 @@ export const data: MCAPFileInformation[] = [
         signed_url: "bar",
         file_name: "far",
       }],
-  },
+    },
+  },  
   {
     id: "07a0sdjwne-597f-4637-8b61-6134e75e6f76",
     mcap_file_name: "file2.3.mcap",
@@ -113,6 +116,7 @@ export const data: MCAPFileInformation[] = [
         signed_url: "bar",
         file_name: "far",
       }],
+    },
   },
   {
     id: "605deb4b-44a8-4801-9da6-a671c1d3eccd",
@@ -142,6 +146,7 @@ export const data: MCAPFileInformation[] = [
         signed_url: "bar",
         file_name: "far",
       }],
+    },
   },
   {
     id: "fb48f265-a44a-4fd5-a873-26cd581950a0",
@@ -171,6 +176,7 @@ export const data: MCAPFileInformation[] = [
         signed_url: "bar",
         file_name: "far",
       }],
+    },
   },
   {
     id: "ba1ae40d-d013-4fe4-ac80-8e129fbe97b9",
@@ -200,6 +206,7 @@ export const data: MCAPFileInformation[] = [
         signed_url: "bar",
         file_name: "far",
       }],
+    },
   },
   {
     id: "55c2ae28-294e-45fd-9afb-a19e7499a1c2",
@@ -229,6 +236,7 @@ export const data: MCAPFileInformation[] = [
         signed_url: "bar",
         file_name: "far",
       }],
+    },
   },
   {
     id: "25d4c874-6310-448b-9984-16fec5f1cb8c",
@@ -258,6 +266,7 @@ export const data: MCAPFileInformation[] = [
         signed_url: "bar",
         file_name: "far",
       }],
+    },
   },
   {
     id: "07a3c667-597f-4637-8b61-6134e75e6f76",
@@ -287,6 +296,7 @@ export const data: MCAPFileInformation[] = [
         signed_url: "bar",
         file_name: "far",
       }],
+    },
   },
   {
     id: "01c1e581-6cf9-42f4-a6d0-0c41442fa081",
@@ -316,4 +326,5 @@ export const data: MCAPFileInformation[] = [
         file_name: "far",
       }],
   },
+  }
 ];
