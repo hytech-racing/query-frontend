@@ -1,10 +1,4 @@
-.schema-autocomplete {
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-  }
-.cancel-button {
-  background-color: #978750;
-  
+.schemasearchbutton {
+  display: "flex";
+
 }

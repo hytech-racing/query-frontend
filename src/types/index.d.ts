@@ -1,5 +1,21 @@
 type MCAPFileInformation = {
   id: string;
+  car_model: string;
+  schema_versions?: null;
+  mcap_files: {
+    signed_url: string;
+    file_name: string;
+  }[];
+  mat_files: {
+    signed_url: string;
+    file_name: string;
+  }[];
+  content_files: {
+    vn_lat_lon_plot: {
+      signed_url: string;
+      file_name: string;
+    }[];
+  };
   mcap_file_name: string;
   matlab_file_name: string;
   aws_bucket: string;

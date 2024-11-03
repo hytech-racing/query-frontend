@@ -17,55 +17,28 @@ export default function Root() {
   });
   const [search, setSearch] = useState<boolean>(false);
 
-  // const fetchData = async (filters: SearchFilter) => {
-  //   const { location, date, notes, eventType, filename } = filters;
-  //   let { afterDate, beforeDate } = filters;
-
-  //   beforeDate = beforeDate
-  //     ? `${beforeDate?.split("-")[1]}-${beforeDate?.split("-")[2]}-${beforeDate?.split("-")[0]}`
-  //     : undefined;
-  //   afterDate = afterDate
-  //     ? `${afterDate?.split("-")[1]}-${afterDate?.split("-")[2]}-${afterDate?.split("-")[0]}`
-  //     : undefined;
-
-  //   const params: Record<string, string> = {
-  //     ...(location ? { location } : {}),
-  //     ...(eventType ? { eventType } : {}),
-  //     ...(date ? { date } : {}),
-  //     ...(notes ? { notes } : {}),
-  //     ...(filename ? { filename } : {}),
-  //     ...(afterDate ? { afterDate } : {}),
-  //     ...(beforeDate ? { beforeDate } : {}),
-  //   };
-
-  //   const queryString = new URLSearchParams(params).toString();
-
-  //   const res = await fetch(
-  //     `${import.meta.env.VITE_API_URL}/api/v2/mcap/get?${queryString}`,
-  //   );
-
-  //   const data = await res.json();
-  //   return data.data;
-  // };
+  const formatDate = (dateStr: string) => {
+    const [year, month, day] = dateStr.split("-");
+    if (month.length !== 2 || day.length !== 2 || year.length !== 4) {
+        throw new Error(`Invalid date format: ${dateStr}`);
+    }
+    return new Date(`${year}-${month}-${day}T00:00:00.000Z`).toISOString();
+  };
 
   const fetchData = async (filters: SearchFilter) => {
     const { location, date, notes, eventType, filename } = filters;
     let { afterDate, beforeDate } = filters;
-
-    beforeDate = beforeDate
-      ? `${beforeDate.split("-")[1]}-${beforeDate.split("-")[2]}-${beforeDate.split("-")[0]}`
-      : undefined;
-    afterDate = afterDate
-      ? `${afterDate.split("-")[1]}-${afterDate.split("-")[2]}-${afterDate.split("-")[0]}`
-      : undefined;
+    
+    beforeDate = beforeDate ? formatDate(beforeDate) : undefined;
+    afterDate = afterDate ? formatDate(afterDate) : undefined;
 
     const buildParams = (additionalParams: Record<string, string> = {}) => {
       return {
         ...(location ? { location } : {}),
         ...(eventType ? { eventType } : {}),
         ...(date ? { date } : {}),
-        ...(afterDate ? { afterDate } : {}),
-        ...(beforeDate ? { beforeDate } : {}),
+        ...(afterDate ? { after_date: afterDate } : {}),
+        ...(beforeDate ? { before_date: beforeDate } : {}),
         ...additionalParams,
       };
     };
@@ -75,7 +48,7 @@ export default function Root() {
       const queryString = new URLSearchParams(params).toString();
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v2/mcap/get?${queryString}`,
+        `${import.meta.env.VITE_API_URL}/api/v2/mcaps?${queryString}`,
       );
       const data = await res.json();
       return data.data;
@@ -88,7 +61,7 @@ export default function Root() {
       const queryStringNotes = new URLSearchParams(paramsNotes).toString();
       promises.push(
         fetch(
-          `${import.meta.env.VITE_API_URL}/api/v2/mcap/get?${queryStringNotes}`,
+          `${import.meta.env.VITE_API_URL}/api/v2/mcaps?${queryStringNotes}`,
         ),
       );
     }
@@ -100,7 +73,7 @@ export default function Root() {
       ).toString();
       promises.push(
         fetch(
-          `${import.meta.env.VITE_API_URL}/api/v2/mcap/get?${queryStringFilename}`,
+          `${import.meta.env.VITE_API_URL}/api/v2/mcaps?${queryStringFilename}`,
         ),
       );
     }

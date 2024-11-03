@@ -17,7 +17,7 @@ export default function DataTable({
   setSelectedData,
 }: DataTableProps) {
   const theme = useMantineTheme();
-
+  
   const setPreviewData = (file: MCAPFileInformation) => {
     if (selectedRow === file.id) {
       setSelectedRow("");
@@ -26,6 +26,12 @@ export default function DataTable({
       setSelectedRow(file.id);
       setSelectedData(file);
     }
+  };
+
+  // Take out when API server team implements filename id in their get route
+  const getFileNameWithoutExtension = (fileNameWithExtension: string) => {
+    const lastDotIndex = fileNameWithExtension.lastIndexOf('.');
+    return lastDotIndex !== -1 ? fileNameWithExtension.slice(0, lastDotIndex) : fileNameWithExtension;
   };
 
   const rows = !data ? (
@@ -45,17 +51,18 @@ export default function DataTable({
       <Table.Tr
         key={file.id}
         onClick={() => setPreviewData(file)}
-        /*fw={selectedRow === file.id ? "bold" : ""}*/
+        
         bg={selectedRow === file.id ? theme.primaryColor : ""}
       >
-        <Table.Td>{file.mcap_file_name}</Table.Td>
+        <Table.Td>{getFileNameWithoutExtension(file.mcap_files[0].file_name)}</Table.Td>
         <Table.Td>{file.date}</Table.Td>
         <Table.Td>{file.location}</Table.Td>
-        <Table.Td>{file.notes}</Table.Td>
+        
+        {/* Change back to notes once notes field is implemented in the server */}
+        <Table.Td>{file.car_model}</Table.Td>
       </Table.Tr>
     ))
   );
-
   return (
     <Table.ScrollContainer h="100%" minWidth={800} style={{ overflowY: 'auto' }}>
       <Table
