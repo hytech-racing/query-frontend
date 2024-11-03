@@ -24,8 +24,7 @@ interface PreviewCardProps {
 
 function PreviewCard({ selectedData }: PreviewCardProps) {
   const formatDate = (dateString: string) => {
-    const [month, day, year] = dateString.split("-");
-    const date = new Date(`${year}-${month}-${day}`);
+    const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       weekday: "short",
       year: "numeric",
@@ -34,22 +33,29 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     });
   };
 
-  const formatTime = (dateString: string) => {
-    const [month, day, year] = dateString.split("-");
-    const date = new Date(`${year}-${month}-${day}T00:00:00`);
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
+  // Take out when API server team implements filename id in their get route
+  const getFileNameWithoutExtension = (fileNameWithExtension: string) => {
+    const lastDotIndex = fileNameWithExtension.lastIndexOf('.');
+    return lastDotIndex !== -1 ? fileNameWithExtension.slice(0, lastDotIndex) : fileNameWithExtension;
   };
 
+  const imageUrl = selectedData?.content_files?.vn_lat_lon_plot?.[0]?.signed_url ?? "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"; // Fallback to a default image if none exists.
+  
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true, 
+    });
+  };
   return (
     <div className="preview-container">
       <Grid>
         <Grid.Col span={3} className="image-column">
           <img
-            src="https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"
+            src={imageUrl}
             alt="Preview"
             className="preview-image"
           />
@@ -67,10 +73,10 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
         <Grid.Col span={3} style={{ position: "relative", padding: "10px" }}>
           {selectedData ? (
             <>
-              <PreviewDataDiv name={selectedData.mcap_file_name} val={""} />
+              <PreviewDataDiv name={getFileNameWithoutExtension(selectedData.mcap_files[0].file_name)} val={""} />
               <PreviewDataDiv
-                name={"Date"}
-                val={formatDate(selectedData.date)}
+                name={"Car Model"}
+                val={selectedData.car_model ?? "NA"}
               />
               <PreviewDataDiv
                 name={"Time"}
@@ -100,13 +106,14 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
               >
                 <DownloadButton
                   buttonText="MCAP"
-                  fileName={selectedData.mcap_file_name}
-                  signedUrl={selectedData.signed_url ?? null}
+                  //One file for now -- can make it dynamically read several files at a time
+                  fileName={selectedData.mcap_files[0].file_name}
+                  signedUrl={selectedData.mcap_files[0].signed_url ?? null}
                 />
                 <DownloadButton
                   buttonText="MAT"
-                  fileName={selectedData.mcap_file_name}
-                  signedUrl={"#"}
+                  fileName={selectedData.mat_files[0].file_name}
+                  signedUrl={selectedData.mat_files[0].signed_url}
                 />
               </div>
             </>
@@ -175,6 +182,9 @@ export function DownloadButton({
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item
+          style={{
+            fontSize: '10px',
+          }}
           leftSection={
             <IconFile
               style={{ width: rem(16), height: rem(16) }}
@@ -226,7 +236,7 @@ export const SchemaTable = () => {
           handleSearch(e.target.value);
         }}
       />
-      <ScrollArea style={{ height: 200, width: 250 }}>
+      <ScrollArea style={{ height: 180, width: 250 , padding: 10}}>
         {" "}
         {/* Scrollable area with height limit */}
         <Table
