@@ -19,66 +19,8 @@ function SearchBarWithFilter({
   const [beforeDate, setBeforeDate] = useState("");
   const [afterDate, setAfterDate] = useState("");
   const [clearSchemas, setClearSchemas] = useState(false);
-  // const [filters] = useState({
-  //   location: "",
-  //   eventType: "",
-  //   beforeDate: "",
-  //   afterDate: "",
-  // });
-
-  // Check if a date is in the valid range
-  // const isDateInRange = (
-  //   dateStr: string,
-  //   beforeDate: string,
-  //   afterDate: string,
-  // ) => {
-  //   const itemDate = new Date(dateStr);
-  //   const before = beforeDate ? new Date(beforeDate) : null;
-  //   const after = afterDate ? new Date(afterDate) : null;
-
-  //   if (before && itemDate > before) return false;
-  //   if (after && itemDate < after) return false;
-
-  //   return true;
-  // };
 
   const schemas = ["Schema1", "Schema2", "Schema3", "Schema4"];
-
-  // Filter logic
-  // const handleSearch = () => {
-  //   const filtered = data.filter((item) => {
-  //     // Match search term in multiple fields
-  //     const matchesSearch =
-  //       item.mcap_file_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       item.matlab_file_name
-  //         .toLowerCase()
-  //         .includes(searchTerm.toLowerCase()) ||
-  //       item.notes?.toLowerCase().includes(searchTerm.toLowerCase());
-
-  //     // Match filters
-  //     const matchesLocation =
-  //       filters.location === "" ||
-  //       item.location.toLowerCase() === filters.location.toLowerCase();
-  //     const matchesEventType =
-  //       filters.eventType.toLowerCase() === "" ||
-  //       item.event_type?.toLowerCase() === filters.eventType.toLowerCase();
-  //     const matchesDate = isDateInRange(
-  //       item.date,
-  //       filters.beforeDate,
-  //       filters.afterDate,
-  //     );
-
-  //     return (
-  //       matchesSearch && matchesLocation && matchesEventType && matchesDate
-  //     );
-  //   });
-  //   setFilteredData(filtered);
-  // };
-
-  // Trigger search on filter or search term change
-  // useEffect(() => {
-  //   handleSearch();
-  // }, [searchTerm, filters]);
 
   // Handle filter changes
   function handleFilterChange(
@@ -96,8 +38,6 @@ function SearchBarWithFilter({
       filt.notes = value;
       filt.filename = value;
     }
-
-    // console.log("search", filt);
 
     setSearchFilters((prevFilters) => ({
       ...prevFilters,
@@ -231,6 +171,7 @@ function SearchBarWithFilter({
           style={{
             display: "flex",
             gap: "10px",
+            marginTop: "10px"
           }}
         >
           {/* Clear Button */}
