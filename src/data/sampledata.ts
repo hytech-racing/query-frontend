@@ -12,6 +12,22 @@ export const data: MCAPFileInformation[] = [
     location: "MRDC",
     notes: "car ran!",
     event_type: "acceleration",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "0723984238489-21312-4e75e6f76",
@@ -26,6 +42,22 @@ export const data: MCAPFileInformation[] = [
     location: "rome",
     notes: "car performed nice",
     event_type: "autocross",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "091823792-2321312-a081",
@@ -39,7 +71,23 @@ export const data: MCAPFileInformation[] = [
     date: "08-29-2024",
     location: "MRDC",
     notes: "car did jk turn on",
-  },
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
+  },  
   {
     id: "07a0sdjwne-597f-4637-8b61-6134e75e6f76",
     mcap_file_name: "file2.3.mcap",
@@ -53,6 +101,22 @@ export const data: MCAPFileInformation[] = [
     location: "rome",
     notes: "car did not latch",
     event_type: "autocross",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "605deb4b-44a8-4801-9da6-a671c1d3eccd",
@@ -67,6 +131,22 @@ export const data: MCAPFileInformation[] = [
     location: "MRDC",
     notes: "car failed",
     event_type: "acceleration",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "fb48f265-a44a-4fd5-a873-26cd581950a0",
@@ -81,6 +161,22 @@ export const data: MCAPFileInformation[] = [
     location: "Michigan",
     notes: "car did not run",
     event_type: "endurance",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "ba1ae40d-d013-4fe4-ac80-8e129fbe97b9",
@@ -95,6 +191,22 @@ export const data: MCAPFileInformation[] = [
     location: "MRDC",
     notes: "car ran!",
     event_type: "acceleration",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "55c2ae28-294e-45fd-9afb-a19e7499a1c2",
@@ -109,23 +221,25 @@ export const data: MCAPFileInformation[] = [
     location: "SCC",
     notes: "brakes were not the best",
     event_type: "skidpad",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
-    id: "25d4c874-6310-448b-9984-16fec5f1cb8c",
-    mcap_file_name: "file5.mcap",
-    matlab_file_name: "file5.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
-    date: "09-22-2024",
-    location: "MRDC",
-    notes: "drivebrain stopped recording mcaps",
-    event_type: "skidpad",
-  },
-  {
-    id: "07a3c667-597f-4637-8b61-6134e75e6f76",
+    id: "3b1cd0af-64c7-4b63-8de9-86c1238451f1",
     mcap_file_name: "file6.mcap",
     matlab_file_name: "file6.mat",
     aws_bucket: "bucket",
@@ -133,22 +247,25 @@ export const data: MCAPFileInformation[] = [
     mat_path: "/path/to/s3/object",
     vn_lat_lon_path: "/path/to/s3/object",
     velocity_plot_path: "/path/to/s3/object",
-    date: "08-16-2024",
-    location: "rome",
-    notes: "car performed beautifully",
-    event_type: "autocross",
-  },
-  {
-    id: "01c1e581-6cf9-42f4-a6d0-0c41442fa081",
-    mcap_file_name: "file7.mcap",
-    matlab_file_name: "file7.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
-    date: "08-29-2024",
-    location: "MRDC",
-    notes: "car did not turn on",
+    date: "08-21-2024",
+    location: "SCC",
+    notes: "brakes worked better",
+    event_type: "endurance",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
 ];

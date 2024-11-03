@@ -24,6 +24,22 @@ const sampleData = [
     location: "MRDC",
     notes: "car ran!",
     event_type: "acceleration",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "fb48f265-a44a-4fd5-a873-26cd581950a0",
@@ -38,6 +54,22 @@ const sampleData = [
     location: "Michigan",
     notes: "car did not run",
     event_type: "endurance",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "ba1ae40d-d013-4fe4-ac80-8e129fbe97b9",
@@ -52,6 +84,22 @@ const sampleData = [
     location: "MRDC",
     notes: "car ran!",
     event_type: "acceleration",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "55c2ae28-294e-45fd-9afb-a19e7499a1c2",
@@ -66,6 +114,22 @@ const sampleData = [
     location: "SCC",
     notes: "brakes were not the best",
     event_type: "skidpad",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "25d4c874-6310-448b-9984-16fec5f1cb8c",
@@ -80,6 +144,22 @@ const sampleData = [
     location: "MRDC",
     notes: "drivebrain stopped recording mcaps",
     event_type: "skidpad",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "07a3c667-597f-4637-8b61-6134e75e6f76",
@@ -94,6 +174,22 @@ const sampleData = [
     location: "rome",
     notes: "car performed beautifully",
     event_type: "autocross",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
   {
     id: "01c1e581-6cf9-42f4-a6d0-0c41442fa081",
@@ -107,6 +203,22 @@ const sampleData = [
     date: "08-29-2024",
     location: "MRDC",
     notes: "car did not turn on",
+    car_model: "HT08",
+    schema_versions: null,
+    mcap_files: [{
+      signed_url: "yar",
+      file_name: "yar",
+    }],
+    mat_files: [{
+      signed_url: "har",
+      file_name: "har",
+    }],
+    content_files: {
+      vn_lat_lon_plot: [{
+        signed_url: "bar",
+        file_name: "far",
+      }],
+    },
   },
 ];
 
