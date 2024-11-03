@@ -13,7 +13,7 @@ export const data: MCAPFileInformation[] = [
     notes: "car ran!",
     event_type: "acceleration",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
@@ -43,7 +43,7 @@ export const data: MCAPFileInformation[] = [
     notes: "car performed nice",
     event_type: "autocross",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
@@ -72,7 +72,7 @@ export const data: MCAPFileInformation[] = [
     location: "MRDC",
     notes: "car did jk turn on",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
@@ -102,7 +102,7 @@ export const data: MCAPFileInformation[] = [
     notes: "car did not latch",
     event_type: "autocross",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
@@ -132,7 +132,7 @@ export const data: MCAPFileInformation[] = [
     notes: "car failed",
     event_type: "acceleration",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
@@ -162,7 +162,7 @@ export const data: MCAPFileInformation[] = [
     notes: "car did not run",
     event_type: "endurance",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
@@ -192,7 +192,7 @@ export const data: MCAPFileInformation[] = [
     notes: "car ran!",
     event_type: "acceleration",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
@@ -222,7 +222,7 @@ export const data: MCAPFileInformation[] = [
     notes: "brakes were not the best",
     event_type: "skidpad",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
@@ -252,7 +252,7 @@ export const data: MCAPFileInformation[] = [
     notes: "drivebrain stopped recording mcaps",
     event_type: "skidpad",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
@@ -282,7 +282,7 @@ export const data: MCAPFileInformation[] = [
     notes: "car performed beautifully",
     event_type: "autocross",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
@@ -311,7 +311,7 @@ export const data: MCAPFileInformation[] = [
     location: "MRDC",
     notes: "car did not turn on",
     car_model: "HT08",
-    schema_versions?: null,
+    schema_versions: null,
     mcap_files: [{
       signed_url: "yar",
       file_name: "yar",
