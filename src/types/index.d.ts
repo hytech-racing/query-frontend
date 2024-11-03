@@ -32,9 +32,8 @@ type MCAPFileInformation = {
 
 type SearchFilter = {
   location?: string;
-  filename?: string;
+  searchText?: string;
   date?: string;
-  notes?: string;
   eventType?: string;
   afterDate?: string;
   beforeDate?: string;
