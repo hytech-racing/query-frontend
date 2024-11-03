@@ -14,9 +14,9 @@ export default function Root() {
     eventType: "",
     beforeDate: "",
     afterDate: "",
+    searchText: "",
   });
   const [search, setSearch] = useState<boolean>(false);
-
   const formatDate = (dateStr: string) => {
     const [year, month, day] = dateStr.split("-");
     if (month.length !== 2 || day.length !== 2 || year.length !== 4) {
@@ -26,87 +26,38 @@ export default function Root() {
   };
 
   const fetchData = async (filters: SearchFilter) => {
-    const { location, date, notes, eventType, filename } = filters;
+    const { location, date, eventType, searchText } = filters;
     let { afterDate, beforeDate } = filters;
     
     beforeDate = beforeDate ? formatDate(beforeDate) : undefined;
     afterDate = afterDate ? formatDate(afterDate) : undefined;
-
-    const buildParams = (additionalParams: Record<string, string> = {}) => {
-      return {
-        ...(location ? { location } : {}),
-        ...(eventType ? { eventType } : {}),
-        ...(date ? { date } : {}),
-        ...(afterDate ? { after_date: afterDate } : {}),
-        ...(beforeDate ? { before_date: beforeDate } : {}),
-        ...additionalParams,
-      };
+    const params = {
+      ...(location ? { location } : {}),
+      ...(eventType ? { eventType } : {}),
+      ...(date ? { date } : {}),
+      ...(afterDate ? { after_date: afterDate } : {}),
+      ...(beforeDate ? { before_date: beforeDate } : {}),
+      ...(searchText ? { search_text: searchText } : {}),
     };
 
-    if (!notes && !filename) {
-      const params = buildParams();
-      const queryString = new URLSearchParams(params).toString();
+    const queryString = new URLSearchParams(params).toString();
 
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v2/mcaps?${queryString}`,
-      );
-      const data = await res.json();
-      return data.data;
-    }
-
-    const promises: Promise<Response>[] = [];
-
-    if (notes) {
-      const paramsNotes = buildParams({ notes });
-      const queryStringNotes = new URLSearchParams(paramsNotes).toString();
-      promises.push(
-        fetch(
-          `${import.meta.env.VITE_API_URL}/api/v2/mcaps?${queryStringNotes}`,
-        ),
-      );
-    }
-
-    if (filename) {
-      const paramsFilename = buildParams({ filename });
-      const queryStringFilename = new URLSearchParams(
-        paramsFilename,
-      ).toString();
-      promises.push(
-        fetch(
-          `${import.meta.env.VITE_API_URL}/api/v2/mcaps?${queryStringFilename}`,
-        ),
-      );
-    }
-
-    const results = await Promise.all(promises);
-    const data = await Promise.all(results.map((res) => res.json()));
-
-    const combinedData = data.flatMap((entry) => entry.data || []);
-
-    const uniqueData = Array.from(
-      new Set(combinedData.map((item) => item.id)),
-    ).map((id) => combinedData.find((item) => item.id === id));
-
-    return uniqueData;
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/v2/mcaps?${queryString}`,
+    );
+    
+    const data = await res.json();
+    return data.data;
   };
 
   const assignData = async () => {
-    const apiData = await Promise.all(
-      location.map(async (loc: string) => await fetchData({ location: loc })),
-    );
-    const validData = apiData.filter((data) => data !== null);
-
-    const flattenedData = validData.flat();
-
-    const sortedData = flattenedData.sort((a, b) => {
-      const [monthA, dayA, yearA] = a.date.split("-");
-      const [monthB, dayB, yearB] = b.date.split("-");
-      const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
-      const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
-
+    const data = await fetchData(searchFilters);
+    console.log(data);
+    const sortedData = data.sort((a: MCAPFileInformation, b: MCAPFileInformation) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
       return dateB.getTime() - dateA.getTime();
     });
-
     setFilteredData(sortedData);
   };
 
@@ -114,21 +65,21 @@ export default function Root() {
     assignData();
   }, []);
 
+  // Two useEffects bc of the way we are handling the Search Button D: 
   useEffect(() => {
     const getData = async () => {
-      const data = await fetchData(searchFilters);
-      // console.log(data);
-      const sortedData = data.sort(
-        (a: MCAPFileInformation, b: MCAPFileInformation) => {
-          const [monthA, dayA, yearA] = a.date.split("-");
-          const [monthB, dayB, yearB] = b.date.split("-");
-          const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
-          const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
-
+      if (search) { // Only fetch data when search is true
+        const data = await fetchData(searchFilters);
+        console.log(data);
+        const sortedData = data.sort((a: MCAPFileInformation, b: MCAPFileInformation) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
           return dateB.getTime() - dateA.getTime();
-        },
-      );
-      setFilteredData(sortedData);
+        });
+        setFilteredData(sortedData);
+
+        setSearch(false);
+      }
     };
     getData();
   }, [search]);
