@@ -1,271 +1,354 @@
 export const data: MCAPFileInformation[] = [
   {
     id: "505deb4b-44a8-48dd-9da6-a671c1d3eccd",
-    mcap_file_name: "file1.mcap",
-    matlab_file_name: "file1.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
+    mcap_files: [
+      {
+        file_name: "filename",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    mat_files: [
+      {
+        file_name: "filename1",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        file_name: "filename2",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    content_files: [
+      {
+        content: "vn_lat_lon_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        content: "avg_vel_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
     date: "08-22-2024",
-    location: "MRDC",
+    location: "SCC",
     notes: "car ran!",
     event_type: "acceleration",
-    car_model: "HT08",
-    schema_versions: null,
-    mcap_files: [{
-      signed_url: "yar",
-      file_name: "yar",
-    }],
-    mat_files: [{
-      signed_url: "har",
-      file_name: "har",
-    }],
-    content_files: {
-      vn_lat_lon_plot: [{
-        signed_url: "bar",
-        file_name: "far",
-      }],
+    schema: {
+      schema_1: "1.2.3",
+      schema_2: "1.2.3",
+      schema_3: "1.2.3",
+      schema_4: "1.2.3",
     },
   },
   {
-    id: "0723984238489-21312-4e75e6f76",
-    mcap_file_name: "file5.3.mcap",
-    matlab_file_name: "file5.3.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
-    date: "08-16-2024",
-    location: "rome",
-    notes: "car performed nice",
-    event_type: "autocross",
-    car_model: "HT08",
-    schema_versions: null,
-    mcap_files: [{
-      signed_url: "yar",
-      file_name: "yar",
-    }],
-    mat_files: [{
-      signed_url: "har",
-      file_name: "har",
-    }],
-    content_files: {
-      vn_lat_lon_plot: [{
-        signed_url: "bar",
-        file_name: "far",
-      }],
-    },
-  },
-  {
-    id: "091823792-2321312-a081",
-    mcap_file_name: "file7.1.mcap",
-    matlab_file_name: "file7.1.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
+    id: "505deb4b-44a8-48dd-9da6-a671c1d3eccd",
+    mcap_files: [
+      {
+        file_name: "filename",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    mat_files: [
+      {
+        file_name: "filename1",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        file_name: "filename2",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    content_files: [
+      {
+        content: "vn_lat_lon_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        content: "avg_vel_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
     date: "08-29-2024",
-    location: "MRDC",
-    notes: "car did jk turn on",
-    car_model: "HT08",
-    schema_versions: null,
-    mcap_files: [{
-      signed_url: "yar",
-      file_name: "yar",
-    }],
-    mat_files: [{
-      signed_url: "har",
-      file_name: "har",
-    }],
-    content_files: {
-      vn_lat_lon_plot: [{
-        signed_url: "bar",
-        file_name: "far",
-      }],
-    },
-  },  
-  {
-    id: "07a0sdjwne-597f-4637-8b61-6134e75e6f76",
-    mcap_file_name: "file2.3.mcap",
-    matlab_file_name: "file2.3.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
-    date: "08-16-2024",
-    location: "rome",
-    notes: "car did not latch",
-    event_type: "autocross",
-    car_model: "HT08",
-    schema_versions: null,
-    mcap_files: [{
-      signed_url: "yar",
-      file_name: "yar",
-    }],
-    mat_files: [{
-      signed_url: "har",
-      file_name: "har",
-    }],
-    content_files: {
-      vn_lat_lon_plot: [{
-        signed_url: "bar",
-        file_name: "far",
-      }],
-    },
-  },
-  {
-    id: "605deb4b-44a8-4801-9da6-a671c1d3eccd",
-    mcap_file_name: "file1.3.mcap",
-    matlab_file_name: "file1.3.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
-    date: "08-22-2024",
-    location: "MRDC",
-    notes: "car failed",
-    event_type: "acceleration",
-    car_model: "HT08",
-    schema_versions: null,
-    mcap_files: [{
-      signed_url: "yar",
-      file_name: "yar",
-    }],
-    mat_files: [{
-      signed_url: "har",
-      file_name: "har",
-    }],
-    content_files: {
-      vn_lat_lon_plot: [{
-        signed_url: "bar",
-        file_name: "far",
-      }],
-    },
-  },
-  {
-    id: "fb48f265-a44a-4fd5-a873-26cd581950a0",
-    mcap_file_name: "file2.mcap",
-    matlab_file_name: "file2.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
-    date: "08-23-2024",
     location: "Michigan",
-    notes: "car did not run",
+    notes: "car ran!",
     event_type: "endurance",
-    car_model: "HT08",
-    schema_versions: null,
-    mcap_files: [{
-      signed_url: "yar",
-      file_name: "yar",
-    }],
-    mat_files: [{
-      signed_url: "har",
-      file_name: "har",
-    }],
-    content_files: {
-      vn_lat_lon_plot: [{
-        signed_url: "bar",
-        file_name: "far",
-      }],
+    schema: {
+      schema_1: "1.2.3",
+      schema_2: "1.2.3",
+      schema_3: "1.2.3",
+      schema_4: "1.2.3",
     },
   },
   {
-    id: "ba1ae40d-d013-4fe4-ac80-8e129fbe97b9",
-    mcap_file_name: "file3.mcap",
-    matlab_file_name: "file3.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
-    date: "08-24-2024",
+    id: "505deb4b-44a8-48dd-9da6-a671c1d3eccd",
+    mcap_files: [
+      {
+        file_name: "filename",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    mat_files: [
+      {
+        file_name: "filename1",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        file_name: "filename2",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    content_files: [
+      {
+        content: "vn_lat_lon_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        content: "avg_vel_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    date: "08-22-2020",
+    location: "Rome",
+    notes: "car ran!",
+    event_type: "skidpad",
+    schema: {
+      schema_1: "1.2.3",
+      schema_2: "1.2.3",
+      schema_3: "1.2.3",
+      schema_4: "1.2.3",
+    },
+  },
+  {
+    id: "505deb4b-44a8-48dd-9da6-a671c1d3eccd",
+    mcap_files: [
+      {
+        file_name: "filename",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    mat_files: [
+      {
+        file_name: "filename1",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        file_name: "filename2",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    content_files: [
+      {
+        content: "vn_lat_lon_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        content: "avg_vel_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    date: "10-22-2024",
     location: "MRDC",
     notes: "car ran!",
+    event_type: "autocross",
+    schema: {
+      schema_1: "1.2.3",
+      schema_2: "1.2.3",
+      schema_3: "1.2.3",
+      schema_4: "1.2.3",
+    },
+  },
+  {
+    id: "505deb4b-44a8-48dd-9da6-a671c1d3eccd",
+    mcap_files: [
+      {
+        file_name: "filename",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    mat_files: [
+      {
+        file_name: "filename1",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        file_name: "filename2",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    content_files: [
+      {
+        content: "vn_lat_lon_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        content: "avg_vel_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    date: "05-22-2024",
+    location: "SCC",
+    notes: "car ran!",
     event_type: "acceleration",
-    car_model: "HT08",
-    schema_versions: null,
-    mcap_files: [{
-      signed_url: "yar",
-      file_name: "yar",
-    }],
-    mat_files: [{
-      signed_url: "har",
-      file_name: "har",
-    }],
-    content_files: {
-      vn_lat_lon_plot: [{
-        signed_url: "bar",
-        file_name: "far",
-      }],
+    schema: {
+      schema_1: "1.2.3",
+      schema_2: "1.2.3",
+      schema_3: "1.2.3",
+      schema_4: "1.2.3",
     },
   },
   {
-    id: "55c2ae28-294e-45fd-9afb-a19e7499a1c2",
-    mcap_file_name: "file4.mcap",
-    matlab_file_name: "file4.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
-    date: "08-12-2024",
-    location: "SCC",
-    notes: "brakes were not the best",
-    event_type: "skidpad",
-    car_model: "HT08",
-    schema_versions: null,
-    mcap_files: [{
-      signed_url: "yar",
-      file_name: "yar",
-    }],
-    mat_files: [{
-      signed_url: "har",
-      file_name: "har",
-    }],
-    content_files: {
-      vn_lat_lon_plot: [{
-        signed_url: "bar",
-        file_name: "far",
-      }],
-    },
-  },
-  {
-    id: "3b1cd0af-64c7-4b63-8de9-86c1238451f1",
-    mcap_file_name: "file6.mcap",
-    matlab_file_name: "file6.mat",
-    aws_bucket: "bucket",
-    mcap_path: "/path/to/s3/object",
-    mat_path: "/path/to/s3/object",
-    vn_lat_lon_path: "/path/to/s3/object",
-    velocity_plot_path: "/path/to/s3/object",
-    date: "08-21-2024",
-    location: "SCC",
-    notes: "brakes worked better",
+    id: "505deb4b-44a8-48dd-9da6-a671c1d3eccd",
+    mcap_files: [
+      {
+        file_name: "filename",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    mat_files: [
+      {
+        file_name: "filename1",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        file_name: "filename2",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    content_files: [
+      {
+        content: "vn_lat_lon_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        content: "avg_vel_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    date: "08-22-2023",
+    location: "Rome",
+    notes: "car ran!",
     event_type: "endurance",
-    car_model: "HT08",
-    schema_versions: null,
-    mcap_files: [{
-      signed_url: "yar",
-      file_name: "yar",
-    }],
-    mat_files: [{
-      signed_url: "har",
-      file_name: "har",
-    }],
-    content_files: {
-      vn_lat_lon_plot: [{
-        signed_url: "bar",
-        file_name: "far",
-      }],
+    schema: {
+      schema_1: "1.2.3",
+      schema_2: "1.2.3",
+      schema_3: "1.2.3",
+      schema_4: "1.2.3",
+    },
+  },
+  {
+    id: "505deb4b-44a8-48dd-9da6-a671c1d3eccd",
+    mcap_files: [
+      {
+        file_name: "filename",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    mat_files: [
+      {
+        file_name: "filename1",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        file_name: "filename2",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    content_files: [
+      {
+        content: "vn_lat_lon_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        content: "avg_vel_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    date: "08-24-2024",
+    location: "Michigan",
+    notes: "car ran!",
+    event_type: "skidpad",
+    schema: {
+      schema_1: "1.2.3",
+      schema_2: "1.2.3",
+      schema_3: "1.2.3",
+      schema_4: "1.2.3",
+    },
+  },
+  {
+    id: "505deb4b-44a8-48dd-9da6-a671c1d3eccd",
+    mcap_files: [
+      {
+        file_name: "filename",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    mat_files: [
+      {
+        file_name: "filename1",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        file_name: "filename2",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    content_files: [
+      {
+        content: "vn_lat_lon_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+      {
+        content: "avg_vel_graph",
+        signed_url:
+          "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67",
+      },
+    ],
+    date: "08-28-2024",
+    location: "MRDC",
+    notes: "car ran!",
+    event_type: "autocross",
+    schema: {
+      schema_1: "1.2.3",
+      schema_2: "1.2.3",
+      schema_3: "1.2.3",
+      schema_4: "1.2.3",
     },
   },
 ];
