@@ -1,4 +1,4 @@
-export const data: MCAPFileInformation[] = [
+export const data: MCAPFileInformationNew[] = [
   {
     id: "505deb4b-44a8-48dd-9da6-a671c1d3eccd",
     mcap_files: [
