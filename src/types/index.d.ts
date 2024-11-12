@@ -1,5 +1,21 @@
 type MCAPFileInformation = {
   id: string;
+  car_model: string;
+  schema_versions?: null;
+  mcap_files: {
+    signed_url: string;
+    file_name: string;
+  }[];
+  mat_files: {
+    signed_url: string;
+    file_name: string;
+  }[];
+  content_files: {
+    vn_lat_lon_plot: {
+      signed_url: string;
+      file_name: string;
+    }[];
+  };
   mcap_file_name: string;
   matlab_file_name: string;
   aws_bucket: string;
@@ -9,6 +25,16 @@ type MCAPFileInformation = {
   velocity_plot_path: string;
   date: string;
   location: string;
-  notes: string?;
-  event_type: string?;
+  notes?: string;
+  event_type?: string;
+  signed_url?: string;
+};
+
+type SearchFilter = {
+  location?: string;
+  searchText?: string;
+  date?: string;
+  eventType?: string;
+  afterDate?: string;
+  beforeDate?: string;
 };

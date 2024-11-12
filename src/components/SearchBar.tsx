@@ -1,85 +1,77 @@
-import React, { useState, useEffect } from "react";
-import { data } from "@/data/sampledata";
+import React, { useState } from "react";
 import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
+import SchemaSearch from "@/components/SchemaSearch";
+import { Button } from "@mantine/core";
 
 interface SearchBarWithFilterProps {
-  setFilteredData: React.Dispatch<React.SetStateAction<MCAPFileInformation[]>>;
+  setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilter>>;
+  setSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
+function SearchBarWithFilter({
+  setSearchFilters,
+  setSearch,
+}: SearchBarWithFilterProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState({
-    location: "",
-    eventType: "",
-    beforeDate: "",
-    afterDate: "",
-  });
-  useEffect(() => {
-    // add code to get data from server here
-    // setFilteredData(serverData)
-  }, []);
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedEventType, setSelectedEventType] = useState("");
+  const [beforeDate, setBeforeDate] = useState("");
+  const [afterDate, setAfterDate] = useState("");
+  const [clearSchemas, setClearSchemas] = useState(false);
 
-  // Check if a date is in the valid range
-  const isDateInRange = (
-    dateStr: string,
-    beforeDate: string,
-    afterDate: string,
-  ) => {
-    const itemDate = new Date(dateStr);
-    const before = beforeDate ? new Date(beforeDate) : null;
-    const after = afterDate ? new Date(afterDate) : null;
-
-    if (before && itemDate > before) return false;
-    if (after && itemDate < after) return false;
-
-    return true;
-  };
-
-  // Filter logic
-  const handleSearch = () => {
-    const filtered = data.filter((item) => {
-      // Match search term in multiple fields
-      const matchesSearch =
-        item.mcap_file_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.matlab_file_name
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        item.notes?.toLowerCase().includes(searchTerm.toLowerCase());
-
-      // Match filters
-      const matchesLocation =
-        filters.location === "" || item.location === filters.location;
-      const matchesEventType =
-        filters.eventType === "" || item.event_type === filters.eventType;
-      const matchesDate = isDateInRange(
-        item.date,
-        filters.beforeDate,
-        filters.afterDate,
-      );
-
-      return (
-        matchesSearch && matchesLocation && matchesEventType && matchesDate
-      );
-    });
-    setFilteredData(filtered);
-  };
-
-  // Trigger search on filter or search term change
-  useEffect(() => {
-    handleSearch();
-  }, [searchTerm, filters]);
+  const schemas = ["Schema1", "Schema2", "Schema3", "Schema4"];
 
   // Handle filter changes
   function handleFilterChange(
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>,
   ) {
-    const { name, value } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-    }));
+    const { name } = e.target;
+    const { value } = e.target;
+
+
+    // Update local state based on input
+    switch (name) {
+      case "location":
+        setSelectedLocation(value);
+        break;
+      case "eventType":
+        setSelectedEventType(value);
+        break;
+      case "beforeDate":
+        setBeforeDate(value);
+        break;
+      case "afterDate":
+        setAfterDate(value);
+        break;
+      case "search_text":
+        setSearchTerm(value);
+        break;
+      default:
+        break;
+    }
   }
+
+  // Clear all filters and search term
+  const handleClear = () => {
+    setSearchTerm("");
+    setSearchFilters({
+      searchText: "",
+      location: "",
+      eventType: "",
+      beforeDate: "",
+      afterDate: "",
+    });
+    setSelectedLocation("");
+    setSelectedEventType("");
+    setBeforeDate("");
+    setAfterDate("");
+    setClearSchemas((prev) => !prev);
+  };
+
+  const handleSearch = () => {
+    setSearch(true);
+  };
 
   return (
     <div className="Search">
@@ -87,14 +79,16 @@ function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
 
       <div className="search-filter-container">
         <h1>Search and Filter Data</h1>
-
         {/* Search Bar */}
         <input
           type="text"
+          name="search_text"
           className="search-bar"
           placeholder="Search by file name or notes..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            handleFilterChange(e);
+          }}
         />
 
         {/* Filter Options */}
@@ -103,6 +97,7 @@ function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
             Location:
             <select
               name="location"
+              value={selectedLocation}
               onChange={handleFilterChange}
               className="filter-select"
             >
@@ -119,6 +114,7 @@ function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
             Event Type:
             <select
               name="eventType"
+              value={selectedEventType}
               onChange={handleFilterChange}
               className="filter-select"
             >
@@ -132,26 +128,44 @@ function SearchBarWithFilter({ setFilteredData }: SearchBarWithFilterProps) {
           </label>
 
           <label>
-            Before Date:
+            Start Date:
             <input
               type="date"
               name="beforeDate"
+              value={beforeDate}
               onChange={handleFilterChange}
               className="date-picker"
-              placeholder="Filter by date"
             />
           </label>
 
           <label>
-            After Date:
+            End Date:
             <input
               type="date"
               name="afterDate"
+              value={afterDate}
               onChange={handleFilterChange}
               className="date-picker"
-              placeholder="Filter by date"
             />
           </label>
+
+          <SchemaSearch schemas={schemas} clear={clearSchemas} />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            marginTop: "10px"
+          }}
+        >
+          {/* Clear Button */}
+          <Button onClick={handleClear} size="xs" variant="light">
+            Clear
+          </Button>
+          {/* Clear Button */}
+          <Button onClick={handleSearch} size="xs">
+            Search
+          </Button>
         </div>
       </div>
     </div>
