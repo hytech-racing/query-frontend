@@ -37,6 +37,10 @@
     overflow-y: auto;
     padding-bottom: 10px;
     width: 80%;
+    min-width: 80%;
+    overflow: hidden;
+    word-wrap: break-word; 
+    word-break: break-word;
   }
 
 .footer {
