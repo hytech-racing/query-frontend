@@ -1,14 +1,38 @@
-import { useState } from "react";
 import { Table } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
 
 interface DataTableProps {
   data?: MCAPFileInformation[];
+  selectedRow?: string;
+  setSelectedRow: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedData: React.Dispatch<
+    React.SetStateAction<MCAPFileInformation | undefined>
+  >;
 }
 
-export default function DataTable({ data }: DataTableProps) {
+export default function DataTable({
+  data,
+  selectedRow,
+  setSelectedRow,
+  setSelectedData,
+}: DataTableProps) {
   const theme = useMantineTheme();
-  const [selectedRow, setSelectedRow] = useState<string>();
+  
+  const setPreviewData = (file: MCAPFileInformation) => {
+    if (selectedRow === file.id) {
+      setSelectedRow("");
+      setSelectedData(undefined);
+    } else {
+      setSelectedRow(file.id);
+      setSelectedData(file);
+    }
+  };
+
+  // Take out when API server team implements filename id in their get route
+  const getFileNameWithoutExtension = (fileNameWithExtension: string) => {
+    const lastDotIndex = fileNameWithExtension.lastIndexOf('.');
+    return lastDotIndex !== -1 ? fileNameWithExtension.slice(0, lastDotIndex) : fileNameWithExtension;
+  };
 
   const rows = !data ? (
     <Table.Tr>
@@ -26,18 +50,19 @@ export default function DataTable({ data }: DataTableProps) {
     data.map((file) => (
       <Table.Tr
         key={file.id}
-        onClick={() => setSelectedRow(file.id)}
-        /*fw={selectedRow === file.id ? "bold" : ""}*/
+        onClick={() => setPreviewData(file)}
+        
         bg={selectedRow === file.id ? theme.primaryColor : ""}
       >
-        <Table.Td>{file.mcap_file_name}</Table.Td>
+        <Table.Td>{getFileNameWithoutExtension(file.mcap_files[0].file_name)}</Table.Td>
         <Table.Td>{file.date}</Table.Td>
         <Table.Td>{file.location}</Table.Td>
-        <Table.Td>{file.notes}</Table.Td>
+        
+        {/* Change back to notes once notes field is implemented in the server */}
+        <Table.Td>{file.car_model}</Table.Td>
       </Table.Tr>
     ))
   );
-
   return (
     <Table.ScrollContainer
       h="100%"
