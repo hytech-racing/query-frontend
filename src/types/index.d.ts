@@ -51,7 +51,6 @@ type ContentFileType = {
 
 type MCAPFileInformationNew = {
   id: string;
-  schema_versions?: null;
   mcap_files: FileType[];
   mat_files: FileType[];
   content_files: ContentFileType[];
