@@ -46,9 +46,15 @@ export default function Root() {
     );
 
     const data = await res.json();
+    {
+      /* REMOVE BEFORE DEPLOYMENT */
+    }
     data.data.forEach((item: MCAPFileInformation, index: number) => {
       item.id = `new-id-${index}`;
     });
+    {
+      /* END REMOVE BEFORE DEPLOYMENT */
+    }
     return data.data;
   };
 
