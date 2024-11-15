@@ -1,3 +1,4 @@
+/*
 type MCAPFileInformation = {
   id: string;
   car_model: string;
@@ -29,6 +30,7 @@ type MCAPFileInformation = {
   event_type?: string;
   signed_url?: string;
 };
+*/
 
 type SearchFilter = {
   location?: string;
@@ -49,7 +51,7 @@ type ContentFileType = {
   signed_url: string;
 };
 
-type MCAPFileInformationNew = {
+type MCAPFileInformation = {
   id: string;
   mcap_files: FileType[];
   mat_files: FileType[];

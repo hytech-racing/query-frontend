@@ -19,7 +19,7 @@ export default function Root() {
   const formatDate = (dateStr: string) => {
     const [year, month, day] = dateStr.split("-");
     if (month.length !== 2 || day.length !== 2 || year.length !== 4) {
-        throw new Error(`Invalid date format: ${dateStr}`);
+      throw new Error(`Invalid date format: ${dateStr}`);
     }
     return new Date(`${year}-${month}-${day}T00:00:00.000Z`).toISOString();
   };
@@ -27,7 +27,7 @@ export default function Root() {
   const fetchData = async (filters: SearchFilter) => {
     const { location, date, eventType, searchText } = filters;
     let { afterDate, beforeDate } = filters;
-    
+
     beforeDate = beforeDate ? formatDate(beforeDate) : undefined;
     afterDate = afterDate ? formatDate(afterDate) : undefined;
     const params = {
@@ -42,21 +42,26 @@ export default function Root() {
     const queryString = new URLSearchParams(params).toString();
 
     const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/v2/mcaps?${queryString}`,
+      `${import.meta.env.VITE_API_URL}/api/v2/mcap/get?${queryString}`,
     );
-    
+
     const data = await res.json();
+    data.data.forEach((item: MCAPFileInformation, index: number) => {
+      item.id = `new-id-${index}`;
+    });
     return data.data;
   };
 
   const assignData = async () => {
     const data = await fetchData(searchFilters);
     console.log(data);
-    const sortedData = data.sort((a: MCAPFileInformation, b: MCAPFileInformation) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      return dateB.getTime() - dateA.getTime();
-    });
+    const sortedData = data.sort(
+      (a: MCAPFileInformation, b: MCAPFileInformation) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateB.getTime() - dateA.getTime();
+      },
+    );
     setFilteredData(sortedData);
   };
 
@@ -64,17 +69,20 @@ export default function Root() {
     assignData();
   }, []);
 
-  // Two useEffects bc of the way we are handling the Search Button D: 
+  // Two useEffects bc of the way we are handling the Search Button D:
   useEffect(() => {
     const getData = async () => {
-      if (search) { // Only fetch data when search is true
+      if (search) {
+        // Only fetch data when search is true
         const data = await fetchData(searchFilters);
         console.log(data);
-        const sortedData = data.sort((a: MCAPFileInformation, b: MCAPFileInformation) => {
-          const dateA = new Date(a.date);
-          const dateB = new Date(b.date);
-          return dateB.getTime() - dateA.getTime();
-        });
+        const sortedData = data.sort(
+          (a: MCAPFileInformation, b: MCAPFileInformation) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return dateB.getTime() - dateA.getTime();
+          },
+        );
         setFilteredData(sortedData);
 
         setSearch(false);
