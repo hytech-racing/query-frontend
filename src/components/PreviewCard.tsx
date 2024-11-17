@@ -104,12 +104,19 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                   gap: "10px",
                 }}
               >
-                <DownloadButton
+                {selectedData.mcap_files.map((item) => (
+                  <DownloadButton
+                    buttonText="MCAP"
+                    fileName={item.file_name}
+                    signedUrl={item.signed_url ?? null}
+                  />
+                ))}
+                {/*<DownloadButton
                   buttonText="MCAP"
                   //One file for now -- can make it dynamically read several files at a time
                   fileName={selectedData.mcap_files[0].file_name}
                   signedUrl={selectedData.mcap_files[0].signed_url ?? null}
-                />
+                />*/}
                 <DownloadButton
                   buttonText="MAT"
                   fileName={selectedData.mat_files[0].file_name}
