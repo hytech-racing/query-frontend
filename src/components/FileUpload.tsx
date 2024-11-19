@@ -78,6 +78,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     } catch (error) {
       setError("Please select files to upload.");
     }
+    }
   };
 
   const toggleModal = () => {
