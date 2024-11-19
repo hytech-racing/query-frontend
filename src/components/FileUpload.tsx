@@ -75,7 +75,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         console.error("Upload failed:", error);
         setError("An error occurred while uploading. Please try again.");
       }
-    } else {
+    } catch (error) {
       setError("Please select files to upload.");
     }
   };
