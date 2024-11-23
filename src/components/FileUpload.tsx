@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Button, Notification, FileInput } from '@mantine/core';
+import { Modal, Button, Loader, Notification, FileInput } from '@mantine/core';
 import '@/css/FileUpload.css';
 
 interface FileUploadProps {
@@ -11,6 +11,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (files: File[]) => {
     if (files.length > 0) {
@@ -19,6 +20,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   };
 
   const handleUpload = async () => {
+    setLoading(true);
     setError(null);
     setSuccess(null)
     if (selectedFiles.length > 0) {
@@ -60,6 +62,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     } else {
       setError('Please select files to upload.');
     }
+    setLoading(false);
   };
 
   const toggleModal = () => {
@@ -104,8 +107,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
             </div>
           )}
         </div>
-
+        {loading && (
+          <Loader color="blue" /> 
+        )}
+        <br/>
         <Button onClick={handleUpload} style={{ marginTop: 10 }}>Upload</Button>
+        
+        
         {success && (
           <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
             {success}
