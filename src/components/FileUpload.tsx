@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Button, Loader, Notification, FileInput } from '@mantine/core';
+import { Modal, Button, Notification, FileInput } from '@mantine/core';
 import '@/css/FileUpload.css';
 
 interface FileUploadProps {
@@ -12,6 +12,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
 
   const handleFileChange = (files: File[]) => {
     if (files.length > 0) {
@@ -107,12 +108,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
             </div>
           )}
         </div>
-        {loading && (
-          <Loader color="blue" /> 
-        )}
-        <br/>
-        <Button onClick={handleUpload} style={{ marginTop: 10 }}>Upload</Button>
         
+        <Button loading={loading} loaderProps={{ type: 'dots' }} onClick={handleUpload} style={{ marginTop: 10 }} disabled={loading}>Upload</Button>
         
         {success && (
           <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
