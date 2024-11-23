@@ -11,6 +11,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
 
   const handleFileChange = (files: File[]) => {
     if (files.length > 0) {
@@ -19,6 +21,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   };
 
   const handleUpload = async () => {
+    setLoading(true);
     setError(null);
     setSuccess(null)
     if (selectedFiles.length > 0) {
@@ -60,6 +63,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     } else {
       setError('Please select files to upload.');
     }
+    setLoading(false);
   };
 
   const toggleModal = () => {
@@ -104,8 +108,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
             </div>
           )}
         </div>
-
-        <Button onClick={handleUpload} style={{ marginTop: 10 }}>Upload</Button>
+        
+        <Button loading={loading} loaderProps={{ type: 'dots' }} onClick={handleUpload} style={{ marginTop: 10 }} disabled={loading}>Upload</Button>
+        
         {success && (
           <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
             {success}
