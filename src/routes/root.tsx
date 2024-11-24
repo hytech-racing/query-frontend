@@ -40,20 +40,22 @@ export default function Root() {
   };
 
   const [search, setSearch] = useState<boolean>(false);
-  const formatDate = (dateStr: string) => {
+  const formatDate = (dateStr: string, time: string) => {
     const [year, month, day] = dateStr.split("-");
     if (month.length !== 2 || day.length !== 2 || year.length !== 4) {
       throw new Error(`Invalid date format: ${dateStr}`);
     }
-    return new Date(`${year}-${month}-${day}T00:00:00.000Z`).toISOString();
+    return new Date(`${year}-${month}-${day}T${time}Z`).toISOString();
   };
 
   const fetchData = async (filters: SearchFilter) => {
     const { location, date, eventType, searchText } = filters;
     let { afterDate, beforeDate } = filters;
 
-    beforeDate = beforeDate ? formatDate(beforeDate) : undefined;
-    afterDate = afterDate ? formatDate(afterDate) : undefined;
+    beforeDate = beforeDate
+      ? formatDate(beforeDate, "00:00:00.000")
+      : undefined;
+    afterDate = afterDate ? formatDate(afterDate, "23:59:59.999") : undefined;
     const params = {
       ...(location ? { location } : {}),
       ...(eventType ? { eventType } : {}),
