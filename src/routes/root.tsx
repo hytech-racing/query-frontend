@@ -110,7 +110,7 @@ export default function Root() {
       }
     };
     getData();
-  }, []);
+  }, [search]);
 
   return (
     <>
