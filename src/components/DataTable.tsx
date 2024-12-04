@@ -57,9 +57,7 @@ export default function DataTable({
         <Table.Td>{getFileNameWithoutExtension(file.mcap_files[0].file_name)}</Table.Td>
         <Table.Td>{file.date}</Table.Td>
         <Table.Td>{file.location}</Table.Td>
-        
-        {/* Change back to notes once notes field is implemented in the server */}
-        <Table.Td>{file.car_model}</Table.Td>
+        <Table.Td>{file.notes}</Table.Td>
       </Table.Tr>
     ))
   );
