@@ -38,3 +38,25 @@ type SearchFilter = {
   afterDate?: string;
   beforeDate?: string;
 };
+
+type FileType = {
+  file_name: string;
+  signed_url: string;
+};
+
+type ContentFileType = {
+  content: string;
+  signed_url: string;
+};
+
+type MCAPFileInformationNew = {
+  id: string;
+  mcap_files: FileType[];
+  mat_files: FileType[];
+  content_files: ContentFileType[];
+  date: string;
+  location: string;
+  notes?: string;
+  event_type?: string;
+  schema?: { [key: string]: string };
+};
