@@ -1,7 +1,7 @@
 import "@mantine/core/styles.css";
 import "@/css/Navbar.css";
 import { NavLink } from "react-router-dom";
-import FileUpload from "@/components/FileUpload"
+import FileUpload from "@/components/FileUpload";
 
 const mainLinksData = [
   { name: "Files", url: "/" },
@@ -27,6 +27,7 @@ export default function Navbar() {
       />
       {links}
 
+      {/* Once POST API is out -- Currently WIP */}
       <FileUpload uploadUrl={`${import.meta.env.VITE_API_URL}/api/v2/mcaps/bulk_upload`}/>
 
       {/* Optionally render active link or other content here */}
