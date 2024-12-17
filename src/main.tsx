@@ -6,6 +6,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+import { NuqsAdapter } from "nuqs/adapters/react-router";
 import Root from "./routes/root";
 import Docs from "./routes/docs";
 import Changelog from "./routes/changelog";
@@ -27,6 +28,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <NuqsAdapter>
+      <RouterProvider router={router} />
+    </NuqsAdapter>
   </StrictMode>,
 );

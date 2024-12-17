@@ -80,6 +80,7 @@ export default function DataTable({
             />
           </Input.Wrapper>
         </Table.Td>
+        
       </Table.Tr>
     ))
   );

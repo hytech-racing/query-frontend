@@ -8,6 +8,7 @@ import {
   Table,
   ScrollArea,
   TextInput,
+  Notification,
 } from "@mantine/core";
 import {
   IconDownload,
@@ -23,6 +24,39 @@ interface PreviewCardProps {
 }
 
 function PreviewCard({ selectedData }: PreviewCardProps) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const handleDelete = async () => {
+    setLoading(true)
+    setError(null);
+    setSuccess(null)
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`, {
+          method: 'DELETE',
+        });
+
+        if (!response.ok) {
+          if (response.status === 503) {
+            const errorMsg = await response.text();
+            setError(`Failed to delete: ${errorMsg} \nTry again in a few minutes!`);
+          } else {
+            const errorMsg = await response.text();
+            setError(`Failed to delete: ${errorMsg}`);
+          }
+        } else {
+          const result = await response.json();
+          setSuccess('File deleted successfully!');
+          console.log('Delete successful:', result);
+        }
+    } catch (error) {
+      console.error('Error sending Delete request:', error);
+      setError('An error occurred during file deletion.');
+    }
+    setLoading(false)
+  }
+  
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -158,20 +192,37 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                   bottom: 0,
                   left: 0,
                   padding: 20,
-                  gap: "10px",
+                  gap: "8px",
                 }}
               >
-                <DownloadButton
-                  buttonText="MCAP"
-                  //One file for now -- can make it dynamically read several files at a time
-                  fileName={selectedData.mcap_files[0].file_name}
-                  signedUrl={selectedData.mcap_files[0].signed_url ?? null}
-                />
-                <DownloadButton
-                  buttonText="MAT"
-                  fileName={selectedData.mat_files[0].file_name}
-                  signedUrl={selectedData.mat_files[0].signed_url}
-                />
+                <div>
+                  {selectedData.mcap_files.map((item) => (
+                    <DownloadButton
+                      buttonText="MCAP"
+                      fileName={item.file_name}
+                      signedUrl={item.signed_url ?? null}
+                    />
+                  ))}
+                  {selectedData.mat_files.map((item) => (
+                    <DownloadButton
+                      buttonText="MAT"
+                      fileName={item.file_name}
+                      signedUrl={item.signed_url}
+                    />
+                  ))}
+                  <Button loading={loading} loaderProps={{ type: 'dots' }} size="compact-md" color="red" onClick={handleDelete}>Delete</Button>
+                  {success && (
+                    <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
+                      {success}
+                    </Notification>
+                  )}
+                  {error && (
+                    <Notification color="red" onClose={() => setError(null)} style={{ marginTop: 10 }}>
+                      {error}
+                    </Notification>
+                  )}
+                </div>
+                
               </div>
             </>
           ) : (
