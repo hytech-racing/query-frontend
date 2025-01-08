@@ -56,7 +56,7 @@ export default function DataTable({
         onClick={() => setPreviewData(file)}
         bg={selectedRow === file.id ? theme.primaryColor : ""}
       >
-        <Table.Td style={{ paddingLeft: "50px" }}>
+        <Table.Td style={{ paddingLeft: "25px" }}>
           {getFileNameWithoutExtension(file.mcap_files[0].file_name)}
         </Table.Td>
         <Table.Td>{file.date}</Table.Td>
@@ -64,7 +64,7 @@ export default function DataTable({
 
         {/* Change back to notes once notes field is implemented in the server */}
         {/* <Table.Td>{file.car_model}</Table.Td> */}
-        <Table.Td style={{ paddingRight: "50px" }}>
+        <Table.Td style={{ paddingRight: "25px" }}>
           <Input.Wrapper>
             <Textarea
               variant="unstyled"
@@ -93,10 +93,10 @@ export default function DataTable({
       >
         <Table.Thead bg={"#D1BF80"}>
           <Table.Tr>
-            <Table.Th style={{ paddingLeft: "50px" }}>Name</Table.Th>
+            <Table.Th style={{ paddingLeft: "25px" }}>Name</Table.Th>
             <Table.Th>Date</Table.Th>
             <Table.Th>Location</Table.Th>
-            <Table.Th style={{ paddingRight: "50px" }}>Notes</Table.Th>
+            <Table.Th style={{ paddingRight: "25px" }}>Notes</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
