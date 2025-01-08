@@ -41,14 +41,14 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           if (response.status === 503) {
             const errorMsg = await response.text();
             setError(`Failed to delete: ${errorMsg} \nTry again in a few minutes!`);
+            console.log(errorMsg);
           } else {
             const errorMsg = await response.text();
             setError(`Failed to delete: ${errorMsg}`);
+            console.log(errorMsg);  
           }
         } else {
-          const result = await response.json();
           setSuccess('File deleted successfully!');
-          console.log('Delete successful:', result);
         }
     } catch (error) {
       console.error('Error sending Delete request:', error);
