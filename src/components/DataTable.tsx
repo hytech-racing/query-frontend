@@ -56,7 +56,7 @@ export default function DataTable({
         onClick={() => setPreviewData(file)}
         bg={selectedRow === file.id ? theme.primaryColor : ""}
       >
-        <Table.Td>
+        <Table.Td style={{ paddingLeft: "50px" }}>
           {getFileNameWithoutExtension(file.mcap_files[0].file_name)}
         </Table.Td>
         <Table.Td>{file.date}</Table.Td>
@@ -64,23 +64,19 @@ export default function DataTable({
 
         {/* Change back to notes once notes field is implemented in the server */}
         {/* <Table.Td>{file.car_model}</Table.Td> */}
-        <Table.Td>
+        <Table.Td style={{ paddingRight: "50px" }}>
           <Input.Wrapper>
             <Textarea
               variant="unstyled"
-              value="
-                    testing long text text text text text text text text text text text text text text text text text text text text text text"
-              //  now with four rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows"
-              //  now with four rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows"
-              //  now with four rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows rows"
+              value={file.notes}
               style={{ whiteSpace: "normal", wordWrap: "break-word" }}
               readOnly
-              placeholder="Note"
-              rows={4}
+              placeholder="No Note Available"
+              minRows={1}
+              maxRows={4}
             />
           </Input.Wrapper>
         </Table.Td>
-        
       </Table.Tr>
     ))
   );
@@ -97,10 +93,10 @@ export default function DataTable({
       >
         <Table.Thead bg={"#D1BF80"}>
           <Table.Tr>
-            <Table.Th>Name</Table.Th>
+            <Table.Th style={{ paddingLeft: "50px" }}>Name</Table.Th>
             <Table.Th>Date</Table.Th>
             <Table.Th>Location</Table.Th>
-            <Table.Th>Notes</Table.Th>
+            <Table.Th style={{ paddingRight: "50px" }}>Notes</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
