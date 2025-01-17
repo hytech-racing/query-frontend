@@ -1,3 +1,4 @@
+import DocumentationVersion from "@/components/DocumentationVersion";
 export default function Docs() {
-  return <div>This is the docs</div>;
+  return <DocumentationVersion />;
 }
