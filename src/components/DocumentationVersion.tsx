@@ -5,7 +5,6 @@ import "@/css/DocumentationVersion.css";
 
 interface DocumentationVersionProps {
   versions: string[];
-  onChange: (version:string) => void;
 }
 
 const DocumentationVersion: React.FC<DocumentationVersionProps> = ({ versions }) => {

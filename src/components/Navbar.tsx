@@ -1,6 +1,6 @@
 import "@mantine/core/styles.css";
 import "@/css/Navbar.css";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import FileUpload from "@/components/FileUpload"
 
 const mainLinksData = [
@@ -25,7 +25,6 @@ export default function Navbar() {
         alt="Logo"
         className="navbar-icon"
       />
-      
       {links}
 
       <FileUpload uploadUrl={`${import.meta.env.VITE_API_URL}/api/v2/mcaps/bulk_upload`}/>
