@@ -1,5 +1,15 @@
-.documentationselect {
+.docs-selector {
     max-width: 300px;
-    margin-left: 30px;
+    margin: 0 auto;
     /*margin-top: 20px;*/
+}
+
+.docs-selector-container {
+    width: 100%;
+    height: 100%;
+}
+#docs-iframe{
+    width: 100%;
+    height: 100%;
+    border: none;
 }
