@@ -16,15 +16,16 @@ const DocumentationVersion: React.FC<DocumentationVersionProps> = ({ versions })
 
   return (
     <div className="docs-selector-container">
-      <Select
-        label="Documentation Version"
-        placeholder="Select Documentation version"
-        data={versions.map((version) => ({ value: version, label: version }))}
-        size="xs"
-        className="docs-selector"
-        onChange={handleVersionChange}
-      />
-
+      <div className="docs-selector">
+        <Select
+          label="Documentation Version"
+          placeholder="Select Documentation version"
+          data={versions.map((version) => ({ value: version, label: version }))}
+          size="xs"
+          id="docs-dropdown"
+          onChange={handleVersionChange}
+        />
+      </div>
       {selectedVersion && (
         <iframe
           src={`/docs/${selectedVersion}.html`}

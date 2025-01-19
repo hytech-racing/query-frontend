@@ -1,7 +1,17 @@
 .docs-selector {
-    max-width: 300px;
-    margin: 0 auto;
+
     /*margin-top: 20px;*/
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+    width: 98vw;
+    text-align: right;
+}
+
+#docs-dropdown {
+    max-width: 300px;
+
 }
 
 .docs-selector-container {
