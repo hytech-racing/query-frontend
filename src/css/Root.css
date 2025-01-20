@@ -36,8 +36,8 @@
     flex-grow: 1;
     overflow-y: auto;
     padding-bottom: 10px;
-    width: 80%;
-    min-width: 80%;
+    width: 60%;
+    min-width: 60%;
     overflow: hidden;
     word-wrap: break-word; 
     word-break: break-word;
