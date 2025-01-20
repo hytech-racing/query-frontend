@@ -40,15 +40,18 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
         },
       );
 
-      if (!response.ok) {
-        if (response.status === 503) {
-          const errorMsg = await response.text();
-          setError(
-            `Failed to delete: ${errorMsg} \nTry again in a few minutes!`,
-          );
+        if (!response.ok) {
+          if (response.status === 503) {
+            const errorMsg = await response.text();
+            setError(`Failed to delete: ${errorMsg} \nTry again in a few minutes!`);
+            console.log(errorMsg);
+          } else {
+            const errorMsg = await response.text();
+            setError(`Failed to delete: ${errorMsg}`);
+            console.log(errorMsg);  
+          }
         } else {
-          const errorMsg = await response.text();
-          setError(`Failed to delete: ${errorMsg}`);
+          setSuccess('File deleted successfully!');
         }
       } else {
         const result = await response.json();
