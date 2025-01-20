@@ -56,11 +56,15 @@ export default function DataTable({
         onClick={() => setPreviewData(file)}
         bg={selectedRow === file.id ? theme.primaryColor : ""}
       >
-        <Table.Td style={{ paddingLeft: "25px" }}>
+        <Table.Td style={{ paddingLeft: "25px", size: "xs" }}>
           {getFileNameWithoutExtension(file.mcap_files[0].file_name)}
         </Table.Td>
         <Table.Td>{file.date}</Table.Td>
-        <Table.Td>{file.location}</Table.Td>
+        <Table.Td style={{ size: "xs" }}>
+          <Input.Wrapper>
+            <Textarea minRows={1} maxRows={4} value={file.location} />
+          </Input.Wrapper>
+        </Table.Td>
 
         {/* Change back to notes once notes field is implemented in the server */}
         {/* <Table.Td>{file.car_model}</Table.Td> */}
