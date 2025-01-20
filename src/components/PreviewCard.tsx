@@ -33,12 +33,9 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     setError(null);
     setSuccess(null);
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`,
-        {
-          method: "DELETE",
-        },
-      );
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`, {
+          method: 'DELETE',
+        });
 
         if (!response.ok) {
           if (response.status === 503) {
@@ -53,14 +50,9 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
         } else {
           setSuccess('File deleted successfully!');
         }
-      } else {
-        const result = await response.json();
-        setSuccess("File deleted successfully!");
-        console.log("Delete successful:", result);
-      }
     } catch (error) {
-      console.error("Error sending Delete request:", error);
-      setError("An error occurred during file deletion.");
+      console.error('Error sending Delete request:', error);
+      setError('An error occurred during file deletion.');
     }
     setLoading(false);
   };
