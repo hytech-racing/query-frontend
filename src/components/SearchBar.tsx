@@ -2,7 +2,7 @@ import React from "react";
 import { eventType, location } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
 import SchemaSearch from "@/components/SchemaSearch";
-import { Button, TextInput, Select } from "@mantine/core";
+import { Button } from "@mantine/core";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
 interface SearchBarWithFilterProps {
@@ -58,18 +58,10 @@ function SearchBarWithFilter({ setSearch }: SearchBarWithFilterProps) {
       <div className="search-filter-container">
         <h1>Search and Filter Data</h1>
         {/* Search Bar */}
-        {/*<input
+        <input
           type="text"
           name="search_text"
           className="search-bar"
-          placeholder="Search by file name or notes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />*/}
-        <TextInput
-          name="search_text"
-          className="search-bar"
-          radius="xl"
           placeholder="Search by file name or notes..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -78,7 +70,7 @@ function SearchBarWithFilter({ setSearch }: SearchBarWithFilterProps) {
         {/* Filter Options */}
         <div className="filter-options">
           <label>
-            {/*Location:
+            Location:
             <select
               name="location"
               value={selectedLocation}
@@ -91,18 +83,7 @@ function SearchBarWithFilter({ setSearch }: SearchBarWithFilterProps) {
                   {locationName}
                 </option>
               ))}
-            </select>*/}
-            <Select
-              label="Location"
-              value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-              className="filter-select">
-              <option value="">All Locations</option>
-                {location.map((locationName, idx) => (
-                  <option value={locationName.toLowerCase()} key={idx}>
-                    {locationName}
-                  </option>))}
-            </Select>
+            </select>
           </label>
 
           <label>
