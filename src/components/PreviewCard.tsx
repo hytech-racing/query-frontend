@@ -9,6 +9,7 @@ import {
   ScrollArea,
   TextInput,
   Notification,
+  CopyButton,
 } from "@mantine/core";
 import {
   IconDownload,
@@ -23,40 +24,47 @@ interface PreviewCardProps {
   selectedData: MCAPFileInformation | undefined;
 }
 
+const origin = window.location.origin;
+
 function PreviewCard({ selectedData }: PreviewCardProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
   const handleDelete = async () => {
-    setLoading(true)
+    setLoading(true);
     setError(null);
-    setSuccess(null)
+    setSuccess(null);
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`, {
-          method: 'DELETE',
-        });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`,
+        {
+          method: "DELETE",
+        },
+      );
 
-        if (!response.ok) {
-          if (response.status === 503) {
-            const errorMsg = await response.text();
-            setError(`Failed to delete: ${errorMsg} \nTry again in a few minutes!`);
-            console.log(errorMsg);
-          } else {
-            const errorMsg = await response.text();
-            setError(`Failed to delete: ${errorMsg}`);
-            console.log(errorMsg);  
-          }
+      if (!response.ok) {
+        if (response.status === 503) {
+          const errorMsg = await response.text();
+          setError(
+            `Failed to delete: ${errorMsg} \nTry again in a few minutes!`,
+          );
+          console.log(errorMsg);
         } else {
-          setSuccess('File deleted successfully!');
+          const errorMsg = await response.text();
+          setError(`Failed to delete: ${errorMsg}`);
+          console.log(errorMsg);
         }
+      } else {
+        setSuccess("File deleted successfully!");
+      }
     } catch (error) {
-      console.error('Error sending Delete request:', error);
-      setError('An error occurred during file deletion.');
+      console.error("Error sending Delete request:", error);
+      setError("An error occurred during file deletion.");
     }
-    setLoading(false)
-  }
-  
+    setLoading(false);
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -69,30 +77,30 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
 
   // Take out when API server team implements filename id in their get route
   const getFileNameWithoutExtension = (fileNameWithExtension: string) => {
-    const lastDotIndex = fileNameWithExtension.lastIndexOf('.');
-    return lastDotIndex !== -1 ? fileNameWithExtension.slice(0, lastDotIndex) : fileNameWithExtension;
+    const lastDotIndex = fileNameWithExtension.lastIndexOf(".");
+    return lastDotIndex !== -1
+      ? fileNameWithExtension.slice(0, lastDotIndex)
+      : fileNameWithExtension;
   };
 
-  const imageUrl = selectedData?.content_files?.vn_lat_lon_plot?.[0]?.signed_url ?? "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"; // Fallback to a default image if none exists.
-  
+  const imageUrl =
+    selectedData?.content_files?.vn_lat_lon_plot?.[0]?.signed_url ??
+    "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"; // Fallback to a default image if none exists.
+
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true, 
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
     });
   };
   return (
     <div className="preview-container">
       <Grid>
         <Grid.Col span={3} className="image-column">
-          <img
-            src={imageUrl}
-            alt="Preview"
-            className="preview-image"
-          />
+          <img src={imageUrl} alt="Preview" className="preview-image" />
         </Grid.Col>
         <Grid.Col span={3} className="image-column">
           <img
@@ -107,7 +115,12 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
         <Grid.Col span={3} style={{ position: "relative", padding: "10px" }}>
           {selectedData ? (
             <>
-              <PreviewDataDiv name={getFileNameWithoutExtension(selectedData.mcap_files[0].file_name)} val={""} />
+              <PreviewDataDiv
+                name={getFileNameWithoutExtension(
+                  selectedData.mcap_files[0].file_name,
+                )}
+                val={""}
+              />
               <PreviewDataDiv
                 name={"Car Model"}
                 val={selectedData.car_model ?? "NA"}
@@ -139,6 +152,19 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 }}
               >
                 <div>
+                  <CopyButton
+                    value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
+                  >
+                    {({ copied, copy }) => (
+                      <Button
+                        color={copied ? "green" : "#B3A369"}
+                        onClick={copy}
+                        size="compact-md"
+                      >
+                        {copied ? "Copied" : "Copy URL"}
+                      </Button>
+                    )}
+                  </CopyButton>
                   {selectedData.mcap_files.map((item) => (
                     <DownloadButton
                       buttonText="MCAP"
@@ -153,19 +179,34 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                       signedUrl={item.signed_url}
                     />
                   ))}
-                  <Button loading={loading} loaderProps={{ type: 'dots' }} size="compact-md" color="red" onClick={handleDelete}>Delete</Button>
+                  <Button
+                    loading={loading}
+                    loaderProps={{ type: "dots" }}
+                    size="compact-md"
+                    color="red"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </Button>
                   {success && (
-                    <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
+                    <Notification
+                      color="green"
+                      onClose={() => setSuccess(null)}
+                      style={{ marginTop: 10 }}
+                    >
                       {success}
                     </Notification>
                   )}
                   {error && (
-                    <Notification color="red" onClose={() => setError(null)} style={{ marginTop: 10 }}>
+                    <Notification
+                      color="red"
+                      onClose={() => setError(null)}
+                      style={{ marginTop: 10 }}
+                    >
                       {error}
                     </Notification>
                   )}
                 </div>
-                
               </div>
             </>
           ) : (
@@ -234,7 +275,7 @@ export function DownloadButton({
       <Menu.Dropdown>
         <Menu.Item
           style={{
-            fontSize: '10px',
+            fontSize: "10px",
           }}
           leftSection={
             <IconFile
@@ -287,7 +328,7 @@ export const SchemaTable = () => {
           handleSearch(e.target.value);
         }}
       />
-      <ScrollArea style={{ height: 180, width: 250 , padding: 10}}>
+      <ScrollArea style={{ height: 180, width: 250, padding: 10 }}>
         {" "}
         {/* Scrollable area with height limit */}
         <Table
