@@ -4,9 +4,9 @@
  *
  * @typedef {Object} MCAPFileInformationNew
  * @property {string} id - A unique identifier for the event.
- * @property {Array<{file_name: string, signed_url: string}>} mcap_files - A list of MCAP files related to the event. Each file is represented by its name and a signed URL to access the file.
- * @property {Array<{file_name: string, signed_url: string}>} mat_files - A list of MAT files associated with the event. Similar to `mcap_files`, each MAT file has a file name and signed URL.
- * @property {Array<{content: string, signed_url: string}>} content_files - A list of content files, each having a name (`content`) and a signed URL for access.
+ * @property {Array<>} mcap_files - An array of MCAP files related to the event. Each file is represented by its name and a signed URL to access the file.
+ * @property {Array<>} mat_files - An array of MAT files associated with the event. Similar to `mcap_files`, each MAT file has a file name and signed URL.
+ * @property {Array<>} content_files - An array of content files, each having a name (`content`) and a signed URL for access.
  * @property {string} date - The date when the event occurred, formatted as MM-DD-YYYY.
  * @property {string} location - The location where the event took place.
  * @property {string} notes - Additional notes or comments about the event.
