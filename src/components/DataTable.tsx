@@ -60,24 +60,32 @@ export default function DataTable({
           {getFileNameWithoutExtension(file.mcap_files[0].file_name)}
         </Table.Td>
         <Table.Td>{file.date}</Table.Td>
-        <Table.Td style={{ size: "xs" }}>
-          <Input.Wrapper>
-            <Textarea minRows={1} maxRows={4} value={file.location} />
+        <Table.Td style={{ size: "xs"}}>
+          <Input.Wrapper >
+            <Textarea
+              variant="unstyled"
+              value={file.location}
+              style={{ whiteSpace: "normal", wordWrap: "break-word"}}
+              readOnly
+              autosize
+              placeholder="No Location Available"
+              minRows={1}
+              maxRows={2}
+            />
           </Input.Wrapper>
         </Table.Td>
 
-        {/* Change back to notes once notes field is implemented in the server */}
-        {/* <Table.Td>{file.car_model}</Table.Td> */}
         <Table.Td style={{ paddingRight: "25px" }}>
           <Input.Wrapper>
             <Textarea
               variant="unstyled"
               value={file.notes}
-              style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+              style={{ whiteSpace: "normal", wordWrap: "break-word"}}
               readOnly
+              autosize
               placeholder="No Note Available"
               minRows={1}
-              maxRows={4}
+              maxRows={2}
             />
           </Input.Wrapper>
         </Table.Td>
