@@ -9,6 +9,7 @@ import {
   ScrollArea,
   TextInput,
   Notification,
+  CopyButton,
 } from "@mantine/core";
 import {
   IconDownload,
@@ -23,6 +24,8 @@ interface PreviewCardProps {
   selectedData: MCAPFileInformation | undefined;
 }
 
+const origin = window.location.origin;
+
 function PreviewCard({ selectedData }: PreviewCardProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,26 +36,31 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     setError(null);
     setSuccess(null);
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`, {
-          method: 'DELETE',
-        });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`,
+        {
+          method: "DELETE",
+        },
+      );
 
-        if (!response.ok) {
-          if (response.status === 503) {
-            const errorMsg = await response.text();
-            setError(`Failed to delete: ${errorMsg} \nTry again in a few minutes!`);
-            console.log(errorMsg);
-          } else {
-            const errorMsg = await response.text();
-            setError(`Failed to delete: ${errorMsg}`);
-            console.log(errorMsg);  
-          }
+      if (!response.ok) {
+        if (response.status === 503) {
+          const errorMsg = await response.text();
+          setError(
+            `Failed to delete: ${errorMsg} \nTry again in a few minutes!`,
+          );
+          console.log(errorMsg);
         } else {
-          setSuccess('File deleted successfully!');
+          const errorMsg = await response.text();
+          setError(`Failed to delete: ${errorMsg}`);
+          console.log(errorMsg);
         }
+      } else {
+        setSuccess("File deleted successfully!");
+      }
     } catch (error) {
-      console.error('Error sending Delete request:', error);
-      setError('An error occurred during file deletion.');
+      console.error("Error sending Delete request:", error);
+      setError("An error occurred during file deletion.");
     }
     setLoading(false);
   };
@@ -209,6 +217,19 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 }}
               >
                 <div>
+                  <CopyButton
+                    value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
+                  >
+                    {({ copied, copy }) => (
+                      <Button
+                        color={copied ? "green" : "#B3A369"}
+                        onClick={copy}
+                        size="compact-md"
+                      >
+                        {copied ? "Copied" : "Copy URL"}
+                      </Button>
+                    )}
+                  </CopyButton>
                   {selectedData.mcap_files.map((item) => (
                     <DownloadButton
                       buttonText="MCAP"
