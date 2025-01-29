@@ -1,5 +1,6 @@
 .app-container {
     height: 100vh;
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -12,6 +13,8 @@
 }
 
 .main-content {
+    height: 100vh;
+    width: 100%;
     display: flex;
     flex: 1;
     overflow: hidden;
@@ -25,16 +28,46 @@
     flex: 1;
     overflow: hidden;
     flex-direction: row;
+    height: 70%;
+    flex-shrink: 0;
 }
 
 .table-contain-result {
     flex-grow: 1;
     overflow-y: auto;
     padding-bottom: 10px;
-  }
+    width: 60%;
+    min-width: 60%;
+    overflow: hidden;
+    word-wrap: break-word; 
+    word-break: break-word;
+}
 
 .footer {
     text-align: center;
     background: #9b8b5de5;
     color: white;
+}
+
+.static {
+    position: fixed;
+}
+
+.scrollable {
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.scrollable-container {
+    overflow-y: auto;
+}
+
+.preview-contain-result {
+    z-index: 1000;
+}
+
+.search-container {
+    width: auto;
+    display: flex;
+    justify-content: center;
 }

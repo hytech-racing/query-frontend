@@ -1,5 +1,6 @@
 import { Table } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
+import { Input, Textarea } from "@mantine/core";
 
 interface DataTableProps {
   data?: MCAPFileInformation[];
@@ -17,7 +18,7 @@ export default function DataTable({
   setSelectedData,
 }: DataTableProps) {
   const theme = useMantineTheme();
-  
+
   const setPreviewData = (file: MCAPFileInformation) => {
     if (selectedRow === file.id) {
       setSelectedRow("");
@@ -30,8 +31,10 @@ export default function DataTable({
 
   // Take out when API server team implements filename id in their get route
   const getFileNameWithoutExtension = (fileNameWithExtension: string) => {
-    const lastDotIndex = fileNameWithExtension.lastIndexOf('.');
-    return lastDotIndex !== -1 ? fileNameWithExtension.slice(0, lastDotIndex) : fileNameWithExtension;
+    const lastDotIndex = fileNameWithExtension.lastIndexOf(".");
+    return lastDotIndex !== -1
+      ? fileNameWithExtension.slice(0, lastDotIndex)
+      : fileNameWithExtension;
   };
 
   const rows = !data ? (
@@ -51,18 +54,50 @@ export default function DataTable({
       <Table.Tr
         key={file.id}
         onClick={() => setPreviewData(file)}
-        
         bg={selectedRow === file.id ? theme.primaryColor : ""}
       >
-        <Table.Td>{getFileNameWithoutExtension(file.mcap_files[0].file_name)}</Table.Td>
+        <Table.Td style={{ paddingLeft: "25px", size: "xs" }}>
+          {getFileNameWithoutExtension(file.mcap_files[0].file_name)}
+        </Table.Td>
         <Table.Td>{file.date}</Table.Td>
-        <Table.Td>{file.location}</Table.Td>
-        <Table.Td>{file.notes}</Table.Td>
+        <Table.Td style={{ size: "xs"}}>
+          <Input.Wrapper >
+            <Textarea
+              variant="unstyled"
+              value={file.location}
+              style={{ whiteSpace: "normal", wordWrap: "break-word"}}
+              readOnly
+              autosize
+              placeholder="No Location Available"
+              minRows={1}
+              maxRows={2}
+            />
+          </Input.Wrapper>
+        </Table.Td>
+
+        <Table.Td style={{ paddingRight: "25px" }}>
+          <Input.Wrapper>
+            <Textarea
+              variant="unstyled"
+              value={file.notes}
+              style={{ whiteSpace: "normal", wordWrap: "break-word"}}
+              readOnly
+              autosize
+              placeholder="No Note Available"
+              minRows={1}
+              maxRows={2}
+            />
+          </Input.Wrapper>
+        </Table.Td>
       </Table.Tr>
     ))
   );
   return (
-    <Table.ScrollContainer h="100%" minWidth={800} style={{ overflowY: 'auto' }}>
+    <Table.ScrollContainer
+      h="100%"
+      minWidth={800}
+      style={{ overflowY: "auto" }}
+    >
       <Table
         stickyHeader
         highlightOnHover={data && data.length > 0}
@@ -70,10 +105,10 @@ export default function DataTable({
       >
         <Table.Thead bg={"#D1BF80"}>
           <Table.Tr>
-            <Table.Th>Name</Table.Th>
+            <Table.Th style={{ paddingLeft: "25px" }}>Name</Table.Th>
             <Table.Th>Date</Table.Th>
             <Table.Th>Location</Table.Th>
-            <Table.Th>Notes</Table.Th>
+            <Table.Th style={{ paddingRight: "25px" }}>Notes</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
