@@ -11,6 +11,7 @@ export default function Root() {
   const [selectedData, setSelectedData] = useState<MCAPFileInformation>();
 
   const [searchTerm] = useQueryState("notes", parseAsString.withDefault(""));
+  const [selectedId] = useQueryState("id", parseAsString.withDefault(""));
   const [selectedLocation] = useQueryState(
     "location",
     parseAsString.withDefault(""),
@@ -49,6 +50,15 @@ export default function Root() {
   };
 
   const fetchData = async (filters: SearchFilter) => {
+    if (selectedId != "") {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v2/mcaps/${selectedId}`,
+      );
+
+      const data = await res.json();
+      return data.data;
+    }
+
     const { location, date, eventType, searchText } = filters;
     let { afterDate, beforeDate } = filters;
 

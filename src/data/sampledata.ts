@@ -1,3 +1,18 @@
+/**
+ * Represents information about an MCAP (Model, Configuration, and Analysis Protocol) file and its associated data.
+ * Each entry in the array corresponds to a specific event, containing metadata about files, content, and event details.
+ *
+ * @typedef {Object} MCAPFileInformationNew
+ * @property {string} id - A unique identifier for the event.
+ * @property {Array<>} mcap_files - An array of MCAP files related to the event. Each file is represented by its name and a signed URL to access the file.
+ * @property {Array<>} mat_files - An array of MAT files associated with the event. Similar to `mcap_files`, each MAT file has a file name and signed URL.
+ * @property {Array<>} content_files - An array of content files, each having a name (`content`) and a signed URL for access.
+ * @property {string} date - The date when the event occurred, formatted as MM-DD-YYYY.
+ * @property {string} location - The location where the event took place.
+ * @property {string} notes - Additional notes or comments about the event.
+ * @property {string} event_type - The type of event (e.g., "acceleration", "endurance").
+ * @property {Object} schema - An object containing versioning information for the event's schema. Each schema property represents a version string.
+ */
 export const data: MCAPFileInformationNew[] = [
   {
     id: "505deb4b-44a8-48dd-9da6-a671c1d3eccd",
