@@ -113,6 +113,71 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           <SchemaTable></SchemaTable>
         </Grid.Col>
         <Grid.Col span={3} style={{ position: "relative", padding: "10px" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Text size="md" fw={700}>
+              run 2024-18-10.mcap
+            </Text>
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Text size="xs" fw={700}>
+              Date:{" "}
+            </Text>
+            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+            <Text size="xs" fw={400}>
+              Fri, Oct 18, 2024
+            </Text>
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Text size="xs" fw={700}>
+              Time:{" "}
+            </Text>
+            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+            <Text size="xs" fw={400}>
+              12:24:02 PM
+            </Text>
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Text size="xs" fw={700}>
+              Location:{" "}
+            </Text>
+            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+            <Text size="xs" fw={400}>
+              MRDC
+            </Text>
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Text size="xs" fw={700}>
+              Sensors:{" "}
+            </Text>
+            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+            <Text size="xs" fw={400}>
+              aero_sensor_1
+            </Text>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              padding: 20,
+              gap: "10px",
+            }}
+          >
+            <div className="previewFileButtons">
+              <DownloadButton
+                buttonText="MAT"
+                fileName={selectedData?.mcap_file_name ?? ""}
+                signedUrl={selectedData?.signed_url ?? null}
+              />
+              <DownloadButton
+                buttonText="MCAP"
+                fileName={selectedData?.mcap_file_name ?? ""}
+                signedUrl={selectedData?.signed_url ?? null}
+              />
+            </div>
+          </div>
           {selectedData ? (
             <>
               <PreviewDataDiv

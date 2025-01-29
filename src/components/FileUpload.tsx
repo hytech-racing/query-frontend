@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Modal, Button, Notification, FileInput } from '@mantine/core';
-import '@/css/FileUpload.css';
+import React, { useState } from "react";
+import { Modal, Button, Notification, FileInput } from "@mantine/core";
+import "@/css/FileUpload.css";
 
 interface FileUploadProps {
   uploadUrl: string;
@@ -25,6 +25,24 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     setError(null);
     setSuccess(null)
     if (selectedFiles.length > 0) {
+      const formData = new FormData();
+      selectedFiles.forEach((file) => {
+        formData.append("files", file);
+      });
+
+      try {
+        const response = await fetch(uploadUrl, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          setError("Upload failed. Network response was not ok.");
+          return;
+        }
+
+        const data = await response.json();
+        console.log("Upload successful:", data);
       try {
         const formData = new FormData();
         selectedFiles.forEach(file => {
@@ -57,11 +75,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         
         setSelectedFiles([]);
       } catch (error) {
-        console.error('Upload failed:', error);
-        setError('An error occurred while uploading. Please try again.');
+        console.error("Upload failed:", error);
+        setError("An error occurred while uploading. Please try again.");
       }
-    } else {
-      setError('Please select files to upload.');
+    } catch (error) {
+      setError("Please select files to upload.");
+    }
     }
     setLoading(false);
   };
@@ -86,7 +105,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         onClose={handleClose}
         title="Select files to upload"
         centered
-        style={{ textAlign: "center" }} 
+        style={{ textAlign: "center" }}
       >
         <div className="files">
           <FileInput
@@ -95,7 +114,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
             onChange={handleFileChange}
             placeholder="Select files to upload"
             label="Choose files"
-            style={{ display: 'block', margin: '0 auto' }}
+            style={{ display: "block", margin: "0 auto" }}
           />
           {selectedFiles.length > 0 && (
             <div>
@@ -117,7 +136,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
           </Notification>
         )}
         {error && (
-          <Notification color="red" onClose={() => setError(null)} style={{ marginTop: 10 }}>
+          <Notification
+            color="red"
+            onClose={() => setError(null)}
+            style={{ marginTop: 10 }}
+          >
             {error}
           </Notification>
         )}
