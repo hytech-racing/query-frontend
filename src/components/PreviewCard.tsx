@@ -113,74 +113,9 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           <SchemaTable></SchemaTable>
         </Grid.Col>
         <Grid.Col span={3} style={{ position: "relative", padding: "10px" }}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="md" fw={700}>
-              run 2024-18-10.mcap
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Date:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              Fri, Oct 18, 2024
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Time:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              12:24:02 PM
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Location:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              MRDC
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Sensors:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              aero_sensor_1
-            </Text>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              padding: 20,
-              gap: "10px",
-            }}
-          >
-            <div className="previewFileButtons">
-              <DownloadButton
-                buttonText="MAT"
-                fileName={selectedData?.mcap_file_name ?? ""}
-                signedUrl={selectedData?.signed_url ?? null}
-              />
-              <DownloadButton
-                buttonText="MCAP"
-                fileName={selectedData?.mcap_file_name ?? ""}
-                signedUrl={selectedData?.signed_url ?? null}
-              />
-            </div>
-          </div>
           {selectedData ? (
             <>
-              <PreviewDataDiv
+              <PreviewDataDivHeader
                 name={getFileNameWithoutExtension(
                   selectedData.mcap_files[0].file_name,
                 )}
@@ -208,15 +143,24 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
               <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
+                  textAlign: "right",
                   position: "absolute",
                   bottom: 0,
                   left: 0,
-                  padding: 20,
+                  padding: 30,
                   gap: "8px",
                 }}
               >
                 <div>
+                  <Button
+                    loading={loading}
+                    loaderProps={{ type: "dots" }}
+                    size="compact-md"
+                    color="red"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </Button>
                   <CopyButton
                     value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
                   >
@@ -244,15 +188,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                       signedUrl={item.signed_url}
                     />
                   ))}
-                  <Button
-                    loading={loading}
-                    loaderProps={{ type: "dots" }}
-                    size="compact-md"
-                    color="red"
-                    onClick={handleDelete}
-                  >
-                    Delete
-                  </Button>
                   {success && (
                     <Notification
                       color="green"
@@ -281,6 +216,66 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                   No file selected
                 </Text>
               </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Date:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  NA
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Time:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  NA
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Location:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  NA
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Sensors:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  NA
+                </Text>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  textAlign: "right",
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  padding: 20,
+                  gap: "10px",
+                }}
+              >
+                <div className="previewFileButtons">
+                  <DownloadButton
+                    buttonText="MAT"
+                    fileName={""}
+                    signedUrl={null}
+                  />
+                  <DownloadButton
+                    buttonText="MCAP"
+                    fileName={""}
+                    signedUrl={null}
+                  />
+                </div>
+              </div>
             </>
           )}
         </Grid.Col>
@@ -308,7 +303,19 @@ export function PreviewDataDiv({ name, val }: PreviewDataDivProps) {
     </div>
   );
 }
-
+export function PreviewDataDivHeader({ name, val }: PreviewDataDivProps) {
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <Text size="m" fw={700}>
+        {name}:{" "}
+      </Text>
+      <span style={{ marginLeft: "5px" }} />
+      <Text size="m" fw={400}>
+        {val}
+      </Text>
+    </div>
+  );
+}
 interface DownloadButtonProps {
   buttonText: string;
   fileName: string;
