@@ -117,7 +117,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 )}
                 val={""}
               />
-              <Grid overflow="scroll">
+              <Grid style={{ overflowY: "auto" }}>
                 <Grid.Col span={12} h={120}>
                   {success && (
                     <Notification
