@@ -98,7 +98,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   };
   return (
     <div className="preview-container">
-      <Grid overflow="scroll">
+      <Grid>
         <Grid.Col span={3} h={240} className="image-column">
           <img src={imageUrl} alt="Preview" className="preview-image" />
         </Grid.Col>
@@ -111,14 +111,32 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
         <Grid.Col span={3} h={240}>
           {selectedData ? (
             <>
+              <PreviewDataDivHeader
+                name={getFileNameWithoutExtension(
+                  selectedData.mcap_files[0].file_name,
+                )}
+                val={""}
+              />
               <Grid overflow="scroll">
-                <Grid.Col span={12}>
-                  <PreviewDataDivHeader
-                    name={getFileNameWithoutExtension(
-                      selectedData.mcap_files[0].file_name,
-                    )}
-                    val={""}
-                  />
+                <Grid.Col span={12} h={120}>
+                  {success && (
+                    <Notification
+                      color="green"
+                      onClose={() => setSuccess(null)}
+                      style={{ marginTop: 10 }}
+                    >
+                      {success}
+                    </Notification>
+                  )}
+                  {error && (
+                    <Notification
+                      color="red"
+                      onClose={() => setError(null)}
+                      style={{ marginTop: 10 }}
+                    >
+                      {error}
+                    </Notification>
+                  )}
                   <PreviewDataDiv
                     name={"Car Model"}
                     val={selectedData.car_model ?? "NA"}
@@ -148,69 +166,49 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     val={selectedData.location}
                   />
                 </Grid.Col>
-                <Grid.Col span={12}>
-                  <div
-                    style={{
-                      textAlign: "center",
-                    }}
-                  >
-                    <Button
-                      loading={loading}
-                      loaderProps={{ type: "dots" }}
-                      size="compact-md"
-                      color="red"
-                      onClick={handleDelete}
-                    >
-                      Delete
-                    </Button>
-                    <CopyButton
-                      value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
-                    >
-                      {({ copied, copy }) => (
-                        <Button
-                          color={copied ? "green" : "#B3A369"}
-                          onClick={copy}
-                          size="compact-md"
-                        >
-                          {copied ? "Copied" : "Copy URL"}
-                        </Button>
-                      )}
-                    </CopyButton>
-                    {selectedData.mcap_files.map((item) => (
-                      <DownloadButton
-                        buttonText="MCAP"
-                        fileName={item.file_name}
-                        signedUrl={item.signed_url ?? null}
-                      />
-                    ))}
-                    {selectedData.mat_files.map((item) => (
-                      <DownloadButton
-                        buttonText="MAT"
-                        fileName={item.file_name}
-                        signedUrl={item.signed_url}
-                      />
-                    ))}
-                    {success && (
-                      <Notification
-                        color="green"
-                        onClose={() => setSuccess(null)}
-                        style={{ marginTop: 10 }}
-                      >
-                        {success}
-                      </Notification>
-                    )}
-                    {error && (
-                      <Notification
-                        color="red"
-                        onClose={() => setError(null)}
-                        style={{ marginTop: 10 }}
-                      >
-                        {error}
-                      </Notification>
-                    )}
-                  </div>
-                </Grid.Col>
               </Grid>
+              <div
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                <Button
+                  loading={loading}
+                  loaderProps={{ type: "dots" }}
+                  size="compact-md"
+                  color="red"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+                <CopyButton
+                  value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
+                >
+                  {({ copied, copy }) => (
+                    <Button
+                      color={copied ? "green" : "#B3A369"}
+                      onClick={copy}
+                      size="compact-md"
+                    >
+                      {copied ? "Copied" : "Copy URL"}
+                    </Button>
+                  )}
+                </CopyButton>
+                {selectedData.mcap_files.map((item) => (
+                  <DownloadButton
+                    buttonText="MCAP"
+                    fileName={item.file_name}
+                    signedUrl={item.signed_url ?? null}
+                  />
+                ))}
+                {selectedData.mat_files.map((item) => (
+                  <DownloadButton
+                    buttonText="MAT"
+                    fileName={item.file_name}
+                    signedUrl={item.signed_url}
+                  />
+                ))}
+              </div>
             </>
           ) : (
             <>
@@ -255,33 +253,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                   NA
                 </Text>
               </div>
-              {/* <div
-                style={{
-                  display: "flex",
-                  textAlign: "right",
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  padding: 20,
-                  gap: "10px",
-                  backgroundColor: "red",
-                }}
-              >
-                <div className="previewFileButtons"
-                  style={{
-                  }}>
-                  <DownloadButton
-                    buttonText="MAT"
-                    fileName={""}
-                    signedUrl={null}
-                  />
-                  <DownloadButton
-                    buttonText="MCAP"
-                    fileName={""}
-                    signedUrl={null}
-                  />
-                </div>
-              </div> */}
             </>
           )}
         </Grid.Col>
