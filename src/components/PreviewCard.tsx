@@ -99,160 +99,26 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   return (
     <div className="preview-container">
       <Grid>
-        <Grid.Col span={3} className="image-column">
+        <Grid.Col span={3} h={240} className="image-column">
           <img src={imageUrl} alt="Preview" className="preview-image" />
         </Grid.Col>
-        <Grid.Col span={3} className="image-column">
-          <img
-            src="https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"
-            alt="Preview"
-            className="preview-image"
-          />
+        <Grid.Col span={3} h={240} className="image-column">
+          <img src={imageUrl} alt="Preview" className="preview-image" />
         </Grid.Col>
-        <Grid.Col span={3} className="image-column">
+        <Grid.Col span={3} h={240} className="image-column">
           <SchemaTable></SchemaTable>
         </Grid.Col>
-        <Grid.Col span={3} style={{ position: "relative", padding: "10px" }}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="md" fw={700}>
-              run 2024-18-10.mcap
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Date:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              Fri, Oct 18, 2024
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Time:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              12:24:02 PM
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Location:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              MRDC
-            </Text>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Text size="xs" fw={700}>
-              Sensors:{" "}
-            </Text>
-            <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
-            <Text size="xs" fw={400}>
-              aero_sensor_1
-            </Text>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              padding: 20,
-              gap: "10px",
-            }}
-          >
-            <div className="previewFileButtons">
-              <DownloadButton
-                buttonText="MAT"
-                fileName={selectedData?.mcap_file_name ?? ""}
-                signedUrl={selectedData?.signed_url ?? null}
-              />
-              <DownloadButton
-                buttonText="MCAP"
-                fileName={selectedData?.mcap_file_name ?? ""}
-                signedUrl={selectedData?.signed_url ?? null}
-              />
-            </div>
-          </div>
+        <Grid.Col span={3} h={240}>
           {selectedData ? (
             <>
-              <PreviewDataDiv
+              <PreviewDataDivHeader
                 name={getFileNameWithoutExtension(
                   selectedData.mcap_files[0].file_name,
                 )}
                 val={""}
               />
-              <PreviewDataDiv
-                name={"Car Model"}
-                val={selectedData.car_model ?? "NA"}
-              />
-              <PreviewDataDiv
-                name={"Time"}
-                val={formatTime(selectedData.date)}
-              />
-              <PreviewDataDiv
-                name={"Date"}
-                val={formatDate(selectedData.date)}
-              />
-              <PreviewDataDiv name={"Location"} val={selectedData.location} />
-              <PreviewDataDiv
-                name={"Event Type"}
-                val={selectedData.event_type ?? null}
-              />
-              <PreviewDataDiv name={"Notes"} val={selectedData.notes ?? null} />
-              <PreviewDataDiv name={"Location"} val={selectedData.location} />
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  padding: 20,
-                  gap: "8px",
-                }}
-              >
-                <div>
-                  <CopyButton
-                    value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
-                  >
-                    {({ copied, copy }) => (
-                      <Button
-                        color={copied ? "green" : "#B3A369"}
-                        onClick={copy}
-                        size="compact-md"
-                      >
-                        {copied ? "Copied" : "Copy URL"}
-                      </Button>
-                    )}
-                  </CopyButton>
-                  {selectedData.mcap_files.map((item) => (
-                    <DownloadButton
-                      buttonText="MCAP"
-                      fileName={item.file_name}
-                      signedUrl={item.signed_url ?? null}
-                    />
-                  ))}
-                  {selectedData.mat_files.map((item) => (
-                    <DownloadButton
-                      buttonText="MAT"
-                      fileName={item.file_name}
-                      signedUrl={item.signed_url}
-                    />
-                  ))}
-                  <Button
-                    loading={loading}
-                    loaderProps={{ type: "dots" }}
-                    size="compact-md"
-                    color="red"
-                    onClick={handleDelete}
-                  >
-                    Delete
-                  </Button>
+              <Grid style={{ overflowY: "auto", overflowX: "hidden" }}>
+                <Grid.Col span={12} h={120}>
                   {success && (
                     <Notification
                       color="green"
@@ -271,7 +137,77 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                       {error}
                     </Notification>
                   )}
-                </div>
+                  <PreviewDataDiv
+                    name={"Car Model"}
+                    val={selectedData.car_model ?? "NA"}
+                  />
+                  <PreviewDataDiv
+                    name={"Time"}
+                    val={formatTime(selectedData.date)}
+                  />
+                  <PreviewDataDiv
+                    name={"Date"}
+                    val={formatDate(selectedData.date)}
+                  />
+                  <PreviewDataDiv
+                    name={"Location"}
+                    val={selectedData.location}
+                  />
+                  <PreviewDataDiv
+                    name={"Event Type"}
+                    val={selectedData.event_type ?? null}
+                  />
+                  <PreviewDataDiv
+                    name={"Notes"}
+                    val={selectedData.notes ?? null}
+                  />
+                  <PreviewDataDiv
+                    name={"Location"}
+                    val={selectedData.location}
+                  />
+                </Grid.Col>
+              </Grid>
+              <div
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                <Button
+                  loading={loading}
+                  loaderProps={{ type: "dots" }}
+                  size="compact-md"
+                  color="red"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+                <CopyButton
+                  value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
+                >
+                  {({ copied, copy }) => (
+                    <Button
+                      color={copied ? "green" : "#B3A369"}
+                      onClick={copy}
+                      size="compact-md"
+                    >
+                      {copied ? "Copied" : "Copy URL"}
+                    </Button>
+                  )}
+                </CopyButton>
+                {selectedData.mcap_files.map((item) => (
+                  <DownloadButton
+                    buttonText="MCAP"
+                    fileName={item.file_name}
+                    signedUrl={item.signed_url ?? null}
+                  />
+                ))}
+                {selectedData.mat_files.map((item) => (
+                  <DownloadButton
+                    buttonText="MAT"
+                    fileName={item.file_name}
+                    signedUrl={item.signed_url}
+                  />
+                ))}
               </div>
             </>
           ) : (
@@ -279,6 +215,42 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Text size="md" fw={700}>
                   No file selected
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Date:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  NA
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Time:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  NA
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Location:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  NA
+                </Text>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Text size="xs" fw={700}>
+                  Sensors:{" "}
+                </Text>
+                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <Text size="xs" fw={400}>
+                  NA
                 </Text>
               </div>
             </>
@@ -308,7 +280,19 @@ export function PreviewDataDiv({ name, val }: PreviewDataDivProps) {
     </div>
   );
 }
-
+export function PreviewDataDivHeader({ name, val }: PreviewDataDivProps) {
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <Text size="m" fw={700}>
+        {name}:{" "}
+      </Text>
+      <span style={{ marginLeft: "5px" }} />
+      <Text size="m" fw={400}>
+        {val}
+      </Text>
+    </div>
+  );
+}
 interface DownloadButtonProps {
   buttonText: string;
   fileName: string;
@@ -381,7 +365,7 @@ export const SchemaTable = () => {
   };
 
   return (
-    <div>
+    <div style={{ padding: "15px", overflow: "scroll" }}>
       {/* Search input */}
       <TextInput
         size="xs"
