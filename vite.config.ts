@@ -15,6 +15,6 @@ export default defineConfig(({ mode }) => {
         "@components": path.resolve(__dirname, "./src/components"),
       },
     },
-    base: mode === "production" ? "/query-frontend/" : "",
+    base: mode === "production" ? "/query-frontend/" : "/",
   };
 });
