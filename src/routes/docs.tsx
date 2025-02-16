@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { Select, Text } from "@mantine/core";
+import { Select, Text, CopyButton, Button } from "@mantine/core";
+import { useParams } from "react-router-dom";
 
 export default function Docs() {
+  const origin = window.location.origin;
+  const { version, repo } = useParams<{ version?: string; repo?: string }>();
   const [versionsCAN, setVersionsCAN] = useState<string[]>([]);
   const [selectedVersion, setSelectedVersion] = useState<string | null>(null);
   const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
@@ -63,6 +66,8 @@ export default function Docs() {
   };
 
   useEffect(() => {
+    setSelectedVersion(version ?? null);
+    setSelectedRepo(repo ?? null);
     fetchVersions();
   }, []);
 
@@ -112,6 +117,19 @@ export default function Docs() {
               }}
             />
           </div>
+          <CopyButton
+            value={`${origin}/docs/${selectedVersion}/${selectedRepo}`}
+          >
+            {({ copied, copy }) => (
+              <Button
+                color={copied ? "green" : "#B3A369"}
+                onClick={copy}
+                size="compact-md"
+              >
+                {copied ? "Copied" : "Copy URL"}
+              </Button>
+            )}
+          </CopyButton>
         </div>
       </div>
 
