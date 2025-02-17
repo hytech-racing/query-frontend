@@ -18,6 +18,7 @@ const router = createBrowserRouter(
     <Route element={<Layout />} errorElement={<ErrorPage />}>
       <Route path="/" element={<Root />} />
       <Route path="/docs" element={<Docs />} />
+      <Route path="/docs/:version/:repo" element={<Docs />} />
       <Route path="/changelog" element={<Changelog />} />
     </Route>,
   ),
