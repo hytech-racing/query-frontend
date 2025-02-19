@@ -47,7 +47,7 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Duplicate index to 404
-      - run: |
+        run: |
           cp index.html dist/404.html
 
       - name: Upload artifact
