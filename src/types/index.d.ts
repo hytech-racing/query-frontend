@@ -26,6 +26,10 @@ type MCAPFileInformation = {
       signed_url: string;
       file_name: string;
     }[];
+    vn_time_vel_plot: {
+      signed_url: string;
+      file_name: string;
+    }[];
   };
   /** Name of the MCAP file. */
   mcap_file_name: string;

@@ -83,8 +83,11 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       : fileNameWithExtension;
   };
 
-  const imageUrl =
+  const latImageUrl =
     selectedData?.content_files?.vn_lat_lon_plot?.[0]?.signed_url ??
+    "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"; // Fallback to a default image if none exists.
+  const velImageUrl =
+    selectedData?.content_files?.vn_time_vel_plot?.[0]?.signed_url ??
     "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"; // Fallback to a default image if none exists.
 
   const formatTime = (dateString: string) => {
@@ -99,16 +102,16 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   return (
     <div className="preview-container">
       <Grid>
-        <Grid.Col span={3} h={240} className="image-column">
-          <img src={imageUrl} alt="Preview" className="preview-image" />
+        <Grid.Col span={3} h={260} className="image-column">
+          <img src={latImageUrl} alt="Preview" className="preview-image" />
         </Grid.Col>
-        <Grid.Col span={3} h={240} className="image-column">
-          <img src={imageUrl} alt="Preview" className="preview-image" />
+        <Grid.Col span={3} h={260} className="image-column">
+          <img src={velImageUrl} alt="Preview" className="preview-image" />
         </Grid.Col>
-        <Grid.Col span={3} h={240} className="image-column">
+        <Grid.Col span={3} h={260} className="image-column">
           <SchemaTable></SchemaTable>
         </Grid.Col>
-        <Grid.Col span={3} h={240}>
+        <Grid.Col span={3} h={260}>
           {selectedData ? (
             <>
               <PreviewDataDivHeader
