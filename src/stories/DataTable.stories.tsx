@@ -53,6 +53,7 @@ const sampleData = [
     mat_files: [{ signed_url: "har", file_name: "har" }],
     content_files: {
       vn_lat_lon_plot: [{ signed_url: "bar", file_name: "far" }],
+      vn_time_vel_plot: [{ signed_url: "bar", file_name: "far" }],
     },
   },
 ];
