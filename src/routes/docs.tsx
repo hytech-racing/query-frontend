@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
-import { Select, Text } from "@mantine/core";
+import { Select, Text, CopyButton, Button } from "@mantine/core";
+import { useParams } from "react-router-dom";
 
 export default function Docs() {
-  const [versions, setVersions] = useState<string[]>([]);
+  const origin = window.location.origin;
+  const { version, repo } = useParams<{ version?: string; repo?: string }>();
+  const [versionsCAN, setVersionsCAN] = useState<string[]>([]);
   const [selectedVersion, setSelectedVersion] = useState<string | null>(null);
+  const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
+  const [versionsProto, setVersionsProto] = useState<string[]>([]);
   const [htmlContent, setHtmlContent] = useState<string>("");
 
   const fetchVersions = async () => {
@@ -11,14 +16,15 @@ export default function Docs() {
       `${import.meta.env.VITE_API_URL}/docs/versions`,
     );
     const data = await response.json();
-    setVersions(data.data);
+    setVersionsCAN(data.HT_CAN);
+    setVersionsProto(data.HT_Proto);
   };
 
   const fetchVersion = async () => {
     if (!selectedVersion) return "<p>Select a version to view content.</p>";
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/docs/versions/${selectedVersion}`,
+        `${import.meta.env.VITE_API_URL}/docs/versions/${selectedVersion}/${selectedRepo}`,
       );
 
       if (!response.ok) {
@@ -60,6 +66,8 @@ export default function Docs() {
   };
 
   useEffect(() => {
+    setSelectedVersion(version ?? null);
+    setSelectedRepo(repo ?? null);
     fetchVersions();
   }, []);
 
@@ -79,18 +87,49 @@ export default function Docs() {
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
           <Text size="xs" fw={700} tt="capitalize">
-            Currently looking at ... {selectedVersion}
+            Currently looking at ... {selectedVersion} at {selectedRepo}
           </Text>
-          <Select
-            label="Documentation Version"
-            placeholder="Select Documentation version"
-            data={versions.map((version) => ({
-              value: version,
-              label: version,
-            }))}
-            size="xs"
-            onChange={(value) => setSelectedVersion(value)}
-          />
+          <div style={{ display: "flex", gap: 10 }}>
+            <Select
+              label="HT_CAN Documentation Version"
+              placeholder="Select Documentation version"
+              data={versionsCAN.map((version) => ({
+                value: version,
+                label: version,
+              }))}
+              size="xs"
+              onChange={(value) => {
+                setSelectedVersion(value);
+                setSelectedRepo("HT_CAN");
+              }}
+            />
+            <Select
+              label="HT_proto Documentation Version"
+              placeholder="Select Documentation version"
+              data={versionsProto.map((version) => ({
+                value: version,
+                label: version,
+              }))}
+              size="xs"
+              onChange={(value) => {
+                setSelectedVersion(value);
+                setSelectedRepo("HT_Proto");
+              }}
+            />
+          </div>
+          <CopyButton
+            value={`${origin}/docs/${selectedVersion}/${selectedRepo}`}
+          >
+            {({ copied, copy }) => (
+              <Button
+                color={copied ? "green" : "#B3A369"}
+                onClick={copy}
+                size="compact-md"
+              >
+                {copied ? "Copied" : "Copy URL"}
+              </Button>
+            )}
+          </CopyButton>
         </div>
       </div>
 

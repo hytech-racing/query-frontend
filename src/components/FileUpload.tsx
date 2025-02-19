@@ -25,24 +25,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     setError(null);
     setSuccess(null)
     if (selectedFiles.length > 0) {
-      const formData = new FormData();
-      selectedFiles.forEach((file) => {
-        formData.append("files", file);
-      });
-
-      try {
-        const response = await fetch(uploadUrl, {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!response.ok) {
-          setError("Upload failed. Network response was not ok.");
-          return;
-        }
-
-        const data = await response.json();
-        console.log("Upload successful:", data);
       try {
         const formData = new FormData();
         selectedFiles.forEach(file => {
@@ -78,9 +60,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         console.error("Upload failed:", error);
         setError("An error occurred while uploading. Please try again.");
       }
-    } catch (error) {
-      setError("Please select files to upload.");
-    }
     }
     setLoading(false);
   };
