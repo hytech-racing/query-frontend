@@ -87,7 +87,7 @@ export default function Docs() {
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
           <Text size="xs" fw={700} tt="capitalize">
-            Currently looking at ... {selectedVersion} at {selectedRepo}
+            Currently looking at ... {selectedVersion?.slice(0,-5)} at {selectedRepo}
           </Text>
           <div style={{ display: "flex", gap: 10 }}>
             <Select
@@ -95,7 +95,7 @@ export default function Docs() {
               placeholder="Select Documentation version"
               data={versionsCAN.map((version) => ({
                 value: version,
-                label: version,
+                label: version.slice(0,-5),
               }))}
               size="xs"
               onChange={(value) => {
@@ -108,7 +108,7 @@ export default function Docs() {
               placeholder="Select Documentation version"
               data={versionsProto.map((version) => ({
                 value: version,
-                label: version,
+                label: version.slice(0,-5),
               }))}
               size="xs"
               onChange={(value) => {
