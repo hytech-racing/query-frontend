@@ -113,7 +113,7 @@ export default function Docs() {
               size="xs"
               onChange={(value) => {
                 setSelectedVersion(value);
-                setSelectedRepo("HT_Proto");
+                setSelectedRepo("HT_proto");
               }}
             />
           </div>
