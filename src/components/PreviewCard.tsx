@@ -258,6 +258,23 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
               </div>
             </>
           )}
+          {/*{ selectedData?._______ && selectedData?._________ && (*/}
+            <div style={{}}>
+              <CopyButton
+                  value={`${origin}/docs/PLACEHOLDER/PLACEHOLDER`}
+                >
+                {({ copied, copy }) => (
+                  <Button
+                    color={copied ? "green" : "#B3A369"}
+                    onClick={copy}
+                    size="xs"
+                  ><object data="" type=""></object>
+                    {copied ? "Copied" : "Copy URL"}
+                  </Button>
+                )}
+              </CopyButton>
+            </div>
+          {/*)}*/}
         </Grid.Col>
       </Grid>
     </div>
