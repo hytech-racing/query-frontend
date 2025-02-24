@@ -118,7 +118,7 @@ export default function Docs() {
             />
           </div>
           <CopyButton
-            value={`${origin}/docs/${selectedVersion}/${selectedRepo}`}
+            value={`${origin}${import.meta.env.BASE_URL}docs/${selectedVersion}/${selectedRepo}`}
           >
             {({ copied, copy }) => (
               <Button
