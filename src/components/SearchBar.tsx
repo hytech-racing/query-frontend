@@ -54,7 +54,7 @@ function SearchBarWithFilter({ setSearch }: SearchBarWithFilterProps) {
   return (
     <div className="Search">
       {/* Display Filtered Data */}
-
+      
       <div className="search-filter-container">
         <h1>Search and Filter Data</h1>
         {/* Search Bar */}
