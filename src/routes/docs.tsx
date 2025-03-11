@@ -117,21 +117,19 @@ export default function Docs() {
               }}
             />
           </div>
-          {selectedVersion != null && selectedRepo != null && (
-            <CopyButton
-              value={`${origin}/docs/${selectedVersion}/${selectedRepo}`}
-            >
-              {({ copied, copy }) => (
-                <Button
-                  color={copied ? "green" : "#B3A369"}
-                  onClick={copy}
-                  size="compact-md"
-                ><object data="" type=""></object>
-                  {copied ? "Copied" : "Copy URL"}
-                </Button>
-              )}
-            </CopyButton>
-          )}
+          <CopyButton
+            value={`${origin}${import.meta.env.BASE_URL}docs/${selectedVersion}/${selectedRepo}`}
+          >
+            {({ copied, copy }) => (
+              <Button
+                color={copied ? "green" : "#B3A369"}
+                onClick={copy}
+                size="compact-md"
+              >
+                {copied ? "Copied" : "Copy URL"}
+              </Button>
+            )}
+          </CopyButton>
         </div>
       </div>
 
