@@ -117,6 +117,7 @@ export default function Docs() {
               }}
             />
           </div>
+          { selectedVersion && selectedRepo && (
           <CopyButton
             value={`${origin}${import.meta.env.BASE_URL}docs/${selectedVersion}/${selectedRepo}`}
           >
@@ -129,7 +130,7 @@ export default function Docs() {
                 {copied ? "Copied" : "Copy URL"}
               </Button>
             )}
-          </CopyButton>
+          </CopyButton>)}
         </div>
       </div>
 
