@@ -3,6 +3,8 @@ import "@/css/Navbar.css";
 import { NavLink } from "react-router-dom";
 import FileUpload from "@/components/FileUpload";
 import Feedback from "@/components/Feedback";
+import { IconHelp } from "@tabler/icons-react";
+import {Button} from "@mantine/core";
 
 const mainLinksData = [
   { name: "Files", url: "/" },
@@ -26,6 +28,13 @@ export default function Navbar() {
         alt="Logo"
         className="navbar-icon"
       />
+      <Button 
+        variant="filled"
+        component="a"
+        target="_blank"
+        href="https://wiki.hytechracing.org/books/software/page/query-frontend-demo-and-documentation">
+          <IconHelp size="25"/>
+      </Button>
       {links}
 
       {/* Once POST API is out -- Currently WIP */}
