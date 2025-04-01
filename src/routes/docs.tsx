@@ -148,7 +148,10 @@ export default function Docs() {
               allowDeselect
             />
           </div>
-          <CopyButton value={generateShareableUrl()}>
+          { selectedCanVersion && selectedProtoVersion && (
+          <CopyButton
+            value={`${origin}${import.meta.env.BASE_URL}docs/${selectedCanVersion}/${selectedProtoVersion}`}
+          >
             {({ copied, copy }) => (
               <Button
                 color={copied ? "green" : "#B3A369"}
@@ -159,7 +162,7 @@ export default function Docs() {
                 {copied ? "Copied" : "Copy URL"}
               </Button>
             )}
-          </CopyButton>
+          </CopyButton>)}
         </div>
       </div>
 
@@ -178,7 +181,7 @@ export default function Docs() {
             </Text>
             <iframe
               srcDoc={canHtmlContent}
-              width="100%"
+              width="95%"
               height="100%"
               style={{ border: "none" }}
             />
@@ -198,7 +201,7 @@ export default function Docs() {
             </Text>
             <iframe
               srcDoc={protoHtmlContent}
-              width="100%"
+              width="95%"
               height="100%"
               style={{ border: "none" }}
             />
