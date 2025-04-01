@@ -148,10 +148,7 @@ export default function Docs() {
               allowDeselect
             />
           </div>
-          { selectedCanVersion && selectedProtoVersion && (
-          <CopyButton
-            value={`${origin}${import.meta.env.BASE_URL}docs/${selectedCanVersion}/${selectedProtoVersion}`}
-          >
+          <CopyButton value={generateShareableUrl()}>
             {({ copied, copy }) => (
               <Button
                 color={copied ? "green" : "#B3A369"}
@@ -162,7 +159,7 @@ export default function Docs() {
                 {copied ? "Copied" : "Copy URL"}
               </Button>
             )}
-          </CopyButton>)}
+          </CopyButton>
         </div>
       </div>
 
