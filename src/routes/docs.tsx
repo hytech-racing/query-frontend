@@ -178,7 +178,7 @@ export default function Docs() {
             </Text>
             <iframe
               srcDoc={canHtmlContent}
-              width="100%"
+              width="95%"
               height="100%"
               style={{ border: "none" }}
             />
@@ -198,7 +198,7 @@ export default function Docs() {
             </Text>
             <iframe
               srcDoc={protoHtmlContent}
-              width="100%"
+              width="95%"
               height="100%"
               style={{ border: "none" }}
             />
