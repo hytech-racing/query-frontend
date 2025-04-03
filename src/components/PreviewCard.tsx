@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Text,
   Button,
@@ -10,7 +10,9 @@ import {
   TextInput,
   Notification,
   CopyButton,
+  Modal,
 } from "@mantine/core";
+import { DateInput } from "@mantine/dates"; // Import DateInput for editing the date
 import {
   IconDownload,
   IconChevronDown,
@@ -30,6 +32,10 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [editDateModalOpened, setEditDateModalOpened] = useState(false);
+  const [newDate, setNewDate] = useState<Date | null>(
+    selectedData?.date ? new Date(selectedData.date) : null,
+  );
 
   const handleDelete = async () => {
     setLoading(true);
@@ -65,6 +71,50 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     setLoading(false);
   };
 
+  const handleEditDate = async () => {
+    if (!newDate || !selectedData?.id) return;
+
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            date: newDate.toISOString(),
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        if (response.status === 503) {
+          const errorMsg = await response.text();
+          setError(
+            `Failed to update date: ${errorMsg} \nTry again in a few minutes!`,
+          );
+        } else {
+          const errorMsg = await response.text();
+          setError(`Failed to update date: ${errorMsg}`);
+        }
+      } else {
+        setSuccess("Date updated successfully!");
+        selectedData.date = newDate.toISOString();
+      }
+    } catch (error) {
+      console.error("Error updating date:", error);
+      setError("An error occurred while updating the date.");
+    }
+
+    setLoading(false);
+    setEditDateModalOpened(false);
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -75,20 +125,12 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     });
   };
 
-  // Take out when API server team implements filename id in their get route
   const getFileNameWithoutExtension = (fileNameWithExtension: string) => {
     const lastDotIndex = fileNameWithExtension.lastIndexOf(".");
     return lastDotIndex !== -1
       ? fileNameWithExtension.slice(0, lastDotIndex)
       : fileNameWithExtension;
   };
-
-  const latImageUrl =
-    selectedData?.content_files?.vn_lat_lon_plot?.[0]?.signed_url ??
-    "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"; // Fallback to a default image if none exists.
-  const velImageUrl =
-    selectedData?.content_files?.vn_time_vel_plot?.[0]?.signed_url ??
-    "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"; // Fallback to a default image if none exists.
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -99,6 +141,46 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       hour12: true,
     });
   };
+
+  const dateInputStyles = {
+    calendarHeaderControl: {
+      width: "24px",
+      height: "24px",
+      fontSize: "14px",
+      lineHeight: "24px",
+    },
+    calendarHeader: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "8px 0",
+    },
+    calendarHeaderLevel: {
+      flex: "0 1 auto",
+    },
+    calendar: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    weekday: {
+      fontSize: "12px",
+    },
+    day: {
+      fontSize: "12px",
+      width: "30px",
+      height: "30px",
+      lineHeight: "30px",
+    },
+  };
+
+  const latImageUrl =
+    selectedData?.content_files?.vn_lat_lon_plot?.[0]?.signed_url ??
+    "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67";
+  const velImageUrl =
+    selectedData?.content_files?.vn_time_vel_plot?.[0]?.signed_url ??
+    "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67";
+
   return (
     <div className="preview-container">
       <Grid>
@@ -109,7 +191,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           <img src={velImageUrl} alt="Preview" className="preview-image" />
         </Grid.Col>
         <Grid.Col span={3} h={260} className="image-column">
-          <SchemaTable></SchemaTable>
+          <SchemaTable />
         </Grid.Col>
         <Grid.Col span={3} h={260}>
           {selectedData ? (
@@ -170,11 +252,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                   />
                 </Grid.Col>
               </Grid>
-              <div
-                style={{
-                  textAlign: "center",
-                }}
-              >
+              <div style={{ textAlign: "center" }}>
                 <Button
                   loading={loading}
                   loaderProps={{ type: "dots" }}
@@ -197,6 +275,13 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     </Button>
                   )}
                 </CopyButton>
+                <Button
+                  size="compact-md"
+                  color="blue"
+                  onClick={() => setEditDateModalOpened(true)}
+                >
+                  Edit Date
+                </Button>
                 {selectedData.mcap_files.map((item) => (
                   <DownloadButton
                     buttonText="MCAP"
@@ -224,7 +309,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 <Text size="xs" fw={700}>
                   Date:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
                   NA
                 </Text>
@@ -233,7 +318,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 <Text size="xs" fw={700}>
                   Time:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
                   NA
                 </Text>
@@ -242,7 +327,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 <Text size="xs" fw={700}>
                   Location:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
                   NA
                 </Text>
@@ -251,7 +336,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 <Text size="xs" fw={700}>
                   Sensors:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
                   NA
                 </Text>
@@ -260,6 +345,32 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           )}
         </Grid.Col>
       </Grid>
+
+      <Modal
+        opened={editDateModalOpened}
+        onClose={() => setEditDateModalOpened(false)}
+        title="Edit Date"
+        centered
+        style={{ textAlign: "center" }}
+      >
+        <DateInput
+          value={newDate}
+          onChange={setNewDate}
+          label="Select new date"
+          placeholder="Pick a date"
+          style={{ display: "block", margin: "0 auto", marginBottom: 20 }}
+          styles={dateInputStyles}
+        />
+        <Button
+          loading={loading}
+          loaderProps={{ type: "dots" }}
+          onClick={handleEditDate}
+          style={{ marginTop: 10 }}
+          disabled={loading || !newDate}
+        >
+          Update Date
+        </Button>
+      </Modal>
     </div>
   );
 }
@@ -270,6 +381,7 @@ interface PreviewDataDivProps {
   name: string;
   val: string | null;
 }
+
 export function PreviewDataDiv({ name, val }: PreviewDataDivProps) {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
@@ -283,6 +395,7 @@ export function PreviewDataDiv({ name, val }: PreviewDataDivProps) {
     </div>
   );
 }
+
 export function PreviewDataDivHeader({ name, val }: PreviewDataDivProps) {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
@@ -296,6 +409,7 @@ export function PreviewDataDivHeader({ name, val }: PreviewDataDivProps) {
     </div>
   );
 }
+
 interface DownloadButtonProps {
   buttonText: string;
   fileName: string;
@@ -347,7 +461,6 @@ export function DownloadButton({
 }
 
 export const SchemaTable = () => {
-  // Example data for the table
   const initialData = Array.from({ length: 20 }, (_, index) => ({
     name: `Schema ${index + 1}`,
     value: `${index + 1 + "." + index + "." + index}`,
@@ -356,7 +469,6 @@ export const SchemaTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(initialData);
 
-  // Function to filter data based on the search term
   const handleSearch = (term: string) => {
     const lowercasedTerm = term.toLowerCase();
     const filtered = initialData.filter(
@@ -369,11 +481,10 @@ export const SchemaTable = () => {
 
   return (
     <div style={{ padding: "15px", overflow: "scroll" }}>
-      {/* Search input */}
       <TextInput
         size="xs"
-        leftSection={<IconSearch></IconSearch>}
-        placeholder="Search schemas" // very hacky text spacing
+        leftSection={<IconSearch />}
+        placeholder="Search schemas"
         value={searchTerm}
         onChange={(e) => {
           setSearchTerm(e.target.value);
@@ -381,8 +492,6 @@ export const SchemaTable = () => {
         }}
       />
       <ScrollArea style={{ height: 180, width: 250, padding: 10 }}>
-        {" "}
-        {/* Scrollable area with height limit */}
         <Table
           striped
           highlightOnHover
