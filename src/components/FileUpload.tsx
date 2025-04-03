@@ -13,7 +13,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-
   const handleFileChange = (files: File[]) => {
     if (files.length > 0) {
       setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
@@ -23,38 +22,40 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const handleUpload = async () => {
     setLoading(true);
     setError(null);
-    setSuccess(null)
+    setSuccess(null);
     if (selectedFiles.length > 0) {
       try {
         const formData = new FormData();
-        selectedFiles.forEach(file => {
-          formData.append('files', file);
+        selectedFiles.forEach((file) => {
+          formData.append("files", file);
         });
 
         try {
-            const response = await fetch(uploadUrl, {
-              method: 'POST',
-              body: formData,
-            });
+          const response = await fetch(uploadUrl, {
+            method: "POST",
+            body: formData,
+          });
 
-            if (!response.ok) {
-              if (response.status === 503) {
-                const errorMsg = await response.text();
-                setError(`Failed to upload: ${errorMsg} \nTry again in a few minutes!`);
-              } else {
-                const errorMsg = await response.text();
-                setError(`Failed to upload: ${errorMsg}`);
-              }
+          if (!response.ok) {
+            if (response.status === 503) {
+              const errorMsg = await response.text();
+              setError(
+                `Failed to upload: ${errorMsg} \nTry again in a few minutes!`,
+              );
             } else {
-              const result = await response.json();
-              setSuccess('File uploaded successfully!');
-              console.log('Upload successful:', result);
+              const errorMsg = await response.text();
+              setError(`Failed to upload: ${errorMsg}`);
             }
+          } else {
+            const result = await response.json();
+            setSuccess("File uploaded successfully!");
+            console.log("Upload successful:", result);
+          }
         } catch (error) {
-          console.error('Error uploading files:', error);
-          setError('An error occurred during file upload.');
+          console.error("Error uploading files:", error);
+          setError("An error occurred during file upload.");
         }
-        
+
         setSelectedFiles([]);
       } catch (error) {
         console.error("Upload failed:", error);
@@ -72,7 +73,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     setShowModal(false);
     setSelectedFiles([]);
     setError(null);
-    setSuccess(null)
+    setSuccess(null);
   };
 
   return (
@@ -106,11 +107,23 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
             </div>
           )}
         </div>
-        
-        <Button loading={loading} loaderProps={{ type: 'dots' }} onClick={handleUpload} style={{ marginTop: 10 }} disabled={loading}>Upload</Button>
-        
+
+        <Button
+          loading={loading}
+          loaderProps={{ type: "dots" }}
+          onClick={handleUpload}
+          style={{ marginTop: 10 }}
+          disabled={loading}
+        >
+          Upload
+        </Button>
+
         {success && (
-          <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
+          <Notification
+            color="green"
+            onClose={() => setSuccess(null)}
+            style={{ marginTop: 10 }}
+          >
             {success}
           </Notification>
         )}
