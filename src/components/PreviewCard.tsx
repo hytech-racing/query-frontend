@@ -12,7 +12,7 @@ import {
   CopyButton,
   Modal,
 } from "@mantine/core";
-import { DateInput } from "@mantine/dates"; // Import DateInput for editing the date
+import { DateInput } from "@mantine/dates";
 import {
   IconDownload,
   IconChevronDown,
@@ -34,6 +34,9 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   const [success, setSuccess] = useState<string | null>(null);
   const [editDateModalOpened, setEditDateModalOpened] = useState(false);
   const [newDate, setNewDate] = useState<Date | null>(
+    selectedData?.date ? new Date(selectedData.date) : null,
+  );
+  const [newTime, setNewTime] = useState<Date | null>(
     selectedData?.date ? new Date(selectedData.date) : null,
   );
 
@@ -72,23 +75,41 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   };
 
   const handleEditDate = async () => {
-    if (!newDate || !selectedData?.id) return;
+    if (!newDate || !newTime || !selectedData?.id) return;
 
     setLoading(true);
     setError(null);
     setSuccess(null);
 
     try {
+      const combinedDate = new Date(newDate);
+      combinedDate.setHours(newTime.getHours());
+      combinedDate.setMinutes(newTime.getMinutes());
+      combinedDate.setSeconds(newTime.getSeconds());
+
+      const formattedDate = `${combinedDate.getFullYear()}-${String(
+        combinedDate.getMonth() + 1,
+      ).padStart(2, "0")}-${String(combinedDate.getDate()).padStart(
+        2,
+        "0",
+      )} ${String(combinedDate.getHours()).padStart(2, "0")}:${String(
+        combinedDate.getMinutes(),
+      ).padStart(2, "0")}:${String(combinedDate.getSeconds()).padStart(
+        2,
+        "0",
+      )}`;
+
+      console.log("Formatted Date for API:", formattedDate);
+
+      const formData = new FormData();
+      formData.append("metadata", "date");
+      formData.append("record", formattedDate);
+
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}`,
+        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}/updateMetadataRecords`,
         {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            date: newDate.toISOString(),
-          }),
+          method: "POST",
+          body: formData,
         },
       );
 
@@ -103,12 +124,12 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           setError(`Failed to update date: ${errorMsg}`);
         }
       } else {
-        setSuccess("Date updated successfully!");
-        selectedData.date = newDate.toISOString();
+        setSuccess("Date and time updated successfully!");
+        selectedData.date = combinedDate.toISOString();
       }
     } catch (error) {
       console.error("Error updating date:", error);
-      setError("An error occurred while updating the date.");
+      setError("An error occurred while updating the date and time.");
     }
 
     setLoading(false);
@@ -349,26 +370,119 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       <Modal
         opened={editDateModalOpened}
         onClose={() => setEditDateModalOpened(false)}
-        title="Edit Date"
+        title="Edit Date and Time"
         centered
         style={{ textAlign: "center" }}
       >
         <DateInput
           value={newDate}
           onChange={setNewDate}
+          valueFormat="DD/MM/YYYY"
           label="Select new date"
           placeholder="Pick a date"
           style={{ display: "block", margin: "0 auto", marginBottom: 20 }}
           styles={dateInputStyles}
         />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginBottom: 20,
+          }}
+        >
+          <label style={{ marginBottom: 5 }}>Select new time (24-hour)</label>
+          <div style={{ display: "flex", gap: 5 }}>
+            <input
+              type="number"
+              value={
+                newTime ? String(newTime.getHours()).padStart(2, "0") : "00"
+              }
+              onChange={(e) => {
+                const hours = Math.min(
+                  23,
+                  Math.max(0, parseInt(e.target.value) || 0),
+                );
+                const updatedTime = newTime ? new Date(newTime) : new Date();
+                updatedTime.setHours(hours);
+                setNewTime(updatedTime);
+              }}
+              min={0}
+              max={23}
+              step={1}
+              placeholder="HH"
+              style={{
+                width: 50,
+                textAlign: "center",
+                padding: 5,
+                border: "1px solid #ccc",
+                borderRadius: 4,
+              }}
+            />
+            <span>:</span>
+            <input
+              type="number"
+              value={
+                newTime ? String(newTime.getMinutes()).padStart(2, "0") : "00"
+              }
+              onChange={(e) => {
+                const minutes = Math.min(
+                  59,
+                  Math.max(0, parseInt(e.target.value) || 0),
+                );
+                const updatedTime = newTime ? new Date(newTime) : new Date();
+                updatedTime.setMinutes(minutes);
+                setNewTime(updatedTime);
+              }}
+              min={0}
+              max={59}
+              step={1}
+              placeholder="MM"
+              style={{
+                width: 50,
+                textAlign: "center",
+                padding: 5,
+                border: "1px solid #ccc",
+                borderRadius: 4,
+              }}
+            />
+            <span>:</span>
+            <input
+              type="number"
+              value={
+                newTime ? String(newTime.getSeconds()).padStart(2, "0") : "00"
+              }
+              onChange={(e) => {
+                const seconds = Math.min(
+                  59,
+                  Math.max(0, parseInt(e.target.value) || 0),
+                );
+                const updatedTime = newTime ? new Date(newTime) : new Date();
+                updatedTime.setSeconds(seconds);
+                setNewTime(updatedTime);
+              }}
+              min={0}
+              max={59}
+              step={1}
+              placeholder="SS"
+              style={{
+                width: 50,
+                textAlign: "center",
+                padding: 5,
+                border: "1px solid #ccc",
+                borderRadius: 4,
+              }}
+            />
+          </div>
+        </div>
         <Button
           loading={loading}
           loaderProps={{ type: "dots" }}
           onClick={handleEditDate}
           style={{ marginTop: 10 }}
-          disabled={loading || !newDate}
+          disabled={loading || !newDate || !newTime}
         >
-          Update Date
+          Update Date and Time
         </Button>
       </Modal>
     </div>
