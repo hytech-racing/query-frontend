@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Text,
   Button,
@@ -33,12 +33,16 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [editDateModalOpened, setEditDateModalOpened] = useState(false);
-  const [newDate, setNewDate] = useState<Date | null>(
-    selectedData?.date ? new Date(selectedData.date) : null,
-  );
-  const [newTime, setNewTime] = useState<Date | null>(
-    selectedData?.date ? new Date(selectedData.date) : null,
-  );
+  const [newDate, setNewDate] = useState<Date | null>(null);
+  const [newTime, setNewTime] = useState<Date | null>(null);
+
+  useEffect(() => {
+    if (editDateModalOpened && selectedData?.date) {
+      const previousDate = new Date(selectedData.date);
+      setNewDate(previousDate);
+      setNewTime(previousDate);
+    }
+  }, [editDateModalOpened, selectedData?.date]);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -87,18 +91,16 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       combinedDate.setMinutes(newTime.getMinutes());
       combinedDate.setSeconds(newTime.getSeconds());
 
-      const formattedDate = `${combinedDate.getFullYear()}-${String(
-        combinedDate.getMonth() + 1,
-      ).padStart(2, "0")}-${String(combinedDate.getDate()).padStart(2, "0")}T${String(
-        combinedDate.getHours(),
-      ).padStart(2, "0")}:${String(combinedDate.getMinutes()).padStart(2, "0")}:${String(
-        combinedDate.getSeconds(),
-      ).padStart(2, "0")}Z`;
+      const formattedDate = combinedDate
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " ");
 
       console.log("Formatted Date for API:", formattedDate);
 
       const formData = new FormData();
-      formData.append("date", formattedDate);
+      formData.append("metadata", "date");
+      formData.append("record", formattedDate);
 
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}/updateMetadataRecords`,
@@ -370,7 +372,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
         style={{ textAlign: "center" }}
       >
         <DateInput
-          value={newDate}
+          value={newDate} // Controlled value
           onChange={setNewDate}
           valueFormat="DD/MM/YYYY"
           label="Select new date"
