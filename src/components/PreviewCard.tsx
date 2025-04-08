@@ -89,21 +89,16 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
 
       const formattedDate = `${combinedDate.getFullYear()}-${String(
         combinedDate.getMonth() + 1,
-      ).padStart(2, "0")}-${String(combinedDate.getDate()).padStart(
-        2,
-        "0",
-      )} ${String(combinedDate.getHours()).padStart(2, "0")}:${String(
-        combinedDate.getMinutes(),
-      ).padStart(2, "0")}:${String(combinedDate.getSeconds()).padStart(
-        2,
-        "0",
-      )}`;
+      ).padStart(2, "0")}-${String(combinedDate.getDate()).padStart(2, "0")}T${String(
+        combinedDate.getHours(),
+      ).padStart(2, "0")}:${String(combinedDate.getMinutes()).padStart(2, "0")}:${String(
+        combinedDate.getSeconds(),
+      ).padStart(2, "0")}Z`;
 
       console.log("Formatted Date for API:", formattedDate);
 
       const formData = new FormData();
-      formData.append("metadata", "date");
-      formData.append("record", formattedDate);
+      formData.append("date", formattedDate);
 
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}/updateMetadataRecords`,
