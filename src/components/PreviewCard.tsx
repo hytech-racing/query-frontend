@@ -93,14 +93,12 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
 
       const formattedDate = combinedDate
         .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
+        
 
       console.log("Formatted Date for API:", formattedDate);
 
       const formData = new FormData();
-      formData.append("metadata", "date");
-      formData.append("record", formattedDate);
+      formData.append("date", formattedDate);
 
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}/updateMetadataRecords`,
@@ -121,7 +119,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           setError(`Failed to update date: ${errorMsg}`);
         }
       } else {
-        setSuccess("Date and time updated successfully!");
+        setSuccess("Date and time updated successfully! Reload to see changes!");
         selectedData.date = combinedDate.toISOString();
       }
     } catch (error) {
