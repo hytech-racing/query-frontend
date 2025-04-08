@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Text,
   Button,
@@ -10,7 +10,9 @@ import {
   TextInput,
   Notification,
   CopyButton,
+  Modal,
 } from "@mantine/core";
+import { DateInput } from "@mantine/dates";
 import {
   IconDownload,
   IconChevronDown,
@@ -30,6 +32,17 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [editDateModalOpened, setEditDateModalOpened] = useState(false);
+  const [newDate, setNewDate] = useState<Date | null>(null);
+  const [newTime, setNewTime] = useState<Date | null>(null);
+
+  useEffect(() => {
+    if (editDateModalOpened && selectedData?.date) {
+      const previousDate = new Date(selectedData.date);
+      setNewDate(previousDate);
+      setNewTime(previousDate);
+    }
+  }, [editDateModalOpened, selectedData?.date]);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -65,6 +78,61 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     setLoading(false);
   };
 
+  const handleEditDate = async () => {
+    if (!newDate || !newTime || !selectedData?.id) return;
+
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const combinedDate = new Date(newDate);
+      combinedDate.setHours(newTime.getHours());
+      combinedDate.setMinutes(newTime.getMinutes());
+      combinedDate.setSeconds(newTime.getSeconds());
+
+      const formattedDate = combinedDate
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " ");
+
+      console.log("Formatted Date for API:", formattedDate);
+
+      const formData = new FormData();
+      formData.append("metadata", "date");
+      formData.append("record", formattedDate);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}/updateMetadataRecords`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+      if (!response.ok) {
+        if (response.status === 503) {
+          const errorMsg = await response.text();
+          setError(
+            `Failed to update date: ${errorMsg} \nTry again in a few minutes!`,
+          );
+        } else {
+          const errorMsg = await response.text();
+          setError(`Failed to update date: ${errorMsg}`);
+        }
+      } else {
+        setSuccess("Date and time updated successfully!");
+        selectedData.date = combinedDate.toISOString();
+      }
+    } catch (error) {
+      console.error("Error updating date:", error);
+      setError("An error occurred while updating the date and time.");
+    }
+
+    setLoading(false);
+    setEditDateModalOpened(false);
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -75,20 +143,12 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     });
   };
 
-  // Take out when API server team implements filename id in their get route
   const getFileNameWithoutExtension = (fileNameWithExtension: string) => {
     const lastDotIndex = fileNameWithExtension.lastIndexOf(".");
     return lastDotIndex !== -1
       ? fileNameWithExtension.slice(0, lastDotIndex)
       : fileNameWithExtension;
   };
-
-  const latImageUrl =
-    selectedData?.content_files?.vn_lat_lon_plot?.[0]?.signed_url ??
-    "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"; // Fallback to a default image if none exists.
-  const velImageUrl =
-    selectedData?.content_files?.vn_time_vel_plot?.[0]?.signed_url ??
-    "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67"; // Fallback to a default image if none exists.
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -99,6 +159,46 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       hour12: true,
     });
   };
+
+  const dateInputStyles = {
+    calendarHeaderControl: {
+      width: "24px",
+      height: "24px",
+      fontSize: "14px",
+      lineHeight: "24px",
+    },
+    calendarHeader: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "8px 0",
+    },
+    calendarHeaderLevel: {
+      flex: "0 1 auto",
+    },
+    calendar: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    weekday: {
+      fontSize: "12px",
+    },
+    day: {
+      fontSize: "12px",
+      width: "30px",
+      height: "30px",
+      lineHeight: "30px",
+    },
+  };
+
+  const latImageUrl =
+    selectedData?.content_files?.vn_lat_lon_plot?.[0]?.signed_url ??
+    "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67";
+  const velImageUrl =
+    selectedData?.content_files?.vn_time_vel_plot?.[0]?.signed_url ??
+    "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67";
+
   return (
     <div className="preview-container">
       <Grid>
@@ -109,7 +209,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           <img src={velImageUrl} alt="Preview" className="preview-image" />
         </Grid.Col>
         <Grid.Col span={3} h={260} className="image-column">
-          <SchemaTable></SchemaTable>
+          <SchemaTable />
         </Grid.Col>
         <Grid.Col span={3} h={260}>
           {selectedData ? (
@@ -170,11 +270,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                   />
                 </Grid.Col>
               </Grid>
-              <div
-                style={{
-                  textAlign: "center",
-                }}
-              >
+              <div style={{ textAlign: "center" }}>
                 <Button
                   loading={loading}
                   loaderProps={{ type: "dots" }}
@@ -197,6 +293,13 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     </Button>
                   )}
                 </CopyButton>
+                <Button
+                  size="compact-md"
+                  color="blue"
+                  onClick={() => setEditDateModalOpened(true)}
+                >
+                  Edit Date
+                </Button>
                 {selectedData.mcap_files.map((item) => (
                   <DownloadButton
                     buttonText="MCAP"
@@ -224,7 +327,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 <Text size="xs" fw={700}>
                   Date:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
                   NA
                 </Text>
@@ -233,7 +336,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 <Text size="xs" fw={700}>
                   Time:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
                   NA
                 </Text>
@@ -242,7 +345,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 <Text size="xs" fw={700}>
                   Location:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
                   NA
                 </Text>
@@ -251,7 +354,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 <Text size="xs" fw={700}>
                   Sensors:{" "}
                 </Text>
-                <span style={{ marginLeft: "5px" }} /> {/* Spacer */}
+                <span style={{ marginLeft: "5px" }} />
                 <Text size="xs" fw={400}>
                   NA
                 </Text>
@@ -260,6 +363,125 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           )}
         </Grid.Col>
       </Grid>
+
+      <Modal
+        opened={editDateModalOpened}
+        onClose={() => setEditDateModalOpened(false)}
+        title="Edit Date and Time"
+        centered
+        style={{ textAlign: "center" }}
+      >
+        <DateInput
+          value={newDate} // Controlled value
+          onChange={setNewDate}
+          valueFormat="DD/MM/YYYY"
+          label="Select new date"
+          placeholder="Pick a date"
+          style={{ display: "block", margin: "0 auto", marginBottom: 20 }}
+          styles={dateInputStyles}
+        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginBottom: 20,
+          }}
+        >
+          <label style={{ marginBottom: 5 }}>Select new time (24-hour)</label>
+          <div style={{ display: "flex", gap: 5 }}>
+            <input
+              type="number"
+              value={
+                newTime ? String(newTime.getHours()).padStart(2, "0") : "00"
+              }
+              onChange={(e) => {
+                const hours = Math.min(
+                  23,
+                  Math.max(0, parseInt(e.target.value) || 0),
+                );
+                const updatedTime = newTime ? new Date(newTime) : new Date();
+                updatedTime.setHours(hours);
+                setNewTime(updatedTime);
+              }}
+              min={0}
+              max={23}
+              step={1}
+              placeholder="HH"
+              style={{
+                width: 50,
+                textAlign: "center",
+                padding: 5,
+                border: "1px solid #ccc",
+                borderRadius: 4,
+              }}
+            />
+            <span>:</span>
+            <input
+              type="number"
+              value={
+                newTime ? String(newTime.getMinutes()).padStart(2, "0") : "00"
+              }
+              onChange={(e) => {
+                const minutes = Math.min(
+                  59,
+                  Math.max(0, parseInt(e.target.value) || 0),
+                );
+                const updatedTime = newTime ? new Date(newTime) : new Date();
+                updatedTime.setMinutes(minutes);
+                setNewTime(updatedTime);
+              }}
+              min={0}
+              max={59}
+              step={1}
+              placeholder="MM"
+              style={{
+                width: 50,
+                textAlign: "center",
+                padding: 5,
+                border: "1px solid #ccc",
+                borderRadius: 4,
+              }}
+            />
+            <span>:</span>
+            <input
+              type="number"
+              value={
+                newTime ? String(newTime.getSeconds()).padStart(2, "0") : "00"
+              }
+              onChange={(e) => {
+                const seconds = Math.min(
+                  59,
+                  Math.max(0, parseInt(e.target.value) || 0),
+                );
+                const updatedTime = newTime ? new Date(newTime) : new Date();
+                updatedTime.setSeconds(seconds);
+                setNewTime(updatedTime);
+              }}
+              min={0}
+              max={59}
+              step={1}
+              placeholder="SS"
+              style={{
+                width: 50,
+                textAlign: "center",
+                padding: 5,
+                border: "1px solid #ccc",
+                borderRadius: 4,
+              }}
+            />
+          </div>
+        </div>
+        <Button
+          loading={loading}
+          loaderProps={{ type: "dots" }}
+          onClick={handleEditDate}
+          style={{ marginTop: 10 }}
+          disabled={loading || !newDate || !newTime}
+        >
+          Update Date and Time
+        </Button>
+      </Modal>
     </div>
   );
 }
@@ -270,6 +492,7 @@ interface PreviewDataDivProps {
   name: string;
   val: string | null;
 }
+
 export function PreviewDataDiv({ name, val }: PreviewDataDivProps) {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
@@ -283,6 +506,7 @@ export function PreviewDataDiv({ name, val }: PreviewDataDivProps) {
     </div>
   );
 }
+
 export function PreviewDataDivHeader({ name, val }: PreviewDataDivProps) {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
@@ -296,6 +520,7 @@ export function PreviewDataDivHeader({ name, val }: PreviewDataDivProps) {
     </div>
   );
 }
+
 interface DownloadButtonProps {
   buttonText: string;
   fileName: string;
@@ -347,7 +572,6 @@ export function DownloadButton({
 }
 
 export const SchemaTable = () => {
-  // Example data for the table
   const initialData = Array.from({ length: 20 }, (_, index) => ({
     name: `Schema ${index + 1}`,
     value: `${index + 1 + "." + index + "." + index}`,
@@ -356,7 +580,6 @@ export const SchemaTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(initialData);
 
-  // Function to filter data based on the search term
   const handleSearch = (term: string) => {
     const lowercasedTerm = term.toLowerCase();
     const filtered = initialData.filter(
@@ -369,11 +592,10 @@ export const SchemaTable = () => {
 
   return (
     <div style={{ padding: "15px", overflow: "scroll" }}>
-      {/* Search input */}
       <TextInput
         size="xs"
-        leftSection={<IconSearch></IconSearch>}
-        placeholder="Search schemas" // very hacky text spacing
+        leftSection={<IconSearch />}
+        placeholder="Search schemas"
         value={searchTerm}
         onChange={(e) => {
           setSearchTerm(e.target.value);
@@ -381,8 +603,6 @@ export const SchemaTable = () => {
         }}
       />
       <ScrollArea style={{ height: 180, width: 250, padding: 10 }}>
-        {" "}
-        {/* Scrollable area with height limit */}
         <Table
           striped
           highlightOnHover
