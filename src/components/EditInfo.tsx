@@ -1,5 +1,4 @@
 import {
-    Text,
     Button,
     Modal,
     Notification,
