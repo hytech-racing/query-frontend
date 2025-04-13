@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import EditInfo from "./EditInfo";
 import {
   Text,
   Button,
@@ -10,9 +11,7 @@ import {
   TextInput,
   Notification,
   CopyButton,
-  Modal,
 } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
 import {
   IconDownload,
   IconChevronDown,
@@ -32,17 +31,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [editDateModalOpened, setEditDateModalOpened] = useState(false);
-  const [newDate, setNewDate] = useState<Date | null>(null);
-  const [newTime, setNewTime] = useState<Date | null>(null);
-
-  useEffect(() => {
-    if (editDateModalOpened && selectedData?.date) {
-      const previousDate = new Date(selectedData.date);
-      setNewDate(previousDate);
-      setNewTime(previousDate);
-    }
-  }, [editDateModalOpened, selectedData?.date]);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -78,59 +66,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     setLoading(false);
   };
 
-  const handleEditDate = async () => {
-    if (!newDate || !newTime || !selectedData?.id) return;
-
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      const combinedDate = new Date(newDate);
-      combinedDate.setHours(newTime.getHours());
-      combinedDate.setMinutes(newTime.getMinutes());
-      combinedDate.setSeconds(newTime.getSeconds());
-
-      const formattedDate = combinedDate
-        .toISOString()
-        
-
-      console.log("Formatted Date for API:", formattedDate);
-
-      const formData = new FormData();
-      formData.append("date", formattedDate);
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}/updateMetadataRecords`,
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-
-      if (!response.ok) {
-        if (response.status === 503) {
-          const errorMsg = await response.text();
-          setError(
-            `Failed to update date: ${errorMsg} \nTry again in a few minutes!`,
-          );
-        } else {
-          const errorMsg = await response.text();
-          setError(`Failed to update date: ${errorMsg}`);
-        }
-      } else {
-        setSuccess("Date and time updated successfully! Reload to see changes!");
-        selectedData.date = combinedDate.toISOString();
-      }
-    } catch (error) {
-      console.error("Error updating date:", error);
-      setError("An error occurred while updating the date and time.");
-    }
-
-    setLoading(false);
-    setEditDateModalOpened(false);
-  };
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -156,38 +91,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       second: "2-digit",
       hour12: true,
     });
-  };
-
-  const dateInputStyles = {
-    calendarHeaderControl: {
-      width: "24px",
-      height: "24px",
-      fontSize: "14px",
-      lineHeight: "24px",
-    },
-    calendarHeader: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      padding: "8px 0",
-    },
-    calendarHeaderLevel: {
-      flex: "0 1 auto",
-    },
-    calendar: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    },
-    weekday: {
-      fontSize: "12px",
-    },
-    day: {
-      fontSize: "12px",
-      width: "30px",
-      height: "30px",
-      lineHeight: "30px",
-    },
   };
 
   const latImageUrl =
@@ -291,13 +194,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     </Button>
                   )}
                 </CopyButton>
-                <Button
-                  size="compact-md"
-                  color="blue"
-                  onClick={() => setEditDateModalOpened(true)}
-                >
-                  Edit Date
-                </Button>
+                <EditInfo selectedData={selectedData} />
                 {selectedData.mcap_files.map((item) => (
                   <DownloadButton
                     buttonText="MCAP"
@@ -361,125 +258,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           )}
         </Grid.Col>
       </Grid>
-
-      <Modal
-        opened={editDateModalOpened}
-        onClose={() => setEditDateModalOpened(false)}
-        title="Edit Date and Time"
-        centered
-        style={{ textAlign: "center" }}
-      >
-        <DateInput
-          value={newDate} // Controlled value
-          onChange={setNewDate}
-          valueFormat="DD/MM/YYYY"
-          label="Select new date"
-          placeholder="Pick a date"
-          style={{ display: "block", margin: "0 auto", marginBottom: 20 }}
-          styles={dateInputStyles}
-        />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: 20,
-          }}
-        >
-          <label style={{ marginBottom: 5 }}>Select new time (24-hour)</label>
-          <div style={{ display: "flex", gap: 5 }}>
-            <input
-              type="number"
-              value={
-                newTime ? String(newTime.getHours()).padStart(2, "0") : "00"
-              }
-              onChange={(e) => {
-                const hours = Math.min(
-                  23,
-                  Math.max(0, parseInt(e.target.value) || 0),
-                );
-                const updatedTime = newTime ? new Date(newTime) : new Date();
-                updatedTime.setHours(hours);
-                setNewTime(updatedTime);
-              }}
-              min={0}
-              max={23}
-              step={1}
-              placeholder="HH"
-              style={{
-                width: 50,
-                textAlign: "center",
-                padding: 5,
-                border: "1px solid #ccc",
-                borderRadius: 4,
-              }}
-            />
-            <span>:</span>
-            <input
-              type="number"
-              value={
-                newTime ? String(newTime.getMinutes()).padStart(2, "0") : "00"
-              }
-              onChange={(e) => {
-                const minutes = Math.min(
-                  59,
-                  Math.max(0, parseInt(e.target.value) || 0),
-                );
-                const updatedTime = newTime ? new Date(newTime) : new Date();
-                updatedTime.setMinutes(minutes);
-                setNewTime(updatedTime);
-              }}
-              min={0}
-              max={59}
-              step={1}
-              placeholder="MM"
-              style={{
-                width: 50,
-                textAlign: "center",
-                padding: 5,
-                border: "1px solid #ccc",
-                borderRadius: 4,
-              }}
-            />
-            <span>:</span>
-            <input
-              type="number"
-              value={
-                newTime ? String(newTime.getSeconds()).padStart(2, "0") : "00"
-              }
-              onChange={(e) => {
-                const seconds = Math.min(
-                  59,
-                  Math.max(0, parseInt(e.target.value) || 0),
-                );
-                const updatedTime = newTime ? new Date(newTime) : new Date();
-                updatedTime.setSeconds(seconds);
-                setNewTime(updatedTime);
-              }}
-              min={0}
-              max={59}
-              step={1}
-              placeholder="SS"
-              style={{
-                width: 50,
-                textAlign: "center",
-                padding: 5,
-                border: "1px solid #ccc",
-                borderRadius: 4,
-              }}
-            />
-          </div>
-        </div>
-        <Button
-          loading={loading}
-          loaderProps={{ type: "dots" }}
-          onClick={handleEditDate}
-          style={{ marginTop: 10 }}
-          disabled={loading || !newDate || !newTime}
-        >
-          Update Date and Time
-        </Button>
-      </Modal>
     </div>
   );
 }
