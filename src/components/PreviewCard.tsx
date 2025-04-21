@@ -11,6 +11,9 @@ import {
   Notification,
   CopyButton,
   Modal,
+  Select,
+  Stack,
+  Code,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import {
@@ -28,11 +31,50 @@ interface PreviewCardProps {
 
 const origin = window.location.origin;
 
+interface FunctionSignature {
+  help: string;
+  inputs: Array<{
+    help: string;
+    mwsize: number[];
+    mwtype: string;
+    name: string;
+  }>;
+  outputs: Array<{
+    help: string;
+    mwsize: number[];
+    mwtype: string;
+    name: string;
+  }>;
+}
+
+interface FunctionDefinition {
+  signatures: FunctionSignature[];
+}
+
+interface ArchiveData {
+  archiveSchemaVersion: string;
+  archiveUuid: string;
+  functions: Record<string, FunctionDefinition>;
+  matlabRuntimeRelease: string;
+  matlabRuntimeVersion: string;
+}
+
+interface DiscoveryResponse {
+  discoverySchemaVersion: string;
+  archives: Record<string, ArchiveData>;
+}
+
 function PreviewCard({ selectedData }: PreviewCardProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [editDateModalOpened, setEditDateModalOpened] = useState(false);
+  const [scriptsModalOpened, setScriptsModalOpened] = useState(false);
+  const [selectedScript, setSelectedScript] = useState<string | null>(null);
+  const [scriptOutput, setScriptOutput] = useState<string>("");
+  const [availableScripts, setAvailableScripts] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
   const [newDate, setNewDate] = useState<Date | null>(null);
   const [newTime, setNewTime] = useState<Date | null>(null);
 
@@ -43,6 +85,40 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       setNewTime(previousDate);
     }
   }, [editDateModalOpened, selectedData?.date]);
+
+  useEffect(() => {
+    const fetchScripts = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_MPS_URL}/api/discovery`,
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch scripts");
+        }
+        const data: DiscoveryResponse = await response.json();
+
+        const scripts: Array<{ value: string; label: string }> = [];
+
+        Object.entries(data.archives).forEach(([version, archiveData]) => {
+          Object.keys(archiveData.functions).forEach((funcName) => {
+            scripts.push({
+              value: `${version}:${funcName}`,
+              label: `${funcName} (${version})`,
+            });
+          });
+        });
+
+        setAvailableScripts(scripts);
+      } catch (error) {
+        console.error("Error fetching scripts:", error);
+        setError("Failed to load available scripts");
+      }
+    };
+
+    if (scriptsModalOpened) {
+      fetchScripts();
+    }
+  }, [scriptsModalOpened]);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -91,9 +167,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       combinedDate.setMinutes(newTime.getMinutes());
       combinedDate.setSeconds(newTime.getSeconds());
 
-      const formattedDate = combinedDate
-        .toISOString()
-        
+      const formattedDate = combinedDate.toISOString();
 
       console.log("Formatted Date for API:", formattedDate);
 
@@ -119,7 +193,9 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           setError(`Failed to update date: ${errorMsg}`);
         }
       } else {
-        setSuccess("Date and time updated successfully! Reload to see changes!");
+        setSuccess(
+          "Date and time updated successfully! Reload to see changes!",
+        );
         selectedData.date = combinedDate.toISOString();
       }
     } catch (error) {
@@ -129,6 +205,58 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
 
     setLoading(false);
     setEditDateModalOpened(false);
+  };
+
+  const handleScriptSubmit = async () => {
+    if (!selectedScript || !selectedData?.id) return;
+
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    setScriptOutput("");
+
+    try {
+      // First API call to process the script
+      const processResponse = await fetch(
+        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}/process?scripts=${selectedScript}`,
+        {
+          method: "GET",
+        },
+      );
+
+      if (!processResponse.ok) {
+        throw new Error("Failed to process script");
+      }
+
+      // Second API call to get the updated data
+      const dataResponse = await fetch(
+        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}`,
+        {
+          method: "GET",
+        },
+      );
+
+      if (!dataResponse.ok) {
+        throw new Error("Failed to fetch updated data");
+      }
+
+      const data = await dataResponse.json();
+
+      const mpsRecord = data.data[0]?.mps_record;
+
+      if (mpsRecord) {
+        setScriptOutput(JSON.stringify(mpsRecord, null, 2));
+        setSuccess("Script executed successfully!");
+      } else {
+        setScriptOutput("No output found");
+        setSuccess("Script executed successfully!");
+      }
+    } catch (error) {
+      console.error("Error running script:", error);
+      setError("An error occurred while running the script.");
+    }
+
+    setLoading(false);
   };
 
   const formatDate = (dateString: string) => {
@@ -297,6 +425,13 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                   onClick={() => setEditDateModalOpened(true)}
                 >
                   Edit Date
+                </Button>
+                <Button
+                  size="compact-md"
+                  color="violet"
+                  onClick={() => setScriptsModalOpened(true)}
+                >
+                  Scripts
                 </Button>
                 {selectedData.mcap_files.map((item) => (
                   <DownloadButton
@@ -479,6 +614,54 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
         >
           Update Date and Time
         </Button>
+      </Modal>
+
+      <Modal
+        opened={scriptsModalOpened}
+        onClose={() => setScriptsModalOpened(false)}
+        title="Run Script"
+        centered
+        size="lg"
+      >
+        <Stack>
+          <Select
+            label="Select Script"
+            placeholder="Choose a script to run"
+            data={availableScripts}
+            value={selectedScript}
+            onChange={setSelectedScript}
+            searchable
+          />
+          <Button
+            loading={loading}
+            onClick={handleScriptSubmit}
+            disabled={!selectedScript}
+          >
+            Run Script
+          </Button>
+
+          {success && (
+            <Notification color="green" onClose={() => setSuccess(null)}>
+              {success}
+            </Notification>
+          )}
+          {error && (
+            <Notification color="red" onClose={() => setError(null)}>
+              {error}
+            </Notification>
+          )}
+
+          {scriptOutput && (
+            <div>
+              <Text fw={700} mb="xs">
+                Script Returns:
+              </Text>
+              <Code block style={{ maxHeight: "300px", overflow: "auto" }}>
+                {scriptOutput}
+              </Code>
+            </div>
+          )}
+        </Stack>
       </Modal>
     </div>
   );
