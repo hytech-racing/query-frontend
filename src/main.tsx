@@ -13,10 +13,14 @@ import Changelog from "./routes/changelog";
 import Layout from "./layout";
 import ErrorPage from "./error-page";
 
+// First thing React looks at 
+// Go to Layout to change the layout
+// Go to routes directory to view the paths
+
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route element={<Layout />} errorElement={<ErrorPage />}>
-      <Route path="/" element={<Root />} />
+    <Route element={<Layout />} errorElement={<ErrorPage />}> 
+      <Route path="/" element={<Root />} /> 
       <Route path="/docs" element={<Docs />} />
       <Route path="/docs/:version/:repo" element={<Docs />} />
       <Route path="/changelog" element={<Changelog />} />

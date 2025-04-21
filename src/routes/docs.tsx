@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { Select, Text, CopyButton, Button } from "@mantine/core";
 import { useParams, useNavigate } from "react-router-dom";
 
+// Documentation Page
+// fetch html page from the backend and display that onto our page
+
 export default function Docs() {
+  // Allows us to use the dynamic elements of the html file in the fetched html
   const origin = window.location.origin;
   const navigate = useNavigate();
   const { version, repo } = useParams<{ version?: string; repo?: string }>();
@@ -17,6 +21,7 @@ export default function Docs() {
   const [canHtmlContent, setCanHtmlContent] = useState<string>("");
   const [protoHtmlContent, setProtoHtmlContent] = useState<string>("");
 
+  // Fetch all the available versions to display in dropdown
   const fetchVersions = async () => {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/docs/versions`,
@@ -26,6 +31,7 @@ export default function Docs() {
     setVersionsProto(data.HT_Proto);
   };
 
+  // Fetch the specific version we want to display in the documentation page
   const fetchVersion = async (version: string, repo: string) => {
     if (!version) return "<p>Select a version to view content.</p>";
     try {
@@ -42,6 +48,7 @@ export default function Docs() {
     }
   };
 
+  // Allows us to use the dynamic elements of the html file in the fetched html
   const addSmoothScrollScriptToHead = (html: string) => {
     const script = `
       <script>
@@ -100,6 +107,7 @@ export default function Docs() {
     navigate(`?${params.toString()}`, { replace: true });
   }, [selectedCanVersion, selectedProtoVersion, navigate]);
 
+  // Allow the pages to be sharable (copy URL links)
   const generateShareableUrl = () => {
     const params = new URLSearchParams();
     if (selectedCanVersion) params.set("can", selectedCanVersion);
