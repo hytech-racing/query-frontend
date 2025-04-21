@@ -20,6 +20,13 @@ import {
 } from "@tabler/icons-react";
 import "@/css/PreviewCard.css";
 
+// Has multiple components in this file
+// 1. Preview Card component (rectangular section at the bottom of roots/files page)
+// 2. Data Div component -- goes in Preview card component
+// 3. Data Div Header component -- goes in Preview card component
+// 4. Download Button component (param : list of files | able to download multiple files)
+// 5. Schema Table component in Preview card
+
 interface PreviewCardProps {
   selectedRow?: string;
   selectedData: MCAPFileInformation | undefined;
@@ -27,6 +34,7 @@ interface PreviewCardProps {
 
 const origin = window.location.origin;
 
+// The actual Preview Card component
 function PreviewCard({ selectedData }: PreviewCardProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -261,8 +269,8 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     </div>
   );
 }
-
 export default PreviewCard;
+
 
 interface PreviewDataDivProps {
   name: string;
@@ -371,7 +379,7 @@ export const SchemaTable = () => {
       <TextInput
         size="xs"
         leftSection={<IconSearch />}
-        placeholder="Search schemas"
+        placeholder="Search schemas - DOES NOT WORK"
         value={searchTerm}
         onChange={(e) => {
           setSearchTerm(e.target.value);

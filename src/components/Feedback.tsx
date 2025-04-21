@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal, Button } from "@mantine/core";
 
+// Get feedback
 export default function Feedback() {
     const [showModal, setShowModal] = useState(false);
 

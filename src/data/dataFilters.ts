@@ -23,3 +23,13 @@ export const location: string[] = [
   "Rome",     // Location for the Rome event.
   "SCC",      // Location for the SCC event.
 ];
+
+/**
+ * Represents the list of possible car models.
+ *
+  */
+export const carModel: string[] = [
+  "HT08", // 2023-2024 Car
+  "HT09", // 2024-2025 Car
+]
+

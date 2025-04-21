@@ -6,6 +6,7 @@ import Feedback from "@/components/Feedback";
 import { Button } from "@mantine/core";
 import { IconHelp } from "@tabler/icons-react";
 
+// Navigation Bar
 const mainLinksData = [
   { name: "Files", url: "/" },
   { name: "Documentation", url: `/docs` },

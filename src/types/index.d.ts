@@ -75,6 +75,8 @@ type SearchFilter = {
   afterDate?: string;
   /** Filter by date before a specific threshold (optional). */
   beforeDate?: string;
+  /** Filter by car model (optional). */
+  carModel?: string;
 };
 
 /**

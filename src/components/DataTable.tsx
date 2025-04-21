@@ -2,6 +2,7 @@ import { Table } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
 import { Input, Textarea } from "@mantine/core";
 
+// Data table of the files/root page
 interface DataTableProps {
   data?: MCAPFileInformation[];
   selectedRow?: string;
