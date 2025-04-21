@@ -4,6 +4,8 @@ import { theme } from "@/theme";
 import Navbar from "@/components/Navbar";
 import { Outlet } from "react-router-dom";
 
+// Layout of main.tsx
+
 export default function Layout() {
   return (
     <MantineProvider theme={theme}>
@@ -13,7 +15,7 @@ export default function Layout() {
         </header>
 
         <div className="main-content">
-          <Outlet />
+          <Outlet /> {/* Changes depending on what is in main.tsx */}
         </div>
       </div>
     </MantineProvider>

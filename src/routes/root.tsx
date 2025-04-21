@@ -29,7 +29,9 @@ export default function Root() {
     "schemas",
     parseAsArrayOf(parseAsString).withDefault([]),
   );
+  const [carModel] = useQueryState("carModel", parseAsString.withDefault(""));
 
+  // corresponds with index.d.ts - type SearchFilter 
   const searchFilters = {
     location: selectedLocation,
     date: selectedEventType,
@@ -38,6 +40,7 @@ export default function Root() {
     afterDate,
     searchText: searchTerm,
     selectedSchemas,
+    carModel: carModel,
   };
 
   const [search, setSearch] = useState<boolean>(false);
@@ -49,6 +52,7 @@ export default function Root() {
     return new Date(`${year}-${month}-${day}T${time}Z`).toISOString();
   };
 
+  // fetch request of wanted files with filters as Query Params
   const fetchData = async (filters: SearchFilter) => {
     if (selectedId != "") {
       const res = await fetch(
@@ -59,7 +63,8 @@ export default function Root() {
       return data.data;
     }
 
-    const { location, date, eventType, searchText } = filters;
+    // corresponds with index.d.ts - type SearchFilter 
+    const { location, date, eventType, searchText, carModel } = filters;
     let { afterDate, beforeDate } = filters;
 
     beforeDate = beforeDate
@@ -73,6 +78,7 @@ export default function Root() {
       ...(afterDate ? { after_date: afterDate } : {}),
       ...(beforeDate ? { before_date: beforeDate } : {}),
       ...(searchText ? { search_text: searchText } : {}),
+      ...(carModel ? { car_model: carModel } : {}),
     };
 
     const queryString = new URLSearchParams(params).toString();

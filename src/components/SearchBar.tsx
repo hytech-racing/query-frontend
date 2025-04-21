@@ -1,9 +1,12 @@
 import React from "react";
-import { eventType, location } from "@/data/dataFilters";
+
+// Lists of available filter options
+import { eventType, location, carModel } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
-import SchemaSearch from "@/components/SchemaSearch";
-import { Button } from "@mantine/core";
+import { Button, MultiSelect } from "@mantine/core";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+
+// Search bar of the files page
 
 interface SearchBarWithFilterProps {
   setSearch: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,11 +33,16 @@ function SearchBarWithFilter({ setSearch }: SearchBarWithFilterProps) {
     "afterDate",
     parseAsString.withDefault(""),
   );
-  const [, setSelectedSchemas] = useQueryState<string[]>(
+  const [selectedSchemas, setSelectedSchemas] = useQueryState<string[]>(
     "schemas",
     parseAsArrayOf(parseAsString).withDefault([]),
   );
+  const [selectedCarModel, setSelectedCarModel] = useQueryState(
+    "carModel",
+    parseAsString.withDefault(""),
+  );
 
+  // Left this here AND NOT in data filters because the retrieval method for available schemas will change
   const schemas = ["Schema1", "Schema2", "Schema3", "Schema4"];
 
   // Clear all filters and search term
@@ -45,6 +53,7 @@ function SearchBarWithFilter({ setSearch }: SearchBarWithFilterProps) {
     setBeforeDate(null);
     setAfterDate(null);
     setSelectedSchemas(null);
+    setSelectedCarModel(null);
   };
 
   const handleSearch = () => {
@@ -126,7 +135,39 @@ function SearchBarWithFilter({ setSearch }: SearchBarWithFilterProps) {
             />
           </label>
 
-          <SchemaSearch schemas={schemas} />
+          <label>
+            Car Model:
+            <select
+              name="car_model"
+              value={selectedCarModel}
+              onChange={(e) => setSelectedCarModel(e.target.value)}
+              className="filter-select"
+            >
+              <option value="">All Car Models</option>
+              {carModel.map((carmodel, idx) => (
+                <option value={carmodel.toLowerCase()} key={idx}>
+                  {carmodel}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {/* Put this here to make the UI look consistent */}
+          <label></label>
+
+          <label>
+            Schemas:
+            <MultiSelect
+              data={schemas}
+              placeholder="DOES NOT WORK YET"
+              value={selectedSchemas}
+              onChange={setSelectedSchemas}
+              searchable
+              className="filter-select"
+              size="xs"
+            /> 
+          </label>
+          
         </div>
         <div
           style={{

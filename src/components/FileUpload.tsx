@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Modal, Button, Notification, FileInput } from "@mantine/core";
 import "@/css/FileUpload.css";
 
+// File upload Modal and Button
+
 interface FileUploadProps {
   uploadUrl: string;
 }

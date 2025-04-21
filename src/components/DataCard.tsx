@@ -1,4 +1,5 @@
 import "@/css/DataCard.css";
+// The formating of each file in the Data table
 
 type Props = {
   filteredData: MCAPFileInformation[];
