@@ -8,6 +8,7 @@ import {
 import { DateInput } from "@mantine/dates";
 import { useEffect, useState } from "react";
 
+// Edit info button in preview card in root/files page
 interface PreviewCardProps {
     selectedData: MCAPFileInformation | undefined;
 }
