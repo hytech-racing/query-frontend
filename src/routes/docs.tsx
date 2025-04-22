@@ -134,7 +134,10 @@ export default function Docs() {
             <Select
               label="HT_CAN Documentation Version"
               placeholder="Select Documentation version"
-              data={versionsCAN.map((version) => ({
+              data={versionsCAN
+                .slice()
+                .reverse()
+                .map((version) => ({
                 value: version,
                 label: version.slice(0, -5),
               }))}
@@ -146,7 +149,10 @@ export default function Docs() {
             <Select
               label="HT_proto Documentation Version"
               placeholder="Select Documentation version"
-              data={versionsProto.map((version) => ({
+              data={versionsProto
+                .slice()
+                .reverse()
+                .map((version) => ({
                 value: version,
                 label: version.slice(0, -5),
               }))}
