@@ -5,7 +5,10 @@ import {
     TextInput,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
-
+/**
+ * This component adds verification functionality for deleting mcap files. The pop-up is called by preview card whenever the user 
+ * chooses to delete a file.
+ */
 interface PreviewCardProps {
     selectedData: MCAPFileInformation | undefined;
 }
@@ -25,18 +28,18 @@ function DeleteData({ selectedData }: PreviewCardProps) {
         }
     }, [deleteDataModalOpened, selectedData]);
 
-    const handleDelete = async () => {
+    const handleDelete = async () => { // sends the delete method to the server
         if (!selectedData) return;
         setLoading(true);
         setError(null);
         setSuccess(null);
-        const authCode = import.meta.env.VITE_AUTH_CODE;
-        if (newPasswordInput !== authCode) {
+        const authCode = import.meta.env.AUTH_CODE;
+        if (newPasswordInput !== authCode) { // checks if passwords match
             setError("Incorrect password. Try again.");
             setLoading(false);
             return;
         }
-        try {
+        try { // completes delete or identifies errors
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`,
                 {
@@ -56,26 +59,17 @@ function DeleteData({ selectedData }: PreviewCardProps) {
                     console.log(errorMsg);
                 }
             } else {
-                setSuccess("File deleted successfully!");
+                setSuccess("File deleted successfully! Refresh to see your changes!");
             }
         } catch (error) {
             console.error("Error sending Delete request:", error);
             setError("An error occurred during file deletion.");
         }
+        setDeleteDataModalOpened(false);
         setLoading(false);
     };
     return (
         <>
-        {success && (
-            <Notification color="green" onClose={() => setSuccess(null)}>
-            {success}
-            </Notification>
-        )}
-        {error && (
-            <Notification color="red" onClose={() => setError(null)}>
-            {error}
-            </Notification>
-        )}
         <Button
             loading={loading}
             loaderProps={{ type: "dots" }}
@@ -109,6 +103,16 @@ function DeleteData({ selectedData }: PreviewCardProps) {
             >
                 Confirm Delete
             </Button>
+            {success && (
+                <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
+                {success}
+                </Notification>
+            )}
+            {error && (
+                <Notification color="red" onClose={() => setError(null)} style={{ marginTop: 10 }}>
+                {error}
+                </Notification>
+            )}
         </Modal>
         </>
     );
