@@ -1,5 +1,6 @@
 import { useState } from "react";
 import EditInfo from "./EditInfo";
+import DeleteData from "./DeleteData";
 import {
   Text,
   Button,
@@ -36,43 +37,8 @@ const origin = window.location.origin;
 
 // The actual Preview Card component
 function PreviewCard({ selectedData }: PreviewCardProps) {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  const handleDelete = async () => {
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`,
-        {
-          method: "DELETE",
-        },
-      );
-
-      if (!response.ok) {
-        if (response.status === 503) {
-          const errorMsg = await response.text();
-          setError(
-            `Failed to delete: ${errorMsg} \nTry again in a few minutes!`,
-          );
-          console.log(errorMsg);
-        } else {
-          const errorMsg = await response.text();
-          setError(`Failed to delete: ${errorMsg}`);
-          console.log(errorMsg);
-        }
-      } else {
-        setSuccess("File deleted successfully!");
-      }
-    } catch (error) {
-      console.error("Error sending Delete request:", error);
-      setError("An error occurred during file deletion.");
-    }
-    setLoading(false);
-  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -180,15 +146,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 </Grid.Col>
               </Grid>
               <div style={{ textAlign: "center" }}>
-                <Button
-                  loading={loading}
-                  loaderProps={{ type: "dots" }}
-                  size="compact-md"
-                  color="red"
-                  onClick={handleDelete}
-                >
-                  Delete
-                </Button>
+                <DeleteData selectedData={selectedData}/>
                 <CopyButton
                   value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
                 >
