@@ -33,7 +33,7 @@ function DeleteData({ selectedData }: PreviewCardProps) {
         setLoading(true);
         setError(null);
         setSuccess(null);
-        const authCode = import.meta.env.AUTH_CODE;
+        const authCode = import.meta.env.VITE_AUTH_CODE;
         if (newPasswordInput !== authCode) { // checks if passwords match
             setError("Incorrect password. Try again.");
             setLoading(false);
