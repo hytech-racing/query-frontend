@@ -175,6 +175,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     signedUrl={item.signed_url}
                   />
                 ))}
+                <MatFileUpload selectedData={selectedData} uniqueID={selectedData.id} />
               </div>
             </>
           ) : (

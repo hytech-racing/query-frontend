@@ -70,50 +70,50 @@ function DeleteData({ selectedData }: PreviewCardProps) {
     };
     return (
         <>
-        <Button
-            loading={loading}
-            loaderProps={{ type: "dots" }}
-            size="compact-md"
-            color="red"
-            onClick={() => setDeleteDataModalOpened(true)}
-        >
-            Delete
-        </Button>
-        <Modal
-            opened={deleteDataModalOpened}
-            onClose={() => setDeleteDataModalOpened(false)}
-            title="Delete Data"
-            centered
-            style={{ textAlign: "center" }}
-        >
-            <TextInput
-                label="Password"
-                value={newPasswordInput}
-                onChange={(e) => setNewPasswordInput(e.currentTarget.value)}
-                type="password"
-                placeholder="Enter Authentication Password"
-                mb="xs"/>
             <Button
                 loading={loading}
                 loaderProps={{ type: "dots" }}
-                onClick={handleDelete}
-                style={{ marginTop: 10 }}
+                size="compact-md"
                 color="red"
-                disabled={loading || newPasswordInput.trim() === ""}
+                onClick={() => setDeleteDataModalOpened(true)}
             >
-                Confirm Delete
+                Delete
             </Button>
-            {success && (
-                <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
-                {success}
-                </Notification>
-            )}
-            {error && (
-                <Notification color="red" onClose={() => setError(null)} style={{ marginTop: 10 }}>
-                {error}
-                </Notification>
-            )}
-        </Modal>
+            <Modal
+                opened={deleteDataModalOpened}
+                onClose={() => setDeleteDataModalOpened(false)}
+                title="Delete Data"
+                centered
+                style={{ textAlign: "center" }}
+            >
+                <TextInput
+                    label="Password"
+                    value={newPasswordInput}
+                    onChange={(e) => setNewPasswordInput(e.currentTarget.value)}
+                    type="password"
+                    placeholder="Enter Authentication Password"
+                    mb="xs"/>
+                <Button
+                    loading={loading}
+                    loaderProps={{ type: "dots" }}
+                    onClick={handleDelete}
+                    style={{ marginTop: 10 }}
+                    color="red"
+                    disabled={loading || newPasswordInput.trim() === ""}
+                >
+                    Confirm Delete
+                </Button>
+                {success && (
+                    <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
+                    {success}
+                    </Notification>
+                )}
+                {error && (
+                    <Notification color="red" onClose={() => setError(null)} style={{ marginTop: 10 }}>
+                    {error}
+                    </Notification>
+                )}
+            </Modal>
         </>
     );
 }
