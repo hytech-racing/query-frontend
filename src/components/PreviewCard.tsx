@@ -1,6 +1,7 @@
 import { useState } from "react";
 import EditInfo from "./EditInfo";
 import DeleteData from "./DeleteData";
+import MatFileUpload from "./MatFileUpload";
 import {
   Text,
   Button,
@@ -175,7 +176,8 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     signedUrl={item.signed_url}
                   />
                 ))}
-                <MatFileUpload selectedData={selectedData} uniqueID={selectedData.id} />
+                {/*<MatFileUpload fileName={getFileNameWithoutExtension(selectedData.mcap_files[0].file_name)} uniqueID={selectedData.id} uploadUrl={""}/>*/}
+                {/* Will be available once route is ready */}
               </div>
             </>
           ) : (
