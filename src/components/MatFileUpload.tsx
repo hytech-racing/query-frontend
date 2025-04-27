@@ -2,19 +2,18 @@ import {
     Button,
     Modal,
     Notification,
-    Textarea,
-    TextInput,
+    FileInput,
 } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
 import { useEffect, useState } from "react";
 
 // MAT file upload button
-interface PreviewCardProps {
-    selectedData: MCAPFileInformation | undefined;
-    uniqueID: String | undefined;
+interface MatFileUploadProps {
+    fileName: string | undefined;
+    uniqueID: string | undefined;
+    uploadUrl: string;
 }
 
-function MatFileUpload({ selectedData, uniqueID } : PreviewCardProps) {
+function MatFileUpload({ fileName, uniqueID, uploadUrl } : MatFileUploadProps) {
     const [showModal, setShowModal] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [loading, setLoading] = useState(false);
@@ -22,53 +21,74 @@ function MatFileUpload({ selectedData, uniqueID } : PreviewCardProps) {
     const [success, setSuccess] = useState<string | null>(null);
 
     useEffect(() => {
-        if (deleteDataModalOpened && selectedData) {
-            setNewPasswordInput("");
+        if (showModal) {
+            setShowModal(false);
+            setSelectedFiles([]);
             setError(null);
             setSuccess(null);
         }
-    }, [deleteDataModalOpened, selectedData]);
+    }, [setShowModal]);
 
-    const handleDelete = async () => { // sends the delete method to the server
-        if (!selectedData) return;
+    const handleFileChange = (files: File[]) => {
+        if (files.length > 0) {
+          setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
+        }
+    };
+
+    const handleUpload = async () => {
         setLoading(true);
         setError(null);
         setSuccess(null);
-        const authCode = import.meta.env.AUTH_CODE;
-        if (newPasswordInput !== authCode) { // checks if passwords match
-            setError("Incorrect password. Try again.");
+
+        if (!uniqueID) {
+            setError("No unique ID provided for upload.");
             setLoading(false);
             return;
         }
-        try { // completes delete or identifies errors
-            const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`,
-                {
-                    method: "DELETE"
-                },
-            );
-            if (!response.ok) {
+
+        if (selectedFiles.length > 0) {
+          try {
+            const formData = new FormData();
+            selectedFiles.forEach((file) => {
+              formData.append('files', file);
+            });
+    
+            try {
+                // will be changed to match updated upload route
+              const response = await fetch(`${uploadUrl}?id=${uniqueID}`, {
+                method: 'POST',
+                body: formData,
+              });
+    
+              if (!response.ok) {
                 if (response.status === 503) {
-                    const errorMsg = await response.text();
-                    setError(
-                    `Failed to delete: ${errorMsg} \nTry again in a few minutes!`,
-                    );
-                    console.log(errorMsg);
+                  const errorMsg = await response.text();
+                  setError(
+                    `Failed to upload: ${errorMsg} \nTry again in a few minutes!`,
+                  );
                 } else {
-                    const errorMsg = await response.text();
-                    setError(`Failed to delete: ${errorMsg}`);
-                    console.log(errorMsg);
+                  const errorMsg = await response.text();
+                  setError(`Failed to upload: ${errorMsg}`);
                 }
-            } else {
-                setSuccess("File deleted successfully! Refresh to see your changes!");
+              } else {
+                const result = await response.json();
+                setSuccess("File uploaded successfully!");
+                console.log("Upload successful:", result);
+              }
+            } catch (error) {
+              console.error("Error uploading files:", error);
+              setError("An error occurred during file upload.");
             }
-        } catch (error) {
-            console.error("Error sending Delete request:", error);
-            setError("An error occurred during file deletion.");
+    
+            setSelectedFiles([]);
+          } catch (error) {
+            console.error("Upload failed:", error);
+            setError("An error occurred while uploading. Please try again.");
+          }
         }
-        setDeleteDataModalOpened(false);
         setLoading(false);
     };
+
     return (
         <>
             {success && (
@@ -82,83 +102,50 @@ function MatFileUpload({ selectedData, uniqueID } : PreviewCardProps) {
                 </Notification>
             )}
             <Button size="compact-md" color="blue" onClick={() => setShowModal(true)}>
-                Upload MAT Files
+                Upload MAT/H5 Files
             </Button>
             <Modal
-                opened={editDateModalOpened}
-                onClose={() => setEditDateModalOpened(false)}
-                title="Edit Data"
+                opened={showModal}
+                onClose={() => setShowModal(false)}
+                title={`Upload MAT Files to ${fileName}`}
                 centered
                 style={{ textAlign: "center" }}
             >
-                <TextInput label="Car Model" value={newCarModel} onChange={(e) => setNewCarModel(e.currentTarget.value)} mb="xs" />
-                <DateInput
-                    value={newDate}
-                    onChange={setNewDate}
-                    valueFormat="DD/MM/YYYY"
-                    label="Select new date"
-                    placeholder="Pick a date"
-                    style={{ display: "block", margin: "0 auto", marginBottom: 20 }}
-                    styles={dateInputStyles}
-                />
-                <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    marginBottom: 20,
-                }}
-                >
-                <label style={{ marginBottom: 5 }}>Select new time (24-hour)</label>
-                <div style={{ display: "flex", gap: 5 }}>
-                    {["Hours", "Minutes", "Seconds"].map((label, idx) => {
-                    const getValue = () => {
-                        if (!newTime) return "00";
-                        const val = [newTime.getHours(), newTime.getMinutes(), newTime.getSeconds()][idx];
-                        return String(val).padStart(2, "0");
-                    };
-                    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-                        const val = Math.max(0, Math.min(parseInt(e.target.value) || 0, idx === 0 ? 23 : 59));
-                        const updated = newTime ? new Date(newTime) : new Date();
-                        if (idx === 0) updated.setHours(val);
-                        if (idx === 1) updated.setMinutes(val);
-                        if (idx === 2) updated.setSeconds(val);
-                        setNewTime(updated);
-                    };
-                    return (
-                        <input
-                        key={label}
-                        type="number"
-                        value={getValue()}
-                        onChange={onChange}
-                        placeholder={label.slice(0, 2).toUpperCase()}
-                        min={0}
-                        max={idx === 0 ? 23 : 59}
-                        step={1}
-                        style={{
-                            width: 50,
-                            textAlign: "center",
-                            padding: 5,
-                            border: "1px solid #ccc",
-                            borderRadius: 4,
-                        }}
-                        />
-                    );
-                    })}
+                <div className="files">
+                    <FileInput
+                        multiple
+                        accept=".mat,.h5"
+                        onChange={handleFileChange}
+                        placeholder="Select files to upload"
+                        label="Choose files"
+                        style={{ display: "block", margin: "0 auto" }}
+                    />
+                    {selectedFiles.length > 0 && (
+                    <div>
+                        <h3>Chosen Files:</h3>
+                        <ul>
+                        {selectedFiles.map((file, index) => (
+                            <li key={index}>{file.name}</li>
+                        ))}
+                        </ul>
+                    </div>
+                    )}
                 </div>
-                </div>
-                <TextInput label="Location" value={newLocation} onChange={(e) => setNewLocation(e.currentTarget.value)} mb="xs" />
-                <TextInput label="Event Type" value={newEventType} onChange={(e) => setNewEventType(e.currentTarget.value)} mb="xs" />
-                <Textarea label="Notes" value={newNotes} onChange={(e) => setNewNotes(e.currentTarget.value)} autosize minRows={2} mb="xs" />
-                <Button
-                    loading={loading}
-                    loaderProps={{ type: "dots" }}
-                    onClick={handleUpdate}
+                <Button loading={loading} loaderProps={{ type: 'dots' }} onClick={handleUpload} style={{ marginTop: 10 }} disabled={loading}>Upload</Button>
+                {success && (
+                    <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
+                    {success}
+                    </Notification>
+                )}
+                {error && (
+                    <Notification
+                    color="red"
+                    onClose={() => setError(null)}
                     style={{ marginTop: 10 }}
-                    disabled={loading || !newDate || !newTime}
-                >
-                    Update Info
-                </Button>
+                    >
+                    {error}
+                    </Notification>
+                )}
             </Modal>
         </>
     );
