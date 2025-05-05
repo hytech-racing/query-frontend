@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import EditInfo from "./EditInfo";
+import DeleteData from "./DeleteData";
+//import MatFileUpload from "./MatFileUpload";
+// used for uploading mat and h5 files
 import {
   Text,
   Button,
@@ -15,7 +19,6 @@ import {
   Stack,
   ActionIcon,
 } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
 import {
   IconDownload,
   IconChevronDown,
@@ -25,6 +28,13 @@ import {
 } from "@tabler/icons-react";
 
 import "@/css/PreviewCard.css";
+
+// Has multiple components in this file
+// 1. Preview Card component (rectangular section at the bottom of roots/files page)
+// 2. Data Div component -- goes in Preview card component
+// 3. Data Div Header component -- goes in Preview card component
+// 4. Download Button component (param : list of files | able to download multiple files)
+// 5. Schema Table component in Preview card
 
 interface PreviewCardProps {
   selectedRow?: string;
@@ -80,9 +90,9 @@ type MPSPackages = {
 };
 
 function PreviewCard({ selectedData }: PreviewCardProps) {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
   const [editDateModalOpened, setEditDateModalOpened] = useState(false);
   const [scriptsModalOpened, setScriptsModalOpened] = useState(false);
   const [selectedVersion, setSelectedVersion] = useState<string | null>();
@@ -318,38 +328,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     });
   };
 
-  const dateInputStyles = {
-    calendarHeaderControl: {
-      width: "24px",
-      height: "24px",
-      fontSize: "14px",
-      lineHeight: "24px",
-    },
-    calendarHeader: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      padding: "8px 0",
-    },
-    calendarHeaderLevel: {
-      flex: "0 1 auto",
-    },
-    calendar: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    },
-    weekday: {
-      fontSize: "12px",
-    },
-    day: {
-      fontSize: "12px",
-      width: "30px",
-      height: "30px",
-      lineHeight: "30px",
-    },
-  };
-
   const latImageUrl =
     selectedData?.content_files?.vn_lat_lon_plot?.[0]?.signed_url ??
     "https://camo.githubusercontent.com/25de56138803873d9ea83567c55b9a022ad86d0acb53bb7c733bb038583e2279/68747470733a2f2f6d69726f2e6d656469756d2e636f6d2f76322f726573697a653a6669743a3430302f312a7241676c6b664c4c316676384a6363697a4a33572d512e706e67";
@@ -429,15 +407,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 </Grid.Col>
               </Grid>
               <div style={{ textAlign: "center" }}>
-                <Button
-                  loading={loading}
-                  loaderProps={{ type: "dots" }}
-                  size="compact-md"
-                  color="red"
-                  onClick={handleDelete}
-                >
-                  Delete
-                </Button>
+                <DeleteData selectedData={selectedData}/>
                 <CopyButton
                   value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
                 >
@@ -451,6 +421,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     </Button>
                   )}
                 </CopyButton>
+
                 <Button
                   size="compact-md"
                   color="blue"
@@ -465,6 +436,8 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 >
                   Scripts
                 </Button>
+                <EditInfo selectedData={selectedData} />
+
                 {selectedData.mcap_files.map((item) => (
                   <DownloadButton
                     buttonText="MCAP"
@@ -479,6 +452,8 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     signedUrl={item.signed_url}
                   />
                 ))}
+                {/*<MatFileUpload fileName={getFileNameWithoutExtension(selectedData.mcap_files[0].file_name)} uniqueID={selectedData.id} uploadUrl={""}/>*/}
+                {/* Will be available once route is ready */}
               </div>
             </>
           ) : (
@@ -528,6 +503,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           )}
         </Grid.Col>
       </Grid>
+
 
       <Modal
         opened={editDateModalOpened}
@@ -746,8 +722,8 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     </div>
   );
 }
-
 export default PreviewCard;
+
 
 interface PreviewDataDivProps {
   name: string;
@@ -856,7 +832,7 @@ export const SchemaTable = () => {
       <TextInput
         size="xs"
         leftSection={<IconSearch />}
-        placeholder="Search schemas"
+        placeholder="Search schemas - DOES NOT WORK"
         value={searchTerm}
         onChange={(e) => {
           setSearchTerm(e.target.value);

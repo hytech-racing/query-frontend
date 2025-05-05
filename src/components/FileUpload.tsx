@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Modal, Button, Notification, FileInput } from "@mantine/core";
 import "@/css/FileUpload.css";
 
+// File upload Modal and Button
+
 interface FileUploadProps {
   uploadUrl: string;
 }
@@ -27,12 +29,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
       try {
         const formData = new FormData();
         selectedFiles.forEach((file) => {
-          formData.append("files", file);
+          formData.append('files', file);
         });
 
         try {
           const response = await fetch(uploadUrl, {
-            method: "POST",
+            method: 'POST',
             body: formData,
           });
 
@@ -108,22 +110,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
           )}
         </div>
 
-        <Button
-          loading={loading}
-          loaderProps={{ type: "dots" }}
-          onClick={handleUpload}
-          style={{ marginTop: 10 }}
-          disabled={loading}
-        >
-          Upload
-        </Button>
+        <Button loading={loading} loaderProps={{ type: 'dots' }} onClick={handleUpload} style={{ marginTop: 10 }} disabled={loading}>Upload</Button>
 
         {success && (
-          <Notification
-            color="green"
-            onClose={() => setSuccess(null)}
-            style={{ marginTop: 10 }}
-          >
+          <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
             {success}
           </Notification>
         )}
