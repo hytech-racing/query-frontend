@@ -1,6 +1,6 @@
-import { useState } from "react";
-import EditInfo from "./EditInfo";
-import DeleteData from "./DeleteData";
+import { useEffect, useState } from "react";
+import EditInfo from "@/components/EditInfo";
+import DeleteData from "@/components/DeleteData";
 //import MatFileUpload from "./MatFileUpload";
 // used for uploading mat and h5 files
 import {
@@ -93,13 +93,10 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const [editDateModalOpened, setEditDateModalOpened] = useState(false);
   const [scriptsModalOpened, setScriptsModalOpened] = useState(false);
   const [selectedVersion, setSelectedVersion] = useState<string | null>();
   // const [scriptOutput, setScriptOutput] = useState<string>("");
   const [availableScripts, setAvailableScripts] = useState<MPSPackages>({});
-  const [newDate, setNewDate] = useState<Date | null>(null);
-  const [newTime, setNewTime] = useState<Date | null>(null);
 
   async function runScript(
     scriptVersion: string,
@@ -118,14 +115,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       setSuccess("job submitted successfully!");
     }
   }
-
-  useEffect(() => {
-    if (editDateModalOpened && selectedData?.date) {
-      const previousDate = new Date(selectedData.date);
-      setNewDate(previousDate);
-      setNewTime(previousDate);
-    }
-  }, [editDateModalOpened, selectedData?.date]);
+  
 
   useEffect(() => {
     const fetchScripts = async () => {
@@ -161,93 +151,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       fetchScripts();
     }
   }, [scriptsModalOpened]);
-
-  const handleDelete = async () => {
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`,
-        {
-          method: "DELETE",
-        },
-      );
-
-      if (!response.ok) {
-        if (response.status === 503) {
-          const errorMsg = await response.text();
-          setError(
-            `Failed to delete: ${errorMsg} \nTry again in a few minutes!`,
-          );
-          console.log(errorMsg);
-        } else {
-          const errorMsg = await response.text();
-          setError(`Failed to delete: ${errorMsg}`);
-          console.log(errorMsg);
-        }
-      } else {
-        setSuccess("File deleted successfully!");
-      }
-    } catch (error) {
-      console.error("Error sending Delete request:", error);
-      setError("An error occurred during file deletion.");
-    }
-    setLoading(false);
-  };
-
-  const handleEditDate = async () => {
-    if (!newDate || !newTime || !selectedData?.id) return;
-
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      const combinedDate = new Date(newDate);
-      combinedDate.setHours(newTime.getHours());
-      combinedDate.setMinutes(newTime.getMinutes());
-      combinedDate.setSeconds(newTime.getSeconds());
-
-      const formattedDate = combinedDate.toISOString();
-
-      console.log("Formatted Date for API:", formattedDate);
-
-      const formData = new FormData();
-      formData.append("date", formattedDate);
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}/updateMetadataRecords`,
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-
-      if (!response.ok) {
-        if (response.status === 503) {
-          const errorMsg = await response.text();
-          setError(
-            `Failed to update date: ${errorMsg} \nTry again in a few minutes!`,
-          );
-        } else {
-          const errorMsg = await response.text();
-          setError(`Failed to update date: ${errorMsg}`);
-        }
-      } else {
-        setSuccess(
-          "Date and time updated successfully! Reload to see changes!",
-        );
-        selectedData.date = combinedDate.toISOString();
-      }
-    } catch (error) {
-      console.error("Error updating date:", error);
-      setError("An error occurred while updating the date and time.");
-    }
-
-    setLoading(false);
-    setEditDateModalOpened(false);
-  };
 
   // const handleScriptSubmit = async () => {
   //   if (!selectedScript || !selectedData?.id) return;
@@ -424,13 +327,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
 
                 <Button
                   size="compact-md"
-                  color="blue"
-                  onClick={() => setEditDateModalOpened(true)}
-                >
-                  Edit Date
-                </Button>
-                <Button
-                  size="compact-md"
                   color="violet"
                   onClick={() => setScriptsModalOpened(true)}
                 >
@@ -504,126 +400,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
         </Grid.Col>
       </Grid>
 
-
-      <Modal
-        opened={editDateModalOpened}
-        onClose={() => setEditDateModalOpened(false)}
-        title="Edit Date and Time"
-        centered
-        style={{ textAlign: "center" }}
-      >
-        <DateInput
-          value={newDate} // Controlled value
-          onChange={setNewDate}
-          valueFormat="DD/MM/YYYY"
-          label="Select new date"
-          placeholder="Pick a date"
-          style={{ display: "block", margin: "0 auto", marginBottom: 20 }}
-          styles={dateInputStyles}
-        />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: 20,
-          }}
-        >
-          <label style={{ marginBottom: 5 }}>Select new time (24-hour)</label>
-          <div style={{ display: "flex", gap: 5 }}>
-            <input
-              type="number"
-              value={
-                newTime ? String(newTime.getHours()).padStart(2, "0") : "00"
-              }
-              onChange={(e) => {
-                const hours = Math.min(
-                  23,
-                  Math.max(0, parseInt(e.target.value) || 0),
-                );
-                const updatedTime = newTime ? new Date(newTime) : new Date();
-                updatedTime.setHours(hours);
-                setNewTime(updatedTime);
-              }}
-              min={0}
-              max={23}
-              step={1}
-              placeholder="HH"
-              style={{
-                width: 50,
-                textAlign: "center",
-                padding: 5,
-                border: "1px solid #ccc",
-                borderRadius: 4,
-              }}
-            />
-            <span>:</span>
-            <input
-              type="number"
-              value={
-                newTime ? String(newTime.getMinutes()).padStart(2, "0") : "00"
-              }
-              onChange={(e) => {
-                const minutes = Math.min(
-                  59,
-                  Math.max(0, parseInt(e.target.value) || 0),
-                );
-                const updatedTime = newTime ? new Date(newTime) : new Date();
-                updatedTime.setMinutes(minutes);
-                setNewTime(updatedTime);
-              }}
-              min={0}
-              max={59}
-              step={1}
-              placeholder="MM"
-              style={{
-                width: 50,
-                textAlign: "center",
-                padding: 5,
-                border: "1px solid #ccc",
-                borderRadius: 4,
-              }}
-            />
-            <span>:</span>
-            <input
-              type="number"
-              value={
-                newTime ? String(newTime.getSeconds()).padStart(2, "0") : "00"
-              }
-              onChange={(e) => {
-                const seconds = Math.min(
-                  59,
-                  Math.max(0, parseInt(e.target.value) || 0),
-                );
-                const updatedTime = newTime ? new Date(newTime) : new Date();
-                updatedTime.setSeconds(seconds);
-                setNewTime(updatedTime);
-              }}
-              min={0}
-              max={59}
-              step={1}
-              placeholder="SS"
-              style={{
-                width: 50,
-                textAlign: "center",
-                padding: 5,
-                border: "1px solid #ccc",
-                borderRadius: 4,
-              }}
-            />
-          </div>
-        </div>
-        <Button
-          loading={loading}
-          loaderProps={{ type: "dots" }}
-          onClick={handleEditDate}
-          style={{ marginTop: 10 }}
-          disabled={loading || !newDate || !newTime}
-        >
-          Update Date and Time
-        </Button>
-      </Modal>
-
+      <EditInfo selectedData={selectedData} />
       <Modal
         opened={scriptsModalOpened}
         onClose={() => setScriptsModalOpened(false)}
