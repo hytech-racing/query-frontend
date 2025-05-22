@@ -1,6 +1,6 @@
 import { useState } from "react";
-import EditInfo from "./EditInfo";
-import DeleteData from "./DeleteData";
+import EditInfo from "@/components/EditInfo";
+import DeleteData from "@/components/DeleteData";
 //import MatFileUpload from "./MatFileUpload";
 // used for uploading mat and h5 files
 import {
