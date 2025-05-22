@@ -9,6 +9,8 @@ export default function Root() {
   const [filteredData, setFilteredData] = useState<MCAPFileInformation[]>();
   const [selectedRow, setSelectedRow] = useState<string>("");
   const [selectedData, setSelectedData] = useState<MCAPFileInformation>();
+  const [distinctLocations, setDistinctLocations] = useState<string[]>([]);
+
 
   const [searchTerm] = useQueryState("notes", parseAsString.withDefault(""));
   const [selectedId] = useQueryState("id", parseAsString.withDefault(""));
@@ -102,6 +104,18 @@ export default function Root() {
       },
     );
     setFilteredData(sortedData);
+
+    const allLocationsIncludingNulls: (string | null | undefined)[] = data.map(
+      (item: MCAPFileInformation) => item.location
+    );
+    const extractedLocations: string[] = allLocationsIncludingNulls.filter(
+      (loc): loc is string => {
+        return loc != null && loc.trim() !== "";
+      }
+    );
+    const uniqueLocations = Array.from(new Set(extractedLocations));
+
+    setDistinctLocations(uniqueLocations);
   };
 
   useEffect(() => {
@@ -142,7 +156,7 @@ export default function Root() {
           />
         </div>
 
-        <SearchBar setSearch={setSearch} />
+        <SearchBar setSearch={setSearch} distinctLocations={distinctLocations}/>
       </div>
       <PreviewCard selectedRow={selectedRow} selectedData={selectedData} />
     </>

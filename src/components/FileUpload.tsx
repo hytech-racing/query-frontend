@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Notification, FileInput } from "@mantine/core";
+import { Modal, Button, Notification, FileInput, Progress} from "@mantine/core";
 import "@/css/FileUpload.css";
 
 // File upload Modal and Button
@@ -14,6 +14,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number>(0); 
+  
 
   const handleFileChange = (files: File[]) => {
     if (files.length > 0) {
@@ -25,46 +27,74 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
-    if (selectedFiles.length > 0) {
-      try {
-        const formData = new FormData();
-        selectedFiles.forEach((file) => {
-          formData.append('files', file);
-        });
+    setUploadProgress(0);
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
 
-        try {
-          const response = await fetch(uploadUrl, {
-            method: 'POST',
-            body: formData,
-          });
+    selectedFiles.forEach((file) => {
+      formData.append('files', file, file.name);
+    });
 
-          if (!response.ok) {
-            if (response.status === 503) {
-              const errorMsg = await response.text();
-              setError(
-                `Failed to upload: ${errorMsg} \nTry again in a few minutes!`,
-              );
-            } else {
-              const errorMsg = await response.text();
-              setError(`Failed to upload: ${errorMsg}`);
-            }
-          } else {
-            const result = await response.json();
-            setSuccess("File uploaded successfully!");
-            console.log("Upload successful:", result);
-          }
-        } catch (error) {
-          console.error("Error uploading files:", error);
-          setError("An error occurred during file upload.");
-        }
-
-        setSelectedFiles([]);
-      } catch (error) {
-        console.error("Upload failed:", error);
-        setError("An error occurred while uploading. Please try again.");
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percentComplete = Math.round((event.loaded / event.total) * 100);
+        setUploadProgress(percentComplete);
       }
+    };
+
+    xhr.onloadstart = () => {
+      setUploadProgress(0);
+    };
+
+    xhr.onload = () => {
+      setLoading(false);
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const result = JSON.parse(xhr.responseText);
+          setSuccess("File(s) uploaded successfully!");
+          console.log("Upload successful:", result);
+          setSelectedFiles([]);
+          setUploadProgress(100);
+          setTimeout(() => setUploadProgress(0), 2000);
+        } catch (e) {
+          console.error("Error parsing server response:", e);
+          setError("Uploaded successfully, but couldn't parse server response.");
+          setUploadProgress(0);
+        }
+      } else {
+        let errorMsg = xhr.responseText || `Server responded with status ${xhr.status}`;
+        if (xhr.status === 503) {
+          errorMsg = `${errorMsg} \nTry again in a few minutes!`;
+        }
+        setError(`Failed to upload: ${errorMsg}`);
+        console.error("Upload failed with status:", xhr.status, xhr.responseText);
+        setUploadProgress(0);
+      }
+    };
+
+    xhr.onerror = () => {
+      setLoading(false);
+      setError("An error occurred during the upload. Please check your network connection and try again.");
+      console.error("XHR onerror triggered");
+      setUploadProgress(0);
+    };
+
+    xhr.onabort = () => {
+      setLoading(false);
+      setError("Upload was aborted.");
+      console.log("XHR onabort triggered");
+      setUploadProgress(0);
+    };
+
+    try {
+      xhr.open('POST', uploadUrl, true);
+      xhr.send(formData);
+    } catch (e) {
+        setLoading(false);
+        setError("An unexpected error occurred before sending the request.");
+        console.error("Error opening or sending XHR:", e);
+        setUploadProgress(0);
     }
-    setLoading(false);
   };
 
   const toggleModal = () => {
@@ -111,7 +141,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         </div>
 
         <Button loading={loading} loaderProps={{ type: 'dots' }} onClick={handleUpload} style={{ marginTop: 10 }} disabled={loading}>Upload</Button>
-
+        <Progress value={uploadProgress}></Progress>
         {success && (
           <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
             {success}
