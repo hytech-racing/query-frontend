@@ -12,19 +12,6 @@ export const eventType: string[] = [
 ];
 
 /**
- * Represents the list of possible locations.
- *
- * These are predefined locations where events have occurred.
- * This constant can be used for filtering data or displaying location options in Storybook components.
- */
-export const location: string[] = [
-  "MRDC",     // Location for the MRDC event.
-  "Michigan", // Location for the Michigan event.
-  "Rome",     // Location for the Rome event.
-  "SCC",      // Location for the SCC event.
-];
-
-/**
  * Represents the list of possible car models.
  *
   */

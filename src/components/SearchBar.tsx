@@ -1,7 +1,7 @@
 import React from "react";
 
 // Lists of available filter options
-import { eventType, location, carModel } from "@/data/dataFilters";
+import { eventType, carModel } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
 import { Button, MultiSelect } from "@mantine/core";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
@@ -10,9 +10,10 @@ import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
 interface SearchBarWithFilterProps {
   setSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  distinctLocations: string[];
 }
 
-function SearchBarWithFilter({ setSearch }: SearchBarWithFilterProps) {
+function SearchBarWithFilter({ setSearch, distinctLocations}: SearchBarWithFilterProps) {
   const [searchTerm, setSearchTerm] = useQueryState(
     "notes",
     parseAsString.withDefault(""),
@@ -86,7 +87,7 @@ function SearchBarWithFilter({ setSearch }: SearchBarWithFilterProps) {
               className="filter-select"
             >
               <option value="">All Locations</option>
-              {location.map((locationName, idx) => (
+              {distinctLocations.map((locationName, idx) => (
                 <option value={locationName.toLowerCase()} key={idx}>
                   {locationName}
                 </option>
