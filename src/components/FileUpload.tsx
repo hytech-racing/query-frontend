@@ -88,8 +88,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
 
     try {
       xhr.open('POST', uploadUrl, true);
-      // If your server requires specific headers (e.g., for authentication), set them here:
-      // xhr.setRequestHeader('Authorization', 'Bearer YOUR_TOKEN');
       xhr.send(formData);
     } catch (e) {
         setLoading(false);
