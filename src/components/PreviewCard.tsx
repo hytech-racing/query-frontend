@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditInfo from "@/components/EditInfo";
 import DeleteData from "@/components/DeleteData";
 //import MatFileUpload from "./MatFileUpload";
@@ -14,13 +14,19 @@ import {
   TextInput,
   Notification,
   CopyButton,
+  Modal,
+  Select,
+  Stack,
+  ActionIcon,
 } from "@mantine/core";
 import {
   IconDownload,
   IconChevronDown,
   IconFile,
   IconSearch,
+  IconPlayerPlay,
 } from "@tabler/icons-react";
+
 import "@/css/PreviewCard.css";
 
 // Has multiple components in this file
@@ -37,10 +43,183 @@ interface PreviewCardProps {
 
 const origin = window.location.origin;
 
-// The actual Preview Card component
+interface FunctionSignature {
+  help: string;
+  inputs: Array<{
+    help: string;
+    mwsize: number[];
+    mwtype: string;
+    name: string;
+  }>;
+  outputs: Array<{
+    help: string;
+    mwsize: number[];
+    mwtype: string;
+    name: string;
+  }>;
+}
+
+interface FunctionDefinition {
+  signatures: FunctionSignature[];
+}
+
+interface ArchiveData {
+  archiveSchemaVersion: string;
+  archiveUuid: string;
+  functions: Record<string, FunctionDefinition>;
+  matlabRuntimeRelease: string;
+  matlabRuntimeVersion: string;
+}
+
+interface DiscoveryResponse {
+  discoverySchemaVersion: string;
+  archives: Record<string, ArchiveData>;
+}
+
+type MPSScript = {
+  name: string;
+  result: string;
+};
+
+type MPSPackage = {
+  scripts: MPSScript[];
+};
+
+type MPSPackages = {
+  [key: string]: MPSPackage;
+};
+
 function PreviewCard({ selectedData }: PreviewCardProps) {
+  function formatMPSResult(version: string, funcName: string): string {
+    // check if result exists
+    if (selectedData?.mps_record?.[version]?.[funcName]?.result) {
+      // If the result exists, check the type
+      const result = selectedData.mps_record[version][funcName];
+      if (result.type == "mat") {
+        return `<a href="${result.result}" target="_blank" rel="noopener noreferrer">Download MAT</a>`;
+      } else if (result.type == "image") {
+        return `<a href="${result.result}" target="_blank" rel="noopener noreferrer">Download Image</a>`;
+      } else {
+        return result.result;
+      }
+    } else {
+      return "";
+    }
+  }
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  const [scriptsModalOpened, setScriptsModalOpened] = useState(false);
+  const [selectedVersion, setSelectedVersion] = useState<string | null>();
+  // const [scriptOutput, setScriptOutput] = useState<string>("");
+  const [availableScripts, setAvailableScripts] = useState<MPSPackages>({});
+
+  async function runScript(
+    scriptVersion: string,
+    scriptName: string,
+    id: string,
+  ) {
+    const resp = await fetch(
+      `${import.meta.env.VITE_API_URL}/mcaps/${id}/process?version=${scriptVersion}&scripts=${scriptName}`,
+      { method: "GET" },
+    );
+
+    if (!resp.ok) {
+      const errorMsg = await resp.text();
+      setError(`failed to run script: ${errorMsg}`);
+    } else {
+      setSuccess("job submitted successfully!");
+    }
+  }
+
+  useEffect(() => {
+    const fetchScripts = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_MPS_URL}/api/discovery`,
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch scripts");
+        }
+        const data: DiscoveryResponse = await response.json();
+
+        const packages: MPSPackages = {};
+
+        Object.entries(data.archives).forEach(([version, archiveData]) => {
+          console.log(selectedData);
+          packages[version] = { scripts: [] };
+          Object.keys(archiveData.functions).forEach((funcName) => {
+            packages[version].scripts.push({
+              name: funcName,
+              result: formatMPSResult(version, funcName),
+            });
+          });
+        });
+
+        setAvailableScripts(packages);
+      } catch (error) {
+        console.error("Error fetching scripts:", error);
+        setError("Failed to load available scripts");
+      }
+    };
+
+    if (scriptsModalOpened) {
+      fetchScripts();
+    }
+  }, [scriptsModalOpened]);
+
+  // const handleScriptSubmit = async () => {
+  //   if (!selectedScript || !selectedData?.id) return;
+
+  //   setLoading(true);
+  //   setError(null);
+  //   setSuccess(null);
+  //   setScriptOutput("");
+
+  //   try {
+  //     // First API call to process the script
+  //     const processResponse = await fetch(
+  //       `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}/process?scripts=${selectedScript}`,
+  //       {
+  //         method: "GET",
+  //       },
+  //     );
+
+  //     if (!processResponse.ok) {
+  //       throw new Error("Failed to process script");
+  //     }
+
+  //     // Second API call to get the updated data
+  //     const dataResponse = await fetch(
+  //       `${import.meta.env.VITE_API_URL}/mcaps/${selectedData.id}`,
+  //       {
+  //         method: "GET",
+  //       },
+  //     );
+
+  //     if (!dataResponse.ok) {
+  //       throw new Error("Failed to fetch updated data");
+  //     }
+
+  //     const data = await dataResponse.json();
+
+  //     const mpsRecord = data.data[0]?.mps_record;
+
+  //     if (mpsRecord) {
+  //       setScriptOutput(JSON.stringify(mpsRecord, null, 2));
+  //       setSuccess("Script executed successfully!");
+  //     } else {
+  //       setScriptOutput("No output found");
+  //       setSuccess("Script executed successfully!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error running script:", error);
+  //     setError("An error occurred while running the script.");
+  //   }
+
+  //   setLoading(false);
+  // };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -148,7 +327,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 </Grid.Col>
               </Grid>
               <div style={{ textAlign: "center" }}>
-                <DeleteData selectedData={selectedData}/>
+                <DeleteData selectedData={selectedData} />
                 <CopyButton
                   value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
                 >
@@ -162,7 +341,16 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     </Button>
                   )}
                 </CopyButton>
+
+                <Button
+                  size="compact-md"
+                  color="violet"
+                  onClick={() => setScriptsModalOpened(true)}
+                >
+                  Scripts
+                </Button>
                 <EditInfo selectedData={selectedData} />
+
                 {selectedData.mcap_files.map((item) => (
                   <DownloadButton
                     buttonText="MCAP"
@@ -228,11 +416,108 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
           )}
         </Grid.Col>
       </Grid>
+
+      <EditInfo selectedData={selectedData} />
+      <Modal
+        opened={scriptsModalOpened}
+        onClose={() => setScriptsModalOpened(false)}
+        title={<Text fw={700}>Run MATLAB Scripts</Text>}
+        centered
+        size="lg"
+      >
+        <Stack>
+          <Text size="sm">
+            Viewing:{" "}
+            {getFileNameWithoutExtension(
+              selectedData ? selectedData.mcap_files[0].file_name : "",
+            )}
+          </Text>
+
+          <Select
+            label="Select MATLAB Script Version"
+            placeholder={
+              Object.keys(availableScripts).length != 0
+                ? "Choose an archive version to see results and run scripts"
+                : "Loading archive versions..."
+            }
+            data={Object.keys(availableScripts)}
+            value={selectedVersion}
+            onChange={setSelectedVersion}
+            disabled={Object.keys(availableScripts).length == 0}
+            searchable
+          />
+
+          {selectedVersion && (
+            <Table>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th colSpan={2}>Run Scripts</Table.Th>
+                  <Table.Th>Results</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {availableScripts[selectedVersion ?? ""]?.scripts.map(
+                  (script, index) => (
+                    <Table.Tr key={index}>
+                      <Table.Td style={{ width: "16px" }}>
+                        <ActionIcon
+                          variant="filled"
+                          color="green"
+                          onClick={() => {
+                            runScript(
+                              selectedVersion,
+                              script.name,
+                              selectedData!.id,
+                            );
+                          }}
+                        >
+                          <IconPlayerPlay
+                            style={{ width: "70%", height: "70%" }}
+                            stroke={1.5}
+                          />
+                        </ActionIcon>
+                      </Table.Td>
+                      <Table.Td style={{ textAlign: "left" }}>
+                        {script.name}
+                      </Table.Td>
+                      <Table.Td
+                        style={{ textAlign: "left" }}
+                        dangerouslySetInnerHTML={{ __html: script.result }}
+                      />
+                    </Table.Tr>
+                  ),
+                )}
+              </Table.Tbody>
+            </Table>
+          )}
+
+          {success && (
+            <Notification color="green" onClose={() => setSuccess(null)}>
+              {success}
+            </Notification>
+          )}
+          {error && (
+            <Notification color="red" onClose={() => setError(null)}>
+              {error}
+            </Notification>
+          )}
+
+          {/* {scriptOutput && (
+            <div>
+              <Text fw={700} mb="xs">
+                Script Returns:
+              </Text>
+              <Code block style={{ maxHeight: "300px", overflow: "auto" }}>
+                {scriptOutput}
+              </Code>
+            </div>
+          )} */}
+        </Stack>
+      </Modal>
     </div>
   );
 }
 export default PreviewCard;
-
 
 interface PreviewDataDivProps {
   name: string;
