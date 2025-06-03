@@ -158,8 +158,7 @@ export default function Root() {
             setSelectedData={setSelectedData}
           />
         </div>
-
-        <SearchBar setSearch={setSearch} locations={distinctLocations} />
+        <SearchBar setSearch={setSearch} distinctLocations={distinctLocations}/>
       </div>
       <PreviewCard selectedRow={selectedRow} selectedData={selectedData} />
     </>

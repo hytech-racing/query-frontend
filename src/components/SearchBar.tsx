@@ -9,10 +9,10 @@ import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
 interface SearchBarWithFilterProps {
   setSearch: React.Dispatch<React.SetStateAction<boolean>>;
-  locations: string[];
+  distinctLocations: string[];
 }
 
-function SearchBarWithFilter({ setSearch, locations }: SearchBarWithFilterProps) {
+function SearchBarWithFilter({ setSearch, distinctLocations}: SearchBarWithFilterProps) {
   const [searchTerm, setSearchTerm] = useQueryState(
     "notes",
     parseAsString.withDefault(""),
@@ -86,7 +86,7 @@ function SearchBarWithFilter({ setSearch, locations }: SearchBarWithFilterProps)
               className="filter-select"
             >
               <option value="">All Locations</option>
-              {locations.map((locationName, idx) => (
+              {distinctLocations.map((locationName, idx) => (
                 <option value={locationName.toLowerCase()} key={idx}>
                   {locationName}
                 </option>
