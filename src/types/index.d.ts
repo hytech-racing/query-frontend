@@ -1,4 +1,16 @@
 /**
+ * Represents a record of MPS data.
+ */
+type MpsRecord = {
+  [key: string]: {
+    [key: string]: {
+      type: string;
+      result: string;
+    };
+  };
+};
+
+/**
  *
  * This type is useful for managing and displaying structured data related to MCAP files
  * in the context of a Storybook story or a React component.
@@ -55,6 +67,8 @@ type MCAPFileInformation = {
   event_type?: string;
   /** Signed URL for accessing the file (optional). */
   signed_url?: string;
+  /** MPS records */
+  mps_record?: MpsRecord;
 };
 
 /**

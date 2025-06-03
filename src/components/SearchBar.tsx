@@ -6,7 +6,6 @@ import "@/css/SearchBar.css";
 import { Button, MultiSelect } from "@mantine/core";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
-// Search bar of the files page
 
 interface SearchBarWithFilterProps {
   setSearch: React.Dispatch<React.SetStateAction<boolean>>;
