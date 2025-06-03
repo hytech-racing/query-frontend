@@ -78,7 +78,7 @@ interface DiscoveryResponse {
 
 type MPSScript = {
   name: string;
-  result: string | null;
+  result: string;
 };
 
 type MPSPackage = {
@@ -90,6 +90,23 @@ type MPSPackages = {
 };
 
 function PreviewCard({ selectedData }: PreviewCardProps) {
+  function formatMPSResult(version: string, funcName: string): string {
+    // check if result exists
+    if (selectedData?.mps_record?.[version]?.[funcName]?.result) {
+      // If the result exists, check the type
+      const result = selectedData.mps_record[version][funcName];
+      if (result.type == "mat") {
+        return `<a href="${result.result}" target="_blank" rel="noopener noreferrer">Download MAT</a>`;
+      } else if (result.type == "image") {
+        return `<a href="${result.result}" target="_blank" rel="noopener noreferrer">Download Image</a>`;
+      } else {
+        return result.result;
+      }
+    } else {
+      return "";
+    }
+  }
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -115,7 +132,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
       setSuccess("job submitted successfully!");
     }
   }
-  
 
   useEffect(() => {
     const fetchScripts = async () => {
@@ -131,11 +147,12 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
         const packages: MPSPackages = {};
 
         Object.entries(data.archives).forEach(([version, archiveData]) => {
+          console.log(selectedData);
           packages[version] = { scripts: [] };
           Object.keys(archiveData.functions).forEach((funcName) => {
             packages[version].scripts.push({
               name: funcName,
-              result: null,
+              result: formatMPSResult(version, funcName),
             });
           });
         });
@@ -310,7 +327,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 </Grid.Col>
               </Grid>
               <div style={{ textAlign: "center" }}>
-                <DeleteData selectedData={selectedData}/>
+                <DeleteData selectedData={selectedData} />
                 <CopyButton
                   value={`${origin}${import.meta.env.BASE_URL}?id=${selectedData.id}`}
                 >
@@ -463,9 +480,10 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                       <Table.Td style={{ textAlign: "left" }}>
                         {script.name}
                       </Table.Td>
-                      <Table.Td style={{ textAlign: "left" }}>
-                        {script.result}
-                      </Table.Td>
+                      <Table.Td
+                        style={{ textAlign: "left" }}
+                        dangerouslySetInnerHTML={{ __html: script.result }}
+                      />
                     </Table.Tr>
                   ),
                 )}
@@ -500,7 +518,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
   );
 }
 export default PreviewCard;
-
 
 interface PreviewDataDivProps {
   name: string;
