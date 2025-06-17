@@ -42,6 +42,7 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_AUTH_CODE: ${{ secrets.AUTH_CODE }}
+          VITE_MPS_URL: ${{ secrets.VITE_MPS_URL }}
         run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
