@@ -360,7 +360,9 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 ))}
                 {selectedData.mat_files.map((item) => (
                   <DownloadButton
-                    buttonText="H5"
+                    buttonText={(
+                      item.file_name.split(".").pop() || ""
+                    ).toUpperCase()}
                     fileName={item.file_name}
                     signedUrl={item.signed_url}
                   />
