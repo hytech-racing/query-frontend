@@ -1,6 +1,7 @@
 import { Table } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
 import { Input, Textarea } from "@mantine/core";
+import CursorWrapper from "./CursorWrapper";
 
 // Data table of the files/root page
 interface DataTableProps {
@@ -10,6 +11,7 @@ interface DataTableProps {
   setSelectedData: React.Dispatch<
     React.SetStateAction<MCAPFileInformation | undefined>
   >;
+  getNextPage: (cursorIdx: number) => void;
 }
 
 export default function DataTable({
@@ -17,6 +19,7 @@ export default function DataTable({
   selectedRow,
   setSelectedRow,
   setSelectedData,
+  getNextPage,
 }: DataTableProps) {
   const theme = useMantineTheme();
 
@@ -51,11 +54,14 @@ export default function DataTable({
       </Table.Td>
     </Table.Tr>
   ) : (
-    data.map((file) => (
-      <Table.Tr
+    data.map((file, idx) => (
+      <CursorWrapper
         key={file.id}
-        onClick={() => setPreviewData(file)}
+        clickFunc={() => setPreviewData(file)}
         bg={selectedRow === file.id ? theme.primaryColor : ""}
+        isCursor={idx === data.length - 1}
+        getNextPage={getNextPage}
+        cursorIdx={idx}
       >
         <Table.Td style={{ paddingLeft: "25px", size: "xs" }}>
           {file.mcap_files
@@ -77,7 +83,6 @@ export default function DataTable({
             />
           </Input.Wrapper>
         </Table.Td>
-
         <Table.Td style={{ paddingRight: "25px" }}>
           <Input.Wrapper>
             <Textarea
@@ -92,7 +97,7 @@ export default function DataTable({
             />
           </Input.Wrapper>
         </Table.Td>
-      </Table.Tr>
+      </CursorWrapper>
     ))
   );
   return (
