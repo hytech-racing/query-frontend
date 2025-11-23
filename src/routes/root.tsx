@@ -5,7 +5,10 @@ import DataTable from "@/components/DataTable";
 import PreviewCard from "@/components/PreviewCard";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
+const MCAP_PAGINATION_LIMIT: number = 10;
+
 export default function Root() {
+  const [mcapPaginationOffset, setMcapPaginationOffset] = useState<number>(0);
   const [filteredData, setFilteredData] = useState<MCAPFileInformation[]>();
   const [selectedRow, setSelectedRow] = useState<string>("");
   const [selectedData, setSelectedData] = useState<MCAPFileInformation>();
@@ -32,7 +35,7 @@ export default function Root() {
   );
   const [carModel] = useQueryState("carModel", parseAsString.withDefault(""));
 
-  // corresponds with index.d.ts - type SearchFilter 
+  // corresponds with index.d.ts - type SearchFilter
   const searchFilters = {
     location: selectedLocation,
     date: selectedEventType,
@@ -53,6 +56,14 @@ export default function Root() {
     return new Date(`${year}-${month}-${day}T${time}Z`).toISOString();
   };
 
+  const getNextPage = (cursorIdx: number) => {
+    // limit duplicate requests
+    if (cursorIdx + MCAP_PAGINATION_LIMIT >= mcapPaginationOffset) {
+      return;
+    }
+    setMcapPaginationOffset(cursorIdx + MCAP_PAGINATION_LIMIT);
+  };
+
   // fetch request of wanted files with filters as Query Params
   const fetchData = async (filters: SearchFilter) => {
     if (selectedId != "") {
@@ -64,7 +75,7 @@ export default function Root() {
       return data.data;
     }
 
-    // corresponds with index.d.ts - type SearchFilter 
+    // corresponds with index.d.ts - type SearchFilter
     const { location, date, eventType, searchText, carModel } = filters;
     let { afterDate, beforeDate } = filters;
 
@@ -80,10 +91,11 @@ export default function Root() {
       ...(beforeDate ? { before_date: beforeDate } : {}),
       ...(searchText ? { search_text: searchText } : {}),
       ...(carModel ? { car_model: carModel } : {}),
+      ...{ limit: JSON.stringify(MCAP_PAGINATION_LIMIT) },
+      ...{ offset: JSON.stringify(mcapPaginationOffset) },
     };
 
     const queryString = new URLSearchParams(params).toString();
-
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/api/v2/mcaps?${queryString}`,
     );
@@ -94,9 +106,6 @@ export default function Root() {
 
   const assignData = async () => {
     const data = await fetchData(searchFilters);
-    console.log(data);
-
-    
 
     const sortedData = data.sort(
       (a: MCAPFileInformation, b: MCAPFileInformation) => {
@@ -109,12 +118,12 @@ export default function Root() {
     setFilteredData(sortedData);
 
     const allLocationsIncludingNulls: (string | null | undefined)[] = data.map(
-      (item: MCAPFileInformation) => item.location
+      (item: MCAPFileInformation) => item.location,
     );
     const extractedLocations: string[] = allLocationsIncludingNulls.filter(
       (loc): loc is string => {
         return loc != null && loc.trim() !== "";
-      }
+      },
     );
     const uniqueLocations = Array.from(new Set(extractedLocations));
 
@@ -123,7 +132,7 @@ export default function Root() {
 
   useEffect(() => {
     assignData();
-  }, []);
+  }, [mcapPaginationOffset]);
 
   // Two useEffects bc of the way we are handling the Search Button D:
   useEffect(() => {
@@ -156,9 +165,13 @@ export default function Root() {
             selectedRow={selectedRow}
             setSelectedRow={setSelectedRow}
             setSelectedData={setSelectedData}
+            getNextPage={getNextPage}
           />
         </div>
-        <SearchBar setSearch={setSearch} distinctLocations={distinctLocations}/>
+        <SearchBar
+          setSearch={setSearch}
+          distinctLocations={distinctLocations}
+        />
       </div>
       <PreviewCard selectedRow={selectedRow} selectedData={selectedData} />
     </>
