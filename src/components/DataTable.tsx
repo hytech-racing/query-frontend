@@ -58,15 +58,17 @@ export default function DataTable({
         bg={selectedRow === file.id ? theme.primaryColor : ""}
       >
         <Table.Td style={{ paddingLeft: "25px", size: "xs" }}>
-          {getFileNameWithoutExtension(file.mcap_files[0].file_name)}
+          {file.mcap_files
+            ? getFileNameWithoutExtension(file.mcap_files[0].file_name)
+            : null}
         </Table.Td>
         <Table.Td>{file.date}</Table.Td>
-        <Table.Td style={{ size: "xs"}}>
-          <Input.Wrapper >
+        <Table.Td style={{ size: "xs" }}>
+          <Input.Wrapper>
             <Textarea
               variant="unstyled"
               value={file.location}
-              style={{ whiteSpace: "normal", wordWrap: "break-word"}}
+              style={{ whiteSpace: "normal", wordWrap: "break-word" }}
               readOnly
               autosize
               placeholder="No Location Available"
@@ -81,7 +83,7 @@ export default function DataTable({
             <Textarea
               variant="unstyled"
               value={file.notes}
-              style={{ whiteSpace: "normal", wordWrap: "break-word"}}
+              style={{ whiteSpace: "normal", wordWrap: "break-word" }}
               readOnly
               autosize
               placeholder="No Note Available"
