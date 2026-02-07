@@ -24,11 +24,13 @@ type MCAPFileInformation = {
   schema_versions?: null;
   /** List of MCAP files, each containing file name and signed URL. */
   mcap_files: {
+    id: string;
     signed_url: string;
     file_name: string;
   }[];
   /** List of MATLAB files, each containing file name and signed URL. */
   mat_files: {
+    id: string;
     signed_url: string;
     file_name: string;
   }[];
