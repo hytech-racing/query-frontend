@@ -1,6 +1,6 @@
 /**
  *
- * This file defines multiple stories for the `DataTable` component, showcasing its behavior 
+ * This file defines multiple stories for the `DataTable` component, showcasing its behavior
  * with various states of input data and container styles.
  *
  * @module DataTableStories
@@ -49,11 +49,11 @@ const sampleData = [
     event_type: "acceleration",
     car_model: "HT08",
     schema_versions: null,
-    mcap_files: [{ signed_url: "yar", file_name: "yar" }],
-    mat_files: [{ signed_url: "har", file_name: "har" }],
+    mcap_files: [{ id: "1", signed_url: "yar", file_name: "yar" }],
+    mat_files: [{ id: "2", signed_url: "har", file_name: "har" }],
     content_files: {
-      vn_lat_lon_plot: [{ signed_url: "bar", file_name: "far" }],
-      vn_time_vel_plot: [{ signed_url: "bar", file_name: "far" }],
+      vn_lat_lon_plot: [{ id: "3", signed_url: "bar", file_name: "far" }],
+      vn_time_vel_plot: [{ id: "4", signed_url: "bar", file_name: "far" }],
     },
   },
 ];
@@ -78,7 +78,7 @@ export const WithResults: Story = {
  * with limited dimensions and scrollable overflow.
  *
  * @type {Story}
- * @property {Object} parameters.docs.description.story - Explains how the `DataTable` becomes scrollable 
+ * @property {Object} parameters.docs.description.story - Explains how the `DataTable` becomes scrollable
  *                                                        within a constrained container.
  */
 export const WithResultsSmall: Story = {
