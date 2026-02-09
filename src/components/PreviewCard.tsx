@@ -416,6 +416,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                   NA
                 </Text>
               </div>
+              selectedVersion
             </>
           )}
         </Grid.Col>
@@ -607,9 +608,13 @@ export function DownloadButton({
                 throw new Error(
                   `Failed to fetch: ${res.status} ${res.statusText}`,
                 );
+
               const json = await res.json();
 
-              const signedUrl = json.data[0]?.mcap_files?.[0]?.signed_url;
+              let signedUrl = json.data[0]?.mcap_files?.[0]?.signed_url;
+              if (buttonText == "H5") {
+                signedUrl = json.data[0].mat_files[0].signed_url;
+              }
 
               if (signedUrl) {
                 window.open(signedUrl, "_blank"); // triggers download in new tab
