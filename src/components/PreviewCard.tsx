@@ -167,7 +167,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
     if (scriptsModalOpened) {
       fetchScripts();
     }
-  }, [scriptsModalOpened, formatMPSResult, selectedData]);
+  }, [scriptsModalOpened]);
 
   // const handleScriptSubmit = async () => {
   //   if (!selectedScript || !selectedData?.id) return;
@@ -416,7 +416,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                   NA
                 </Text>
               </div>
-              selectedVersion
             </>
           )}
         </Grid.Col>
