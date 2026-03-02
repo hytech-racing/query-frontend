@@ -356,6 +356,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     buttonText="MCAP"
                     fileName={item.file_name}
                     signedUrl={item.signed_url ?? null}
+                    id={selectedData.id}
                   />
                 ))}
                 {selectedData.mat_files.map((item) => (
@@ -365,6 +366,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     ).toUpperCase()}
                     fileName={item.file_name}
                     signedUrl={item.signed_url}
+                    id={selectedData.id}
                   />
                 ))}
                 {/*<MatFileUpload fileName={getFileNameWithoutExtension(selectedData.mcap_files[0].file_name)} uniqueID={selectedData.id} uploadUrl={""}/>*/}
@@ -558,12 +560,14 @@ interface DownloadButtonProps {
   buttonText: string;
   fileName: string;
   signedUrl: string | null;
+  id: string;
 }
 
 export function DownloadButton({
+  // add id parameter to pass into API call (use /id call on backend)
   buttonText,
   fileName,
-  signedUrl,
+  id,
 }: DownloadButtonProps) {
   return (
     <Menu
@@ -593,8 +597,32 @@ export function DownloadButton({
               stroke={1.5}
             />
           }
-          onClick={() => {
-            window.open(signedUrl ?? undefined, "_blank");
+          onClick={async () => {
+            // make a call to server to get new sign url
+            try {
+              const res = await fetch(
+                `${import.meta.env.VITE_API_URL}/mcaps/${id}`,
+              );
+              if (!res.ok)
+                throw new Error(
+                  `Failed to fetch: ${res.status} ${res.statusText}`,
+                );
+
+              const json = await res.json();
+
+              let signedUrl = json.data[0]?.mcap_files?.[0]?.signed_url;
+              if (buttonText == "H5") {
+                signedUrl = json.data[0].mat_files[0].signed_url;
+              }
+
+              if (signedUrl) {
+                window.open(signedUrl, "_blank"); // triggers download in new tab
+              } else {
+                console.error("No signed URL available for this MCAP file");
+              }
+            } catch (err) {
+              console.error("Download error:", err);
+            }
           }}
         >
           {fileName}
