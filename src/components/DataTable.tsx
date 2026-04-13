@@ -63,6 +63,7 @@ export default function DataTable({
             : null}
         </Table.Td>
         <Table.Td>{file.date}</Table.Td>
+        <Table.Td>{file.event_type}</Table.Td>
         <Table.Td style={{ size: "xs" }}>
           <Input.Wrapper>
             <Textarea
@@ -110,6 +111,7 @@ export default function DataTable({
           <Table.Tr>
             <Table.Th style={{ paddingLeft: "25px" }}>Name</Table.Th>
             <Table.Th>Date</Table.Th>
+            <Table.Th>Event Type</Table.Th>
             <Table.Th>Location</Table.Th>
             <Table.Th style={{ paddingRight: "25px" }}>Notes</Table.Th>
           </Table.Tr>
