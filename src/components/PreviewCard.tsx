@@ -9,7 +9,6 @@ import {
   rem,
   Table,
   ScrollArea,
-  TextInput,
   Notification,
   CopyButton,
   Modal,
@@ -21,7 +20,6 @@ import {
   IconDownload,
   IconChevronDown,
   IconFile,
-  IconSearch,
   IconPlayerPlay,
 } from "@tabler/icons-react";
 
@@ -639,36 +637,16 @@ export function DownloadButton({
 }
 
 export const SchemaTable = () => {
+  // Static placeholder data until this is backed by a real schema API.
+  // The search box that used to sit here was non-functional ("DOES NOT WORK")
+  // and has been removed rather than shipped broken.
   const initialData = Array.from({ length: 20 }, (_, index) => ({
     name: `Schema ${index + 1}`,
     value: `${index + 1 + "." + index + "." + index}`,
   }));
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(initialData);
-
-  const handleSearch = (term: string) => {
-    const lowercasedTerm = term.toLowerCase();
-    const filtered = initialData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(lowercasedTerm) ||
-        item.value.toLowerCase().includes(lowercasedTerm),
-    );
-    setFilteredData(filtered);
-  };
-
   return (
     <div style={{ padding: "15px", overflow: "scroll" }}>
-      <TextInput
-        size="xs"
-        leftSection={<IconSearch />}
-        placeholder="Search schemas - DOES NOT WORK"
-        value={searchTerm}
-        onChange={(e) => {
-          setSearchTerm(e.target.value);
-          handleSearch(e.target.value);
-        }}
-      />
       <ScrollArea style={{ height: 180, width: 250, padding: 10 }}>
         <Table
           striped
@@ -686,8 +664,8 @@ export const SchemaTable = () => {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {filteredData.length > 0 ? (
-              filteredData.map((item, index) => (
+            {initialData.length > 0 ? (
+              initialData.map((item, index) => (
                 <Table.Tr key={index}>
                   <Table.Td style={{ textAlign: "left" }}>{item.name}</Table.Td>
                   <Table.Td style={{ textAlign: "left" }}>

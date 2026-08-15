@@ -3,7 +3,7 @@ import SearchBar from "@/components/SearchBar";
 import "@/css/Root.css";
 import DataTable from "@/components/DataTable";
 import PreviewCard from "@/components/PreviewCard";
-import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+import { parseAsString, useQueryState } from "nuqs";
 
 export default function Root() {
   const [filteredData, setFilteredData] = useState<MCAPFileInformation[]>();
@@ -26,13 +26,9 @@ export default function Root() {
     parseAsString.withDefault(""),
   );
   const [afterDate] = useQueryState("afterDate", parseAsString.withDefault(""));
-  const [selectedSchemas] = useQueryState<string[]>(
-    "schemas",
-    parseAsArrayOf(parseAsString).withDefault([]),
-  );
   const [carModel] = useQueryState("carModel", parseAsString.withDefault(""));
 
-  // corresponds with index.d.ts - type SearchFilter 
+  // corresponds with index.d.ts - type SearchFilter
   const searchFilters = {
     location: selectedLocation,
     date: selectedEventType,
@@ -40,7 +36,6 @@ export default function Root() {
     beforeDate,
     afterDate,
     searchText: searchTerm,
-    selectedSchemas,
     carModel: carModel,
   };
 

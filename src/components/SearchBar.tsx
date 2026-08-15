@@ -3,8 +3,8 @@ import React from "react";
 // Lists of available filter options
 import { eventType, carModel } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
-import { Button, MultiSelect } from "@mantine/core";
-import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+import { Button } from "@mantine/core";
+import { parseAsString, useQueryState } from "nuqs";
 
 
 interface SearchBarWithFilterProps {
@@ -33,17 +33,10 @@ function SearchBarWithFilter({ setSearch, distinctLocations}: SearchBarWithFilte
     "afterDate",
     parseAsString.withDefault(""),
   );
-  const [selectedSchemas, setSelectedSchemas] = useQueryState<string[]>(
-    "schemas",
-    parseAsArrayOf(parseAsString).withDefault([]),
-  );
   const [selectedCarModel, setSelectedCarModel] = useQueryState(
     "carModel",
     parseAsString.withDefault(""),
   );
-
-  // Left this here AND NOT in data filters because the retrieval method for available schemas will change
-  const schemas = ["Schema1", "Schema2", "Schema3", "Schema4"];
 
   // Clear all filters and search term
   const handleClear = () => {
@@ -52,7 +45,6 @@ function SearchBarWithFilter({ setSearch, distinctLocations}: SearchBarWithFilte
     setSelectedEventType(null);
     setBeforeDate(null);
     setAfterDate(null);
-    setSelectedSchemas(null);
     setSelectedCarModel(null);
   };
 
@@ -152,22 +144,6 @@ function SearchBarWithFilter({ setSearch, distinctLocations}: SearchBarWithFilte
             </select>
           </label>
 
-          {/* Put this here to make the UI look consistent */}
-          <label></label>
-
-          <label>
-            Schemas:
-            <MultiSelect
-              data={schemas}
-              placeholder="DOES NOT WORK YET"
-              value={selectedSchemas}
-              onChange={setSelectedSchemas}
-              searchable
-              className="filter-select"
-              size="xs"
-            /> 
-          </label>
-          
         </div>
         <div
           style={{
