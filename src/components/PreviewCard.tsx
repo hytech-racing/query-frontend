@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import EditInfo from "@/components/EditInfo";
 import DeleteData from "@/components/DeleteData";
-//import MatFileUpload from "./MatFileUpload";
-// used for uploading mat and h5 files
 import {
   Text,
   Button,
@@ -371,8 +369,6 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     id={selectedData.id}
                   />
                 ))}
-                {/*<MatFileUpload fileName={getFileNameWithoutExtension(selectedData.mcap_files[0].file_name)} uniqueID={selectedData.id} uploadUrl={""}/>*/}
-                {/* Will be available once route is ready */}
               </div>
             </>
           ) : (
