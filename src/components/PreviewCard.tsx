@@ -353,6 +353,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
 
                 {selectedData.mcap_files.map((item) => (
                   <DownloadButton
+                    key={item.file_name}
                     buttonText="MCAP"
                     fileName={item.file_name}
                     signedUrl={item.signed_url ?? null}
@@ -361,6 +362,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                 ))}
                 {selectedData.mat_files.map((item) => (
                   <DownloadButton
+                    key={item.file_name}
                     buttonText={(
                       item.file_name.split(".").pop() || ""
                     ).toUpperCase()}
@@ -567,6 +569,7 @@ export function DownloadButton({
   // add id parameter to pass into API call (use /id call on backend)
   buttonText,
   fileName,
+  signedUrl: signedUrlProp,
   id,
 }: DownloadButtonProps) {
   return (
@@ -598,7 +601,10 @@ export function DownloadButton({
             />
           }
           onClick={async () => {
-            // make a call to server to get new sign url
+            // Re-fetch the record to get a fresh signed URL (they expire), then
+            // find the specific file this button represents by name -- previously
+            // this always grabbed mcap_files[0]/mat_files[0] regardless of which
+            // button was clicked, so multi-file records downloaded the wrong file.
             try {
               const res = await fetch(
                 `${import.meta.env.VITE_API_URL}/mcaps/${id}`,
@@ -609,16 +615,20 @@ export function DownloadButton({
                 );
 
               const json = await res.json();
-
-              let signedUrl = json.data[0]?.mcap_files?.[0]?.signed_url;
-              if (buttonText == "H5") {
-                signedUrl = json.data[0].mat_files[0].signed_url;
-              }
+              const record = json.data?.[0];
+              const allFiles: FileType[] = [
+                ...(record?.mcap_files ?? []),
+                ...(record?.mat_files ?? []),
+              ];
+              const match = allFiles.find(
+                (f) => f.file_name === fileName,
+              );
+              const signedUrl = match?.signed_url ?? signedUrlProp;
 
               if (signedUrl) {
                 window.open(signedUrl, "_blank"); // triggers download in new tab
               } else {
-                console.error("No signed URL available for this MCAP file");
+                console.error(`No signed URL available for ${fileName}`);
               }
             } catch (err) {
               console.error("Download error:", err);
