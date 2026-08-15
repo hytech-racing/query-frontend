@@ -4,6 +4,7 @@ import "@/css/Root.css";
 import DataTable from "@/components/DataTable";
 import PreviewCard from "@/components/PreviewCard";
 import { parseAsString, useQueryState } from "nuqs";
+import { Notification } from "@mantine/core";
 
 export default function Root() {
   const [filteredData, setFilteredData] = useState<MCAPFileInformation[]>();
@@ -40,9 +41,12 @@ export default function Root() {
   };
 
   const [search, setSearch] = useState<boolean>(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  // Throws on a malformed date -- callers must catch this rather than let it
+  // become an uncaught rejection (it previously would, silently breaking search).
   const formatDate = (dateStr: string, time: string) => {
     const [year, month, day] = dateStr.split("-");
-    if (month.length !== 2 || day.length !== 2 || year.length !== 4) {
+    if (!year || !month || !day || month.length !== 2 || day.length !== 2 || year.length !== 4) {
       throw new Error(`Invalid date format: ${dateStr}`);
     }
     return new Date(`${year}-${month}-${day}T${time}Z`).toISOString();
@@ -88,32 +92,36 @@ export default function Root() {
   };
 
   const assignData = async () => {
-    const data = await fetchData(searchFilters);
-    console.log(data);
+    try {
+      setSearchError(null);
+      const data = await fetchData(searchFilters);
 
-    
+      const sortedData = data.sort(
+        (a: MCAPFileInformation, b: MCAPFileInformation) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          return dateB.getTime() - dateA.getTime();
+        },
+      );
 
-    const sortedData = data.sort(
-      (a: MCAPFileInformation, b: MCAPFileInformation) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        return dateB.getTime() - dateA.getTime();
-      },
-    );
+      setFilteredData(sortedData);
 
-    setFilteredData(sortedData);
+      const allLocationsIncludingNulls: (string | null | undefined)[] =
+        data.map((item: MCAPFileInformation) => item.location);
+      const extractedLocations: string[] = allLocationsIncludingNulls.filter(
+        (loc): loc is string => {
+          return loc != null && loc.trim() !== "";
+        },
+      );
+      const uniqueLocations = Array.from(new Set(extractedLocations));
 
-    const allLocationsIncludingNulls: (string | null | undefined)[] = data.map(
-      (item: MCAPFileInformation) => item.location
-    );
-    const extractedLocations: string[] = allLocationsIncludingNulls.filter(
-      (loc): loc is string => {
-        return loc != null && loc.trim() !== "";
-      }
-    );
-    const uniqueLocations = Array.from(new Set(extractedLocations));
-
-    setDistinctLocations(uniqueLocations);
+      setDistinctLocations(uniqueLocations);
+    } catch (err) {
+      console.error("Error loading data:", err);
+      setSearchError(
+        err instanceof Error ? err.message : "Failed to load data.",
+      );
+    }
   };
 
   useEffect(() => {
@@ -124,19 +132,26 @@ export default function Root() {
   useEffect(() => {
     const getData = async () => {
       if (search) {
-        // Only fetch data when search is true
-        const data = await fetchData(searchFilters);
-        console.log(data);
-        const sortedData = data.sort(
-          (a: MCAPFileInformation, b: MCAPFileInformation) => {
-            const dateA = new Date(a.date);
-            const dateB = new Date(b.date);
-            return dateB.getTime() - dateA.getTime();
-          },
-        );
-        setFilteredData(sortedData);
-
-        setSearch(false);
+        try {
+          setSearchError(null);
+          // Only fetch data when search is true
+          const data = await fetchData(searchFilters);
+          const sortedData = data.sort(
+            (a: MCAPFileInformation, b: MCAPFileInformation) => {
+              const dateA = new Date(a.date);
+              const dateB = new Date(b.date);
+              return dateB.getTime() - dateA.getTime();
+            },
+          );
+          setFilteredData(sortedData);
+        } catch (err) {
+          console.error("Error searching data:", err);
+          setSearchError(
+            err instanceof Error ? err.message : "Failed to search data.",
+          );
+        } finally {
+          setSearch(false);
+        }
       }
     };
     getData();
@@ -144,6 +159,11 @@ export default function Root() {
 
   return (
     <>
+      {searchError && (
+        <Notification color="red" onClose={() => setSearchError(null)}>
+          {searchError}
+        </Notification>
+      )}
       <div className="results-container">
         <div className="table-contain-result">
           <DataTable
