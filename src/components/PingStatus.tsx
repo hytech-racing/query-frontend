@@ -17,6 +17,10 @@ const PingStatus: React.FC = () => {
 
   useEffect(() => {
     handleGetStatus();
+    // Poll instead of checking once on mount -- otherwise the badge can stay
+    // stuck on "active" long after the backend actually goes down.
+    const intervalId = setInterval(handleGetStatus, 10000);
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
