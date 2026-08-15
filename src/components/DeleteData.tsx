@@ -43,7 +43,10 @@ function DeleteData({ selectedData }: PreviewCardProps) {
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/mcaps/${selectedData?.id}`,
                 {
-                    method: "DELETE"
+                    method: "DELETE",
+                    headers: {
+                        "X-Delete-Auth-Code": newPasswordInput,
+                    },
                 },
             );
             if (!response.ok) {
