@@ -18,9 +18,6 @@ jobs:
 
       - run: npm ci
       - parallel:
-          - name: ESLint
           - run: npm run lint
-
-          - name: Prettier
           - run: npm run format:check
 
