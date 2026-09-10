@@ -1,4 +1,4 @@
-import { Table } from "@mantine/core";
+import { Loader, Table } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
 import { Input, Textarea } from "@mantine/core";
 
@@ -41,7 +41,7 @@ export default function DataTable({
   const rows = !data ? (
     <Table.Tr>
       <Table.Td colSpan={100} ta="center">
-        Use the filters to get results
+        <Loader />
       </Table.Td>
     </Table.Tr>
   ) : data.length === 0 ? (
