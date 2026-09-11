@@ -61,7 +61,7 @@ export default function Root() {
       );
 
       const data = await res.json();
-      return data.data;
+      return data.data as MCAPFileInformation[];
     }
 
     // corresponds with index.d.ts - type SearchFilter 
@@ -89,62 +89,42 @@ export default function Root() {
     );
 
     const data = await res.json();
-    return data.data;
+    return data.data as MCAPFileInformation[];
   };
 
-  const assignData = async () => {
-    const data = await fetchData(searchFilters);
-    console.log(data);
-
-    
-
-    const sortedData = data.sort(
-      (a: MCAPFileInformation, b: MCAPFileInformation) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        return dateB.getTime() - dateA.getTime();
-      },
-    );
-
+  const updateFilteredData = (unsortedData: MCAPFileInformation[]) => {
+    const sortedData = unsortedData.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB.getTime() - dateA.getTime();
+    });
     setFilteredData(sortedData);
+  };
 
-    const allLocationsIncludingNulls: (string | null | undefined)[] = data.map(
-      (item: MCAPFileInformation) => item.location
-    );
-    const extractedLocations: string[] = allLocationsIncludingNulls.filter(
-      (loc): loc is string => {
-        return loc != null && loc.trim() !== "";
-      }
-    );
+  const updateLocations = (unsortedData: MCAPFileInformation[]) => {
+    const extractedLocations: string[] = 
+      unsortedData
+        .map((item) => item.location)
+        .filter((loc) => loc != null && loc.trim() !== "");
     const uniqueLocations = Array.from(new Set(extractedLocations));
-
     setDistinctLocations(uniqueLocations);
   };
 
   useEffect(() => {
-    assignData();
+    fetchData(searchFilters).then(data => {
+      updateFilteredData(data);
+      updateLocations(data);
+    })
   }, []);
 
   // Two useEffects bc of the way we are handling the Search Button D:
   useEffect(() => {
-    const getData = async () => {
-      if (search) {
-        // Only fetch data when search is true
-        const data = await fetchData(searchFilters);
-        console.log(data);
-        const sortedData = data.sort(
-          (a: MCAPFileInformation, b: MCAPFileInformation) => {
-            const dateA = new Date(a.date);
-            const dateB = new Date(b.date);
-            return dateB.getTime() - dateA.getTime();
-          },
-        );
-        setFilteredData(sortedData);
-
+    if (search) {
+      fetchData(searchFilters).then(data => {
+        updateFilteredData(data);
         setSearch(false);
-      }
-    };
-    getData();
+      })
+    }
   }, [search]);
 
   return (
@@ -152,7 +132,9 @@ export default function Root() {
       <div className="results-container">
         <div className="table-contain-result">
           <DataTable
-            data={filteredData}
+            // when data is undefined, a loading indicator appears.
+            // this serves to show the loading indicator while searching is in-progress
+            data={search ? undefined : filteredData}
             selectedRow={selectedRow}
             setSelectedRow={setSelectedRow}
             setSelectedData={setSelectedData}

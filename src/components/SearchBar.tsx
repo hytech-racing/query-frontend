@@ -1,5 +1,4 @@
-import React from "react";
-
+import React, { useState } from "react";
 // Lists of available filter options
 import { eventType, carModel } from "@/data/dataFilters";
 import "@/css/SearchBar.css";
@@ -13,7 +12,8 @@ interface SearchBarWithFilterProps {
 }
 
 function SearchBarWithFilter({ setSearch, distinctLocations}: SearchBarWithFilterProps) {
-  const [searchTerm, setSearchTerm] = useQueryState(
+  const [searchTerm, setSearchTerm] = useState("")
+  const [_, setSearchTermQuery] = useQueryState(
     "notes",
     parseAsString.withDefault(""),
   );
@@ -47,7 +47,8 @@ function SearchBarWithFilter({ setSearch, distinctLocations}: SearchBarWithFilte
 
   // Clear all filters and search term
   const handleClear = () => {
-    setSearchTerm(null);
+    setSearchTerm("");
+    setSearchTermQuery(null);
     setSelectedLocation(null);
     setSelectedEventType(null);
     setBeforeDate(null);
@@ -57,6 +58,7 @@ function SearchBarWithFilter({ setSearch, distinctLocations}: SearchBarWithFilte
   };
 
   const handleSearch = () => {
+    setSearchTermQuery(searchTerm);
     setSearch(true);
   };
 
@@ -176,13 +178,11 @@ function SearchBarWithFilter({ setSearch, distinctLocations}: SearchBarWithFilte
             marginTop: "10px",
           }}
         >
-          {/* Clear Button */}
           <Button onClick={handleClear} size="xs" variant="light">
             Clear
           </Button>
-          {/* Clear Button */}
           <Button onClick={handleSearch} size="xs">
-            Search
+            Search/Reload
           </Button>
         </div>
       </div>
