@@ -4,6 +4,7 @@ import "@/css/Root.css";
 import DataTable from "@/components/DataTable";
 import PreviewCard from "@/components/PreviewCard";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+import { notifications } from "@mantine/notifications";
 
 export default function Root() {
   const [pendingUploads, setPendingUploads] = useState<string[]>([]);
@@ -138,16 +139,22 @@ export default function Root() {
     );
     eventSource.onmessage = (ev) => {
       const data = JSON.parse(ev.data);
-      console.log(data);
-      if (data.status === "pending" && data.name != null) {
+      if (data.status === "processing" && data.name != null) {
         setPendingUploads((uploads) => [...uploads, data.name]);
-      } else if (data.status === "uploaded" && data.data != null) {
+      } else if (data.status === "completed" && data.data != null) {
         const mcapFileInfo = data.data as MCAPFileInformation;
         const mcapFileName = mcapFileInfo.mcap_files[0].file_name;
         setFilteredData((dataList) => [...(dataList ?? []), data.data]);
         setPendingUploads((uploads) =>
           uploads.filter((u) => u !== mcapFileName),
         );
+      } else if (data.status === "failed") {
+        notifications.show({
+          title: `${data.name ?? "Unknown File"} failed to upload`,
+          message: data.error || "",
+          color: "red",
+        });
+        setPendingUploads((uploads) => uploads.filter((u) => u !== data.name));
       }
     };
 
