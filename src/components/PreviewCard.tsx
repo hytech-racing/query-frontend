@@ -359,7 +359,7 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     id={selectedData.id}
                   />
                 ))}
-                {selectedData.mat_files.map((item) => (
+                {selectedData.mat_files?.map((item) => (
                   <DownloadButton
                     buttonText={(
                       item.file_name.split(".").pop() || ""
@@ -368,7 +368,12 @@ function PreviewCard({ selectedData }: PreviewCardProps) {
                     signedUrl={item.signed_url}
                     id={selectedData.id}
                   />
-                ))}
+                )) ?? (
+                  <DownloadButtonComponent
+                    buttonText="H5 File Unavailable"
+                    disabled
+                  />
+                )}
                 {/*<MatFileUpload fileName={getFileNameWithoutExtension(selectedData.mcap_files[0].file_name)} uniqueID={selectedData.id} uploadUrl={""}/>*/}
                 {/* Will be available once route is ready */}
               </div>
@@ -563,7 +568,25 @@ interface DownloadButtonProps {
   id: string;
 }
 
-export function DownloadButton({
+function DownloadButtonComponent(args: {
+  buttonText: string;
+  disabled?: boolean;
+}) {
+  return (
+    <Button
+      variant="filled"
+      size="xs"
+      rightSection={<IconChevronDown size={20} />}
+      leftSection={<IconDownload size={20} />}
+      disabled={args.disabled}
+      c={args.disabled ? "red" : undefined}
+    >
+      {args.buttonText}
+    </Button>
+  );
+}
+
+function DownloadButton({
   // add id parameter to pass into API call (use /id call on backend)
   buttonText,
   fileName,
@@ -577,14 +600,7 @@ export function DownloadButton({
       withinPortal
     >
       <Menu.Target>
-        <Button
-          variant="filled"
-          size="xs"
-          rightSection={<IconChevronDown size={20} />}
-          leftSection={<IconDownload size={20} />}
-        >
-          {buttonText}
-        </Button>
+        <DownloadButtonComponent buttonText={buttonText} />
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item
