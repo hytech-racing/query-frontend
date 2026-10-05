@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Notification, FileInput, Progress} from "@mantine/core";
+import { Modal, Button, Notification, FileInput, Progress, Checkbox, Center, Text} from "@mantine/core";
 import "@/css/FileUpload.css";
 
 // File upload Modal and Button
@@ -15,7 +15,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0); 
-  
+  const [uploadHiddenFiles, setUploadHiddenFiles] = useState(false);
 
   const handleFileChange = (files: File[]) => {
     if (files.length > 0) {
@@ -87,7 +87,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     };
 
     try {
-      xhr.open('POST', uploadUrl, true);
+      xhr.open('POST', uploadUrl + uploadHiddenFiles ? "?hidden=true" : "", true);
       xhr.send(formData);
     } catch (e) {
         setLoading(false);
@@ -117,7 +117,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         onClose={handleClose}
         title="Select files to upload"
         centered
-        style={{ textAlign: "center" }}
       >
         <div className="files">
           <FileInput
@@ -140,8 +139,15 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
           )}
         </div>
 
-        <Button loading={loading} loaderProps={{ type: 'dots' }} onClick={handleUpload} style={{ marginTop: 10 }} disabled={loading}>Upload</Button>
+        <Center>
+          <Checkbox mt={10} label="Hide Files from non-admin users" defaultChecked={uploadHiddenFiles} onChange={() => setUploadHiddenFiles(v => !v)} />
+        </Center>
+
+        <Center>
+          <Button loading={loading} loaderProps={{ type: 'dots' }} onClick={handleUpload} style={{ marginTop: 10 }} disabled={loading}>Upload</Button>
+        </Center>
         <Progress value={uploadProgress}></Progress>
+
         {success && (
           <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
             {success}

@@ -9,7 +9,6 @@ import {
 import { NuqsAdapter } from "nuqs/adapters/react-router";
 import Root from "./routes/root";
 import Docs from "./routes/docs";
-import Changelog from "./routes/changelog";
 import Layout from "./layout";
 import ErrorPage from "./error-page";
 
@@ -23,7 +22,6 @@ const router = createBrowserRouter(
       <Route path="/" element={<Root />} /> 
       <Route path="/docs" element={<Docs />} />
       <Route path="/docs/:version/:repo" element={<Docs />} />
-      <Route path="/changelog" element={<Changelog />} />
     </Route>,
   ),
   {
