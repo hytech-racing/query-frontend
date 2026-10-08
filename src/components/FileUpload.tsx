@@ -15,7 +15,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0); 
-  const [uploadHiddenFiles, setUploadHiddenFiles] = useState(false);
+  const [uploadHiddenFiles, setUploadHiddenFiles] = useState(true);
 
   const handleFileChange = (files: File[]) => {
     if (files.length > 0) {
@@ -87,7 +87,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     };
 
     try {
-      xhr.open('POST', uploadUrl + uploadHiddenFiles ? "?hidden=true" : "", true);
+      xhr.open('POST', uploadUrl + (uploadHiddenFiles ? "?hidden=true" : ""), true);
       xhr.send(formData);
     } catch (e) {
         setLoading(false);
@@ -140,7 +140,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         </div>
 
         <Center>
-          <Checkbox mt={10} label="Hide Files from non-admin users" defaultChecked={uploadHiddenFiles} onChange={() => setUploadHiddenFiles(v => !v)} />
+          <Checkbox mt={10} label="Hide Files from non-logged in users" defaultChecked={uploadHiddenFiles} onChange={() => setUploadHiddenFiles(v => !v)} />
         </Center>
 
         <Center>

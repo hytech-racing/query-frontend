@@ -65,6 +65,8 @@ type MCAPFileInformation = {
   notes?: string;
   /** Type of the event (e.g., acceleration, endurance) (optional). */
   event_type?: string;
+  /** Whether the file is hidden from users who aren't team leads. */
+  hidden?: boolean;
   /** Signed URL for accessing the file (optional). */
   signed_url?: string;
   /** MPS records */

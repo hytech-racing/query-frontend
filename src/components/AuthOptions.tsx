@@ -1,5 +1,5 @@
 import "@/css/Navbar.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@mantine/core";
 import { IconLogin, IconLogout } from "@tabler/icons-react";
 
@@ -15,6 +15,7 @@ type MeResponse = {
 export default function AuthOptions() {
   const [username, setUsername] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const errorMsgShown = useRef(false)
 
   useEffect(() => {
     const loadAuthStatus = async () => {
@@ -40,6 +41,20 @@ export default function AuthOptions() {
     };
 
     loadAuthStatus();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("error") != null && !errorMsgShown.current) {
+      errorMsgShown.current = true;
+      window.alert("You didn't log in with an authorized account. Only team leads need to log in (for file deletion perms).")
+    }
+
+    const callback = () => {
+      if (document.visibilityState === 'visible') {
+        loadAuthStatus();
+      }
+    };
+    window.addEventListener('visibilitychange', callback);
+    return () => window.removeEventListener('visibilitychange', callback);
   }, []);
 
   if (isLoading) {

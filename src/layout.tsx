@@ -1,8 +1,10 @@
 import "@mantine/core/styles.css";
+import '@mantine/notifications/styles.css';
 import { MantineProvider } from "@mantine/core";
 import { theme } from "@/theme";
 import Navbar from "@/components/Navbar";
 import { Outlet } from "react-router-dom";
+import { Notifications } from "@mantine/notifications";
 
 // Layout of main.tsx
 
@@ -18,6 +20,7 @@ export default function Layout() {
           <Outlet /> {/* Changes depending on what is in main.tsx */}
         </div>
       </div>
+      <Notifications />
     </MantineProvider>
   );
 }

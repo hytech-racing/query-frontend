@@ -57,7 +57,8 @@ export default function Root() {
   const fetchData = async (filters: SearchFilter) => {
     if (selectedId != "") {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v2/mcaps/${selectedId}`,
+        `${import.meta.env.VITE_API_URL}/api/v2/mcaps/${selectedId}`, 
+        { credentials: "include" }
       );
 
       const data = await res.json();
@@ -86,6 +87,7 @@ export default function Root() {
 
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/api/v2/mcaps?${queryString}`,
+      { credentials: "include" }
     );
 
     const data = await res.json();
