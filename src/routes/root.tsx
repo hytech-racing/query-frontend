@@ -3,8 +3,10 @@ import SearchBar from "@/components/SearchBar";
 import "@/css/Root.css";
 import DataTable from "@/components/DataTable";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+import { notifications } from "@mantine/notifications";
 
 export default function Root() {
+  const [pendingUploads, setPendingUploads] = useState<string[]>([]);
   const [filteredData, setFilteredData] = useState<MCAPFileInformation[]>();
   const [selectedRow, setSelectedRow] = useState<string>("");
   const [selectedData, setSelectedData] = useState<MCAPFileInformation>();
@@ -91,13 +93,21 @@ export default function Root() {
     return data.data as MCAPFileInformation[];
   };
 
-  const updateFilteredData = (unsortedData: MCAPFileInformation[]) => {
-    const sortedData = unsortedData.sort((a, b) => {
+  const filterAndSort = (unsortedData: MCAPFileInformation[]) =>
+    unsortedData.sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
       return dateB.getTime() - dateA.getTime();
     });
-    setFilteredData(sortedData);
+
+  const updatePendingUploads = async () => {
+    const resp = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/v2/mcaps/pending`,
+    );
+    const pendingUploads = await resp.json();
+    if (Array.isArray(pendingUploads)) {
+      setPendingUploads(pendingUploads);
+    }
   };
 
   const updateLocations = (unsortedData: MCAPFileInformation[]) => {
@@ -109,19 +119,60 @@ export default function Root() {
   };
 
   useEffect(() => {
+    // fetch data on load
     fetchData(searchFilters).then((data) => {
-      updateFilteredData(data);
+      setFilteredData(filterAndSort(data));
       updateLocations(data);
     });
+
+    // Fetch currently pending MCAP file uploads (most of the time, this is empty)
+    updatePendingUploads();
+
+    // Refreshes data table entries when user refocuses the page
+    const reloadCallback = () => setSearch(!document.hidden);
+    document.addEventListener("visibilitychange", reloadCallback);
+
+    // Creates a Server-Sent Events subscriber that listens to file upload changes
+    const eventSource = new EventSource(
+      `${import.meta.env.VITE_API_URL}/api/v2/mcaps/subscribe`,
+    );
+    eventSource.onmessage = (ev) => {
+      const data = JSON.parse(ev.data);
+      if (data.status === "processing" && data.name != null) {
+        setPendingUploads((uploads) => [...uploads, data.name]);
+      } else if (data.status === "completed" && data.data != null) {
+        const mcapFileInfo = data.data as MCAPFileInformation;
+        const mcapFileName = mcapFileInfo.mcap_files[0].file_name;
+        setFilteredData((dataList) =>
+          filterAndSort([...(dataList ?? []), data.data]),
+        );
+        setPendingUploads((uploads) =>
+          uploads.filter((u) => u !== mcapFileName),
+        );
+      } else if (data.status === "failed") {
+        notifications.show({
+          title: `${data.name ?? "Unknown File"} failed to upload`,
+          message: data.error || "",
+          color: "red",
+        });
+        setPendingUploads((uploads) => uploads.filter((u) => u !== data.name));
+      }
+    };
+
+    return () => {
+      eventSource.close();
+      document.removeEventListener("visibilitychange", reloadCallback);
+    };
   }, []);
 
   // Two useEffects bc of the way we are handling the Search Button D:
   useEffect(() => {
     if (search) {
       fetchData(searchFilters).then((data) => {
-        updateFilteredData(data);
+        setFilteredData(filterAndSort(data));
         setSearch(false);
       });
+      updatePendingUploads();
     }
   }, [search]);
 
@@ -132,6 +183,7 @@ export default function Root() {
           // when data is undefined, a loading indicator appears.
           // this serves to show the loading indicator while searching is in-progress
           data={search ? undefined : filteredData}
+          pendingUploads={pendingUploads}
           selectedRow={selectedRow}
           selectedData={selectedData}
           setSelectedRow={setSelectedRow}
