@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import "@/css/Root.css";
 import DataTable from "@/components/DataTable";
-import PreviewCard from "@/components/PreviewCard";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import { notifications } from "@mantine/notifications";
 
@@ -180,23 +179,21 @@ export default function Root() {
   return (
     <>
       <div className="results-container">
-        <div className="table-contain-result">
-          <DataTable
-            // when data is undefined, a loading indicator appears.
-            // this serves to show the loading indicator while searching is in-progress
-            data={search ? undefined : filteredData}
-            pendingUploads={pendingUploads}
-            selectedRow={selectedRow}
-            setSelectedRow={setSelectedRow}
-            setSelectedData={setSelectedData}
-          />
-        </div>
+        <DataTable
+          // when data is undefined, a loading indicator appears.
+          // this serves to show the loading indicator while searching is in-progress
+          data={search ? undefined : filteredData}
+          pendingUploads={pendingUploads}
+          selectedRow={selectedRow}
+          selectedData={selectedData}
+          setSelectedRow={setSelectedRow}
+          setSelectedData={setSelectedData}
+        />
         <SearchBar
           setSearch={setSearch}
           distinctLocations={distinctLocations}
         />
       </div>
-      <PreviewCard selectedRow={selectedRow} selectedData={selectedData} />
     </>
   );
 }
