@@ -1,12 +1,14 @@
-import { Group, Loader, Table, Text } from "@mantine/core";
+import { Group, Loader, Stack, Table, Text } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
 import { Input, Textarea } from "@mantine/core";
+import PreviewCard from "./PreviewCard";
 
 // Data table of the files/root page
 interface DataTableProps {
   data?: MCAPFileInformation[];
   selectedRow?: string;
   pendingUploads: string[];
+  selectedData: MCAPFileInformation | undefined;
   setSelectedRow: React.Dispatch<React.SetStateAction<string>>;
   setSelectedData: React.Dispatch<
     React.SetStateAction<MCAPFileInformation | undefined>
@@ -17,6 +19,7 @@ export default function DataTable({
   data,
   selectedRow,
   pendingUploads,
+  selectedData,
   setSelectedRow,
   setSelectedData,
 }: DataTableProps) {
@@ -115,30 +118,39 @@ export default function DataTable({
   ));
 
   return (
-    <Table.ScrollContainer
-      h="100%"
-      minWidth={800}
-      style={{ overflowY: "auto" }}
-    >
-      <Table
-        stickyHeader
-        highlightOnHover={data && data.length > 0}
-        highlightOnHoverColor={"#F8F9FA"}
+    <Stack miw="60%" style={{ flexGrow: 1 }}>
+      <Table.ScrollContainer
+        h="100%"
+        minWidth="100%"
+        style={{ overflowY: "auto", position: "relative" }}
       >
-        <Table.Thead bg={"#D1BF80"}>
-          <Table.Tr>
-            <Table.Th style={{ paddingLeft: "25px" }}>Name</Table.Th>
-            <Table.Th>Date</Table.Th>
-            <Table.Th>Event Type</Table.Th>
-            <Table.Th>Location</Table.Th>
-            <Table.Th style={{ paddingRight: "25px" }}>Notes</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {pendingUploadsRows}
-          {rows}
-        </Table.Tbody>
-      </Table>
-    </Table.ScrollContainer>
+        <Table
+          stickyHeader
+          highlightOnHover={data && data.length > 0}
+          highlightOnHoverColor={"#F8F9FA"}
+        >
+          <Table.Thead bg={"#D1BF80"}>
+            <Table.Tr>
+              <Table.Th style={{ paddingLeft: "25px" }}>Name</Table.Th>
+              <Table.Th>Date</Table.Th>
+              <Table.Th>Event Type</Table.Th>
+              <Table.Th>Location</Table.Th>
+              <Table.Th style={{ paddingRight: "25px" }}>Notes</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {pendingUploadsRows}
+            {rows}
+          </Table.Tbody>
+        </Table>
+      </Table.ScrollContainer>
+      <PreviewCard
+        selectedData={selectedData}
+        clearSelectedData={() => {
+          setSelectedData(undefined);
+          setSelectedRow("");
+        }}
+      />
+    </Stack>
   );
 }
