@@ -144,7 +144,9 @@ export default function Root() {
       } else if (data.status === "completed" && data.data != null) {
         const mcapFileInfo = data.data as MCAPFileInformation;
         const mcapFileName = mcapFileInfo.mcap_files[0].file_name;
-        setFilteredData((dataList) => [...(dataList ?? []), data.data]);
+        setFilteredData((dataList) =>
+          filterAndSort([...(dataList ?? []), data.data]),
+        );
         setPendingUploads((uploads) =>
           uploads.filter((u) => u !== mcapFileName),
         );
