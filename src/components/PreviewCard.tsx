@@ -121,7 +121,7 @@ function PreviewCard({ selectedData, clearSelectedData }: PreviewCardProps) {
   ) {
     const resp = await fetch(
       `${import.meta.env.VITE_API_URL}/mcaps/${id}/process?version=${scriptVersion}&scripts=${scriptName}`,
-      { method: "GET" },
+      { credentials: "include" },
     );
 
     if (!resp.ok) {
@@ -493,6 +493,7 @@ function DownloadButton({
             try {
               const res = await fetch(
                 `${import.meta.env.VITE_API_URL}/mcaps/${id}`,
+                { credentials: "include" },
               );
               if (!res.ok)
                 throw new Error(

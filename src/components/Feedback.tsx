@@ -14,7 +14,7 @@ export default function Feedback() {
     };
     return (
     <>
-        <Button color="red" onClick={toggleModal}>Feedback</Button>
+        <Button c="white" bg="red.9" onClick={toggleModal}>Feedback</Button>
         
         <Modal
             opened={showModal}

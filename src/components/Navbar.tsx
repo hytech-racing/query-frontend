@@ -2,8 +2,8 @@ import "@mantine/core/styles.css";
 import "@/css/Navbar.css";
 import { NavLink } from "react-router-dom";
 import FileUpload from "@/components/FileUpload";
-import Feedback from "@/components/Feedback";
-import PingStatus from "@/components/PingStatus";
+import AuthOptions from "@/components/AuthOptions";
+import AdminUsers from "@/components/AdminUsers";
 import { Button } from "@mantine/core";
 import { IconHelp } from "@tabler/icons-react";
 
@@ -11,12 +11,9 @@ import { IconHelp } from "@tabler/icons-react";
 const mainLinksData = [
   { name: "Files", url: "/" },
   { name: "Documentation", url: `/docs` },
-  { name: "Changelog", url: `/changelog` },
 ];
 
 export default function Navbar() {
-  const hytechName = "HyTech Racing Checkpoint 1";
-
   const links = mainLinksData.map(({ name, url }) => (
     <NavLink key={name} className="nav-link" to={url}>
       {name}
@@ -25,31 +22,36 @@ export default function Navbar() {
 
   return (
     <nav id="navbar">
-      <img
-        src={`${import.meta.env.BASE_URL}favicon.ico`}
-        alt="Logo"
-        className="navbar-icon"
-      />
-      <Button
-        variant="filled"
-        component="a"
-        target="_blank"
-        href="https://wiki.hytechracing.org/books/software/page/query-frontend-demo-and-documentation"
-      >
-        <IconHelp size="25" />
-      </Button>
-      {links}
-
-      {/* Once POST API is out -- Currently WIP */}
-      <FileUpload
-        uploadUrl={`${import.meta.env.VITE_API_URL}/api/v2/mcaps/bulk_upload`}
-      />
-      <div style={{ right: 0 }}>
-        <Feedback />
+      {/* Brand: logo and title, anchored to the left */}
+      <div className="navbar-brand">
+        <img
+          src={`${import.meta.env.BASE_URL}favicon.ico`}
+          alt="Logo"
+          className="navbar-icon"
+        />
+        <h3 className="hytechName">HyTech Data Acquisition</h3>
       </div>
-      {/* Optionally render active link or other content here */}
-      <h3 className="hytechName">{hytechName}</h3>
-      <PingStatus />
+
+      {/* Primary navigation links */}
+      <div className="navbar-links">{links}</div>
+
+      {/* Actions, pushed to the right edge */}
+      <div className="navbar-actions">
+        <Button
+          variant="filled"
+          component="a"
+          target="_blank"
+          aria-label="Help"
+          href="https://wiki.hytechracing.org/books/software/page/query-frontend-demo-and-documentation"
+        >
+          <IconHelp size="20" />
+        </Button>
+        <FileUpload
+          uploadUrl={`${import.meta.env.VITE_API_URL}/api/v2/mcaps/bulk_upload`}
+        />
+        <AdminUsers />
+        <AuthOptions />
+      </div>
     </nav>
   );
 }

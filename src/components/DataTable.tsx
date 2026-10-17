@@ -1,6 +1,18 @@
-import { Group, Loader, Stack, Table, Text } from "@mantine/core";
-import { useMantineTheme } from "@mantine/core";
-import { Input, Textarea } from "@mantine/core";
+import {
+  Group,
+  Input,
+  Loader,
+  Stack,
+  Switch,
+  Table,
+  Text,
+  Textarea,
+  Tooltip,
+  useMantineTheme,
+} from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconInfoCircle } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 import PreviewCard from "./PreviewCard";
 
 // Data table of the files/root page
@@ -25,6 +37,36 @@ export default function DataTable({
 }: DataTableProps) {
   const theme = useMantineTheme();
 
+  // The Hidden column and its toggles are only rendered for logged-in users (team leads).
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Optimistic per-file visibility, keyed by file id, so a switch reflects the
+  // result of its request without waiting for the parent to refetch.
+  const [hiddenOverrides, setHiddenOverrides] = useState<
+    Record<string, boolean>
+  >({});
+  // File ids whose visibility request is in flight, so only that switch is disabled.
+  const [pendingIds, setPendingIds] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const loadAuthStatus = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/auth/me`,
+          {
+            credentials: "include",
+          },
+        );
+        // A 401 means there is no active session, so the column stays hidden.
+        setIsLoggedIn(response.ok);
+      } catch (error) {
+        console.error("Failed to load auth status:", error);
+        setIsLoggedIn(false);
+      }
+    };
+
+    loadAuthStatus();
+  }, []);
+
   const setPreviewData = (file: MCAPFileInformation) => {
     if (selectedRow === file.id) {
       setSelectedRow("");
@@ -32,6 +74,53 @@ export default function DataTable({
     } else {
       setSelectedRow(file.id);
       setSelectedData(file);
+    }
+  };
+
+  const changeVisibility = async (
+    file: MCAPFileInformation,
+    nextHidden: boolean,
+  ) => {
+    const fileLabel = file.mcap_files
+      ? getFileNameWithoutExtension(file.mcap_files[0].file_name)
+      : file.id;
+    const showError = (error: string) => {
+      notifications.show({
+        title: `Failed to update visibility for ${fileLabel}`,
+        message: error,
+        color: "red",
+      });
+      console.error("Error sending visibility request:", error);
+    };
+
+    setPendingIds((prev) => ({ ...prev, [file.id]: true }));
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/mcaps/${file.id}/changeVisibilityTo/${
+          nextHidden ? "hidden" : "visible"
+        }`,
+        { method: "POST", credentials: "include" },
+      );
+
+      if (response.status === 401) {
+        showError("You must be logged in to change file visibility.");
+        return;
+      }
+      if (!response.ok) {
+        showError(
+          `Invalid status: ${response.status}. Error Msg: ${await response.text()}`,
+        );
+        return;
+      }
+      setHiddenOverrides((prev) => ({ ...prev, [file.id]: nextHidden }));
+    } catch (error) {
+      showError(`${error}`);
+    } finally {
+      setPendingIds((prev) => {
+        const next = { ...prev };
+        delete next[file.id];
+        return next;
+      });
     }
   };
 
@@ -98,6 +187,24 @@ export default function DataTable({
             />
           </Input.Wrapper>
         </Table.Td>
+
+        {isLoggedIn ? (
+          <Table.Td onClick={(event) => event.stopPropagation()}>
+            <Switch
+              aria-label={`Toggle visibility for ${
+                file.mcap_files
+                  ? getFileNameWithoutExtension(file.mcap_files[0].file_name)
+                  : file.id
+              }`}
+              checked={hiddenOverrides[file.id] ?? file.hidden ?? false}
+              disabled={pendingIds[file.id] ?? false}
+              onChange={(event) =>
+                changeVisibility(file, event.currentTarget.checked)
+              }
+              color="darkblue"
+            />
+          </Table.Td>
+        ) : null}
       </Table.Tr>
     ))
   );
@@ -114,6 +221,7 @@ export default function DataTable({
       <Table.Td />
       <Table.Td />
       <Table.Td />
+      {isLoggedIn ? <Table.Td /> : null}
     </Table.Tr>
   ));
 
@@ -135,7 +243,29 @@ export default function DataTable({
               <Table.Th>Date</Table.Th>
               <Table.Th>Event Type</Table.Th>
               <Table.Th>Location</Table.Th>
-              <Table.Th style={{ paddingRight: "25px" }}>Notes</Table.Th>
+              <Table.Th
+                style={{ paddingRight: isLoggedIn ? undefined : "25px" }}
+              >
+                Notes
+              </Table.Th>
+              {isLoggedIn && (
+                <Table.Th>
+                  <Group gap={4} wrap="nowrap">
+                    <Text fw={700} fz={14}>
+                      Hidden
+                    </Text>
+                    <Tooltip
+                      label="Hidden files are not visible to people who aren't team leads."
+                      withArrow
+                      multiline
+                      position="bottom"
+                      w={220}
+                    >
+                      <IconInfoCircle size={16} />
+                    </Tooltip>
+                  </Group>
+                </Table.Th>
+              )}
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>

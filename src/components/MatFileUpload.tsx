@@ -27,7 +27,7 @@ function MatFileUpload({ fileName, uniqueID, uploadUrl } : MatFileUploadProps) {
             setError(null);
             setSuccess(null);
         }
-    }, [setShowModal]);
+    }, [showModal]);
 
     const handleFileChange = (files: File[]) => {
         if (files.length > 0) {

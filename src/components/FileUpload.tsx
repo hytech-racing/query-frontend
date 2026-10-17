@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Modal, Button, Notification, FileInput, Progress} from "@mantine/core";
+import {
+  Modal,
+  Button,
+  Notification,
+  FileInput,
+  Progress,
+  Checkbox,
+  Center,
+} from "@mantine/core";
 import "@/css/FileUpload.css";
 
 // File upload Modal and Button
@@ -14,8 +22,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<number>(0); 
-  
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [uploadHiddenFiles, setUploadHiddenFiles] = useState(true);
 
   const handleFileChange = (files: File[]) => {
     if (files.length > 0) {
@@ -32,7 +40,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     const formData = new FormData();
 
     selectedFiles.forEach((file) => {
-      formData.append('files', file, file.name);
+      formData.append("files", file, file.name);
     });
 
     xhr.upload.onprogress = (event) => {
@@ -58,23 +66,32 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
           setTimeout(() => setUploadProgress(0), 2000);
         } catch (e) {
           console.error("Error parsing server response:", e);
-          setError("Uploaded successfully, but couldn't parse server response.");
+          setError(
+            "Uploaded successfully, but couldn't parse server response.",
+          );
           setUploadProgress(0);
         }
       } else {
-        let errorMsg = xhr.responseText || `Server responded with status ${xhr.status}`;
+        let errorMsg =
+          xhr.responseText || `Server responded with status ${xhr.status}`;
         if (xhr.status === 503) {
           errorMsg = `${errorMsg} \nTry again in a few minutes!`;
         }
         setError(`Failed to upload: ${errorMsg}`);
-        console.error("Upload failed with status:", xhr.status, xhr.responseText);
+        console.error(
+          "Upload failed with status:",
+          xhr.status,
+          xhr.responseText,
+        );
         setUploadProgress(0);
       }
     };
 
     xhr.onerror = () => {
       setLoading(false);
-      setError("An error occurred during the upload. Please check your network connection and try again.");
+      setError(
+        "An error occurred during the upload. Please check your network connection and try again.",
+      );
       console.error("XHR onerror triggered");
       setUploadProgress(0);
     };
@@ -87,13 +104,17 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
     };
 
     try {
-      xhr.open('POST', uploadUrl, true);
+      xhr.open(
+        "POST",
+        uploadUrl + (uploadHiddenFiles ? "?hidden=true" : ""),
+        true,
+      );
       xhr.send(formData);
     } catch (e) {
-        setLoading(false);
-        setError("An unexpected error occurred before sending the request.");
-        console.error("Error opening or sending XHR:", e);
-        setUploadProgress(0);
+      setLoading(false);
+      setError("An unexpected error occurred before sending the request.");
+      console.error("Error opening or sending XHR:", e);
+      setUploadProgress(0);
     }
   };
 
@@ -117,7 +138,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
         onClose={handleClose}
         title="Select files to upload"
         centered
-        style={{ textAlign: "center" }}
       >
         <div className="files">
           <FileInput
@@ -140,10 +160,34 @@ const FileUpload: React.FC<FileUploadProps> = ({ uploadUrl }) => {
           )}
         </div>
 
-        <Button loading={loading} loaderProps={{ type: 'dots' }} onClick={handleUpload} style={{ marginTop: 10 }} disabled={loading}>Upload</Button>
+        <Center>
+          <Checkbox
+            mt={10}
+            label="Hide Files from non-logged in users"
+            defaultChecked={uploadHiddenFiles}
+            onChange={() => setUploadHiddenFiles((v) => !v)}
+          />
+        </Center>
+
+        <Center>
+          <Button
+            loading={loading}
+            loaderProps={{ type: "dots" }}
+            onClick={handleUpload}
+            style={{ marginTop: 10 }}
+            disabled={loading}
+          >
+            Upload
+          </Button>
+        </Center>
         <Progress value={uploadProgress}></Progress>
+
         {success && (
-          <Notification color="green" onClose={() => setSuccess(null)} style={{ marginTop: 10 }}>
+          <Notification
+            color="green"
+            onClose={() => setSuccess(null)}
+            style={{ marginTop: 10 }}
+          >
             {success}
           </Notification>
         )}
