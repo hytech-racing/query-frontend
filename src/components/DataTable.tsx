@@ -112,13 +112,7 @@ export default function DataTable({
         );
         return;
       }
-
       setHiddenOverrides((prev) => ({ ...prev, [file.id]: nextHidden }));
-      notifications.show({
-        title: "Visibility Updated",
-        message: `${fileLabel} is now ${nextHidden ? "hidden" : "visible"}.`,
-        color: "green",
-      });
     } catch (error) {
       showError(`${error}`);
     } finally {
@@ -257,7 +251,9 @@ export default function DataTable({
               {isLoggedIn && (
                 <Table.Th>
                   <Group gap={4} wrap="nowrap">
-                    <Text fw={700}>Hidden</Text>
+                    <Text fw={700} fz={14}>
+                      Hidden
+                    </Text>
                     <Tooltip
                       label="Hidden files are not visible to people who aren't team leads."
                       withArrow
