@@ -1,14 +1,26 @@
-import { Loader, Table, Tooltip } from "@mantine/core";
-import { useMantineTheme } from "@mantine/core";
-import { Group, Input, Switch, Text, Textarea } from "@mantine/core";
+import {
+  Group,
+  Input,
+  Loader,
+  Stack,
+  Switch,
+  Table,
+  Text,
+  Textarea,
+  Tooltip,
+  useMantineTheme,
+} from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import PreviewCard from "./PreviewCard";
 
 // Data table of the files/root page
 interface DataTableProps {
   data?: MCAPFileInformation[];
   selectedRow?: string;
+  pendingUploads: string[];
+  selectedData: MCAPFileInformation | undefined;
   setSelectedRow: React.Dispatch<React.SetStateAction<string>>;
   setSelectedData: React.Dispatch<
     React.SetStateAction<MCAPFileInformation | undefined>
@@ -18,6 +30,8 @@ interface DataTableProps {
 export default function DataTable({
   data,
   selectedRow,
+  pendingUploads,
+  selectedData,
   setSelectedRow,
   setSelectedData,
 }: DataTableProps) {
@@ -200,46 +214,77 @@ export default function DataTable({
       </Table.Tr>
     ))
   );
+
+  const pendingUploadsRows = pendingUploads.map((upload, index) => (
+    <Table.Tr key={"pendingUpload" + index}>
+      <Table.Td style={{ paddingLeft: "25px", size: "xs" }}>
+        <Group align="center" gap="sm">
+          <Text fz={14}>{upload.replace(".mcap", "")}</Text>
+          <Loader size="xs" />
+        </Group>
+      </Table.Td>
+      <Table.Td />
+      <Table.Td />
+      <Table.Td />
+      <Table.Td />
+      {isLoggedIn ? <Table.Td /> : null}
+    </Table.Tr>
+  ));
+
   return (
-    <Table.ScrollContainer
-      h="100%"
-      minWidth={800}
-      style={{ overflowY: "auto" }}
-    >
-      <Table
-        stickyHeader
-        highlightOnHover={data && data.length > 0}
-        highlightOnHoverColor={"#F8F9FA"}
+    <Stack miw="60%" style={{ flexGrow: 1 }}>
+      <Table.ScrollContainer
+        h="100%"
+        minWidth="100%"
+        style={{ overflowY: "auto", position: "relative" }}
       >
-        <Table.Thead bg={"#D1BF80"}>
-          <Table.Tr>
-            <Table.Th style={{ paddingLeft: "25px" }}>Name</Table.Th>
-            <Table.Th>Date</Table.Th>
-            <Table.Th>Event Type</Table.Th>
-            <Table.Th>Location</Table.Th>
-            <Table.Th style={{ paddingRight: isLoggedIn ? undefined : "25px" }}>
-              Notes
-            </Table.Th>
-            {isLoggedIn ? (
-              <Table.Th>
-                <Group gap={4} wrap="nowrap">
-                  <Text fw={700}>Hidden</Text>
-                  <Tooltip
-                    label="Hidden files are not visible to people who aren't team leads."
-                    withArrow
-                    multiline
-                    position="bottom"
-                    w={220}
-                  >
-                    <IconInfoCircle size={16} />
-                  </Tooltip>
-                </Group>
+        <Table
+          stickyHeader
+          highlightOnHover={data && data.length > 0}
+          highlightOnHoverColor={"#F8F9FA"}
+        >
+          <Table.Thead bg={"#D1BF80"}>
+            <Table.Tr>
+              <Table.Th style={{ paddingLeft: "25px" }}>Name</Table.Th>
+              <Table.Th>Date</Table.Th>
+              <Table.Th>Event Type</Table.Th>
+              <Table.Th>Location</Table.Th>
+              <Table.Th
+                style={{ paddingRight: isLoggedIn ? undefined : "25px" }}
+              >
+                Notes
               </Table.Th>
-            ) : null}
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
-    </Table.ScrollContainer>
+              {isLoggedIn && (
+                <Table.Th>
+                  <Group gap={4} wrap="nowrap">
+                    <Text fw={700}>Hidden</Text>
+                    <Tooltip
+                      label="Hidden files are not visible to people who aren't team leads."
+                      withArrow
+                      multiline
+                      position="bottom"
+                      w={220}
+                    >
+                      <IconInfoCircle size={16} />
+                    </Tooltip>
+                  </Group>
+                </Table.Th>
+              )}
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {pendingUploadsRows}
+            {rows}
+          </Table.Tbody>
+        </Table>
+      </Table.ScrollContainer>
+      <PreviewCard
+        selectedData={selectedData}
+        clearSelectedData={() => {
+          setSelectedData(undefined);
+          setSelectedRow("");
+        }}
+      />
+    </Stack>
   );
 }
