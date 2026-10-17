@@ -300,10 +300,9 @@ function PreviewCard({ selectedData, clearSelectedData }: PreviewCardProps) {
                   id={selectedData.id}
                 />
               )) ?? (
-                <DownloadButtonComponent
-                  buttonText="H5 File Unavailable"
-                  disabled
-                />
+                <Button {...downloadButtonProps(true)}>
+                  H5 File Unavailable
+                </Button>
               )}
               {/*<MatFileUpload fileName={getFileNameWithoutExtension(selectedData.mcap_files[0].file_name)} uniqueID={selectedData.id} uploadUrl={""}/>*/}
               {/* Will be available once route is ready */}
@@ -451,22 +450,15 @@ interface DownloadButtonProps {
   id: string;
 }
 
-function DownloadButtonComponent(args: {
-  buttonText: string;
-  disabled?: boolean;
-}) {
-  return (
-    <Button
-      variant="filled"
-      size="xs"
-      rightSection={<IconChevronDown size={20} />}
-      leftSection={<IconDownload size={20} />}
-      disabled={args.disabled}
-      c={args.disabled ? "red" : undefined}
-    >
-      {args.buttonText}
-    </Button>
-  );
+function downloadButtonProps(disabled: boolean) {
+  return {
+    variant: "filled",
+    size: "xs",
+    rightSection: <IconChevronDown size={20} />,
+    leftSection: <IconDownload size={20} />,
+    disabled: disabled,
+    c: disabled ? "red" : undefined,
+  };
 }
 
 function DownloadButton({
@@ -483,7 +475,7 @@ function DownloadButton({
       withinPortal
     >
       <Menu.Target>
-        <DownloadButtonComponent buttonText={buttonText} />
+        <Button {...downloadButtonProps(false)}>{buttonText}</Button>
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item
