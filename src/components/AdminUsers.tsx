@@ -185,7 +185,7 @@ export default function AdminUsers() {
         title="Admin Users"
         centered
         styles={{
-          header: { paddingBottom: 5 },
+          header: { paddingBottom: 5 }
         }}
       >
         <Stack gap="sm">
