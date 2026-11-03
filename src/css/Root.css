@@ -19,7 +19,7 @@
     flex: 1;
     overflow: hidden;
     height: 500px;
-    padding-top: 50px;
+    padding-top: 64px;
     flex-direction: column;
 }
 
@@ -30,17 +30,6 @@
     flex-direction: row;
     height: 70%;
     flex-shrink: 0;
-}
-
-.table-contain-result {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding-bottom: 10px;
-    width: 60%;
-    min-width: 60%;
-    overflow: hidden;
-    word-wrap: break-word; 
-    word-break: break-word;
 }
 
 .footer {
@@ -64,10 +53,4 @@
 
 .preview-contain-result {
     z-index: 1000;
-}
-
-.search-container {
-    width: auto;
-    display: flex;
-    justify-content: center;
 }

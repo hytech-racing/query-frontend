@@ -1,74 +1,159 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
-nav {
-  padding: 15px 0;
-  background: #b3a36a;
+/* --- Navigation bar --- */
+#navbar {
   display: flex;
-  height: 50px;
   align-items: center;
-}
-
-.nav-link {
-  padding: 3px 15px;
-  text-decoration: none;
-  color: #ffffff;
-  background-color: transparent;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  display: inline-block;
-  margin-left: 20px;
+  gap: 10px;
+  height: 64px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  background: #b3a36a;
   font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  color: #ffffff;
 }
 
-#navbar a.active {
-  background-color: #978750;
-  font-weight: bold;
-}
-
-.nav-link:hover {
-  color: white;
-  background-color: #d1bf80;
+/* Brand (logo + title), anchored to the left. `min-width: 0` lets the title
+   truncate on narrow screens instead of pushing the actions off the bar. */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
 
 .navbar-icon {
-  height: 30px;
-  margin-right: 20px;
-  margin-left: 20px;
+  height: 36px;
+  width: 36px;
+  padding: 3px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  display: block;
+  flex-shrink: 0;
 }
 
 .hytechName {
-  margin-left: auto;
-  margin-right: 10px;
-  border-radius: 5px;
-  color: white;
-  font-weight: 900;
-}
-
-.vpnStatus {
-  border-radius: 100%;
-  width: 1rem;
-  height: 1rem;
-  margin: 1rem;
-  cursor: pointer;
-}
-
-.vpnStatusGood {
-  background-color: green;
-}
-
-.vpnStatusBad {
-  background-color: red;
-}
-
-.vpnStatusHover {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
-  z-index: 10;
-  background-color: white;
-  width: fit-content;
-  border-radius: 5px;
-  transform: translate(-85%, 75%);
-  padding: 0.25rem;
-  border: 1px solid gray;
+}
+
+/* Primary navigation links, grouped next to the brand */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+}
+
+.nav-link {
+  padding: 7px 14px;
+  border-radius: 8px;
+  color: #ffffff;
+  background-color: transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+#navbar a.active {
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.22);
+  font-weight: 700;
+}
+
+/* Actions pinned to the right edge */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Unify every control in the bar: the buttons come from several components,
+   some of which ship their own global `button` styles. Targets Mantine's static
+   root class so it also matches the buttons rendered as anchors (`component="a"`). */
+#navbar .mantine-Button-root {
+  --button-fz: 1rem;
+  --button-height: 38px;
+  --button-padding-x: 16px;
+  --button-radius: 8px;
+  margin: 0;
+  font-weight: 600;
+  background-color: #ffffff;
+  color: #6b5a2a;
+}
+
+#navbar .mantine-Button-root:hover {
+  background-color: #f1ead6;
+  color: #4f421e;
+}
+
+/* --- Auth status --- */
+.authStatus {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.16);
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.authStatusLoggedIn {
+  color: #d3f9d8;
+}
+
+.authStatusLoggedOut {
+  color: #ffd8d8;
+}
+
+@media (max-width: 1280px) {
+  #navbar {
+    gap: 8px;
+    padding: 0 14px;
+  }
+
+  .hytechName {
+    font-size: 1.05rem;
+  }
+
+  .navbar-links {
+    margin-left: 12px;
+  }
+
+  .nav-link {
+    padding: 7px 10px;
+  }
+
+  .authStatus {
+    padding: 6px 10px;
+  }
+}
+
+/* The title no longer fits once the links and actions claim the bar. */
+@media (max-width: 1100px) {
+  .hytechName {
+    display: none;
+  }
 }
